@@ -11,14 +11,14 @@ const Header = () => {
     <header className='header-top-strip' >
       <div className='container-xxl '>
         <div className='row' >
-          <div className='col-6'>
+          {/* <div className='col-6'>
             <p className='text-dark mt-2'>Free Shipping over $100 & free Returns</p>
           </div>
           <div className='col-6'>
             <p className='text-end text-dark mt-2'>
               Hotline: <a className='text-dark' href="tel:+ 8790989087">8790989087</a>
             </p>
-          </div>
+          </div> */}
           
         </div>
       </div>
