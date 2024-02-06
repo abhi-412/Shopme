@@ -136,7 +136,7 @@ const MainProduct = () => {
                                 </div>
                                 <div className="d-flex gap-30 align-items-center">
                                     <button className='button login'>Add to Cart</button>
-                                    <button className='button signup'>Buy Now</button>
+                                    <button className='signup-button'>Buy Now</button>
                                 </div>
                             </div>
                             
