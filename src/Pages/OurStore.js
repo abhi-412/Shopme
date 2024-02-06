@@ -89,7 +89,7 @@ const OurStore = () => {
                             <h6 className='mb-0'>From $0 to ${priceFilterBy}</h6>
                                 <div className="filter-range">
                                 <input type="range"
-                                class="form-range"
+                                className="form-range"
                                 min="0"
                                 max="10000"
                                 step="10"
