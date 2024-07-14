@@ -36,7 +36,7 @@ const Carousel = () => {
 
   return (
     <div id="indicators-carousel" className="relative bg-gray-300 w-full mt-3 mb-5" data-carousel="static">
-      <div className="relative h-56 overflow-hidden rounded-lg md:h-96">
+      <div className="relative h-56 overflow-hidden md:h-96">
         {imageArr.map((item, index) => (
           <div
             key={index}

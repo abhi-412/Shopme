@@ -86,11 +86,11 @@ const Footer = () => {
                 <h4 className='text-white mb-4'>Quick Links</h4>
                 <div className='text-sm md:text-base flex flex-col gap-2'>
 
-                    <Link className='text-white6' to={'/'}>Accessories</Link>
-                    <Link className='text-white6' to={'/'}>Laptops</Link>
-                    <Link className='text-white6' to={'/'}>Headphones</Link>
-                    <Link className='text-white6' to={'/'}>Smart Watches</Link>
-                    <Link className='text-white6' to={'/'}>Tablets</Link>
+                    <Link className='text-white' to={'/'}>Accessories</Link>
+                    <Link className='text-white' to={'/'}>Laptops</Link>
+                    <Link className='text-white' to={'/'}>Headphones</Link>
+                    <Link className='text-white' to={'/'}>Smart Watches</Link>
+                    <Link className='text-white' to={'/'}>Tablets</Link>
                   
                 </div>
               </div>
