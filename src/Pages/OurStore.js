@@ -1,10 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BreadCrumb from '../Components/BreadCrumb'
 import Meta from '../Components/Meta'
 import ReactStars from 'react-stars'
 import FeaturedCard from '../Components/FeaturedCard'
 import Color from '../Components/Color'
 import Container from '../Components/Container'
+import { useDispatch, useSelector } from 'react-redux'
+import { getProducts } from '../features/products/productSlice'
+import StoreCard from '../Components/StoreCard'
+import { MdTune } from "react-icons/md";
+import Drawer from './Drawer'
 
 const Categories = ["Watch","Tv","Camera","Laptop"];
 
@@ -20,7 +25,29 @@ const options = [["manual","Featured"],["best-selling","Best Selling"],
 
 const OurStore = () => {
     const [priceFilterBy, setPriceFilterBy] = useState(50000);
-    const [grid,setGrid] = useState(4);
+    const [grid,setGrid] = useState(12);
+
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+    const toggleDrawer = () => {
+        setIsDrawerOpen(!isDrawerOpen);
+      };
+
+    const dispatch = useDispatch();
+
+    const productState = useSelector(state=>state.product);
+    const {products, isLoading,isError,message,isSuccess} = productState;
+
+    useEffect(()=>{
+        dispatch(getProducts());
+    },[])
+
+    useEffect(()=>{
+       if(window.innerWidth <= 768){
+           setGrid(12);
+       }
+    },[])
+    
   
 
     const handlePriceRange=(e)=>{
@@ -34,9 +61,22 @@ const OurStore = () => {
     <BreadCrumb title={"Our Store"} />
     
 
-    <Container class1="store-wrapper py-5 home-wrapper-2">
-        <div className="row">
-                <div className="col-3 p-0">
+    <Container class1="py-5 ">
+    {/* <Drawer handlePriceRange={handlePriceRange} Categories={Categories} size={size} tags={tags} priceFilterBy={priceFilterBy}/> */}
+    {isDrawerOpen && (
+        <Drawer 
+          Categories={Categories} 
+          priceFilterBy={priceFilterBy} 
+          handlePriceRange={handlePriceRange} 
+          size={size} 
+          tags={tags} 
+          toggleDrawer={toggleDrawer}
+          isDrawerOpen={isDrawerOpen}
+        />
+      )}
+
+        <div className="grid grid-cols-12 gap-8">
+                <div className="md:col-span-3 md:block hidden p-0">
                      <div className='text-dark filter-card mb-3'>
                         <h3 className="filter-title">Shop By Category</h3>
                         <ul>
@@ -85,8 +125,8 @@ const OurStore = () => {
                         <div className='mb-3'>
                             <h5 className='sub-title mb-3'>Price</h5>
 
-                            <div className="form-range d-flex flex-column justify-content-center gap-10">
-                            <h6 className='mb-0'>From $0 to ${priceFilterBy}</h6>
+                            <div className="form-range d-flex flex-column justify-content-center gap-2">
+                            <h6 className=''>From $0 to ${priceFilterBy}</h6>
                                 <div className="filter-range">
                                 <input type="range"
                                 className="form-range"
@@ -188,57 +228,56 @@ const OurStore = () => {
                      </div>
 
                 </div>
+
                 
-                <div className="col-9">
-                    <div className="filter-sort-grid  mb-4">
-                        <div className="d-flex justify-content-between align-items-center">
-                        <div className="d-flex align-items-center gap-10">
-                            <p className='mb-0 d-block'>Sort By:</p>
+                <div className={`md:col-span-9 col-span-12 p-2 ${isDrawerOpen && "opacity-50"}`}>
+                        <div className="flex bg-white p-3 mb-4 justify-between flex-wrap gap-3 items-center">
+                        <div className="d-flex align-items-center gap-3">
+                            <p className='mb-0 d-block'>Sort:</p>
                             <select 
                             name="" 
                             id="" 
-                            className='form-control form-select'>
+                            className='border py-1.5 px-2 rounded'>
                                 {options.map((op)=>{
                                     return <option value={op[0]}>{op[1]}</option>
                                 })}
                             </select>
                         </div>
-                            <div className="d-flex align-items-center gap-10">
-                                <p className='total-products mb-0'>21 Products</p>
-                                <div className="d-flex gap-10 align-items-center grid">
-                                    <img src="images/gr4.svg"
-                                     className='d-block img-fluid' 
-                                     alt="" 
-                                     onClick={()=>{setGrid(3)}}
-                                     />
-                                    <img src="images/gr3.svg"
-                                     className='d-block img-fluid' 
-                                     alt="" 
-                                     onClick={()=>{setGrid(4)}}
-                                     />
-                                    <img src="images/gr2.svg"
-                                     className='d-block img-fluid' 
-                                     alt="" 
-                                     onClick={()=>{setGrid(6)}}
-                                     />
-                                    <img src="images/gr.svg"
-                                     className='d-block img-fluid' 
-                                     alt="" 
-                                     onClick={()=>{setGrid(12)}}
-                                     />
-                                </div>
+
+                        <div className="flex items-center gap-3">
+                            {/* <p className='mb-0'>21 Products</p> */}
+                            <button
+                            onClick={toggleDrawer}
+                             className='border py-1.5 px-2 rounded md:hidden' type="button" data-drawer-target="drawer-backdrop" data-drawer-show="drawer-backdrop" data-drawer-backdrop="true" aria-controls="drawer-backdrop">
+                            <MdTune className='text-2xl'/>
+                            </button>
+                            <div className="flex gap-3 items-center">
+                                
+                                <img src="images/gr3.svg"
+                                    className='w-5 h-5 md:block hidden'  
+                                    alt="" 
+                                    onClick={()=>{setGrid(4)}}
+                                    />
+                                <img src="images/gr2.svg"
+                                    className='w-5 h-5 md:block hidden'  
+                                    alt="" 
+                                    onClick={()=>{setGrid(6)}}
+                                    />
+                                <img src="images/gr.svg"
+                                    className='w-5 h-5 md:block hidden'  
+                                    alt="" 
+                                    onClick={()=>{setGrid(12)}}
+                                    />
                             </div>
                         </div>
-                    </div>
+                        </div>
+                    
                     
                     <div className="products-list">
-                        <div className="d-flex flex-wrap gap-10">
-                        <FeaturedCard grid={grid} />
-                        <FeaturedCard grid={grid} />
-                        <FeaturedCard grid={grid} />
-                        <FeaturedCard grid={grid} />
-                        <FeaturedCard grid={grid} />
-                        <FeaturedCard grid={grid} />
+                        <div className="grid grid-cols-12 flex-wrap gap-3">
+                        {products.map((product)=>{
+                            return <StoreCard  col={grid} key={product.id} product={product} />
+                        })}
                        
 
                         </div>

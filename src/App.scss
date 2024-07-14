@@ -333,6 +333,7 @@ footer:not(:first-child){
 
 .featured-card:hover .action-bar{
     right: 10px;
+    top: 13%;
 }
 
 .featured-card{
@@ -377,6 +378,8 @@ footer:not(:first-child){
 
     .featured-image img{
         object-fit: contain;
+        max-height: 270px;
+        // min-height: 150px;
     }
 
 

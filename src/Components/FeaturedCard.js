@@ -1,36 +1,74 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { GoHeart } from "react-icons/go";
 import ReactStars from 'react-stars';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToWishList } from '../features/products/productSlice';
+import { FaHeart } from "react-icons/fa";
+import { getOneUser, getUserWishlist } from '../features/user/userSlice';
 
 const FeaturedCard = (props) => {
-    const {grid} = props;
+    const {grid,product} = props;
+
+    const dispatch = useDispatch();
     // console.log(grid);
     let location=useLocation();
+
+    const parser = new DOMParser();
+
+    const wishlist = useSelector(state=>state.auth?.wishlist);
+
+    useEffect(()=>{
+        dispatch(getUserWishlist());
+    },[])
+
+    const addToWishlist = (id)=>{
+        dispatch(addToWishList(id));
+        setTimeout(() =>{
+            dispatch(getUserWishlist());
+        },600)
+    }
+    const wishIds = wishlist?.map((item)=>{
+        if(item?._id === product?._id){
+            return item?._id;
+        }
+    })
+
+
   return (
     <>
-   <div className={`${location.pathname == "/store" ? `gr-${grid}` : "col-3"}`} >
-    <Link to={'/product/:id'} className="featured-card position-relative">
-        <div className='icon position-absolute'>
-        <GoHeart />
+   {/* <div className={`${location.pathname === "/store" ? `gr-${grid}` : "cols-3"}`} > */}
+    <Link 
+        // to={'/product/:id'}
+         className=" relative min-w-[250px] hover:shadow-xl hover:scale-105 transition delay-50 bg-white rounded"
+         >
+        <div className='icon absolute right-5 top-2'>
+        <button className='border-0 bg-transparent' onClick={()=>{addToWishlist(product?._id)}}>{wishIds?.includes(product?._id) ? <FaHeart className='text-danger'/> : <GoHeart/>}</button>
         </div>
-        <div className='featured-image'>
-        <img className='img-fluid'  src="/assets/watch.jpg" alt="Featured product" />
-        <img className='img-fluid'  src="/assets/watch-2.jpg" alt="Featured product" />
+        <div className='mb-3 mx-4'>
+        <img className='img-fluid object-cover w-100'  src={product?.images[0]?.url || "/assets/watch.jpg"} alt="Featured product" />
+        {product?.images?.length > 1 && 
+            <img className='img-fluid hidden'  src={product?.images[1]?.url || "/assets/watch.jpg"} alt="Featured product" />
+        }
         </div>
-        <div className="featured-body">
-            <h6 className="brand">Timex</h6>
-            <p className="featured-item-text">Modern Watch Bulk 10<br /> Pack Multi For.. </p>
-            <p className={`description ${grid===12 ? "d-block" : "d-none"}`}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima praesentium nesciunt qui nam tempore accusantium, repellat velit reprehenderit sed sit magni, hic autem aut.......</p>
+        <div className="px-4 py-3">
+            <h6 className="brand">{product?.brand || 'Timex'}</h6>
+            <p className="featured-item-text">{product?.title} </p>
+            <p className={`description ${grid===12 ? "d-block" : "d-none"}`}>{parser.parseFromString(product?.description,"text/html").body.textContent}</p>
+            <div className='d-flex align-items-center gap-3'>
+                
             <ReactStars
             count={5}
-            value={3}
+            value={product?.totalRating}
             edit={false}
-            size={24}
+            size={window.innerWidth < 768 ? 20 : 24}
             color2={'#ffd700'} />
-            <h5 className='price'>$100.00</h5>
+
+            <p style={{color:"gray"}} className='mb-0 md:block hidden'>{product?.ratings?.length} ratings</p>
+            </div>
+            <h5 className='price'>₹ {product?.price} only</h5>
         </div>
-        <div className='action-bar position-absolute'>
+        <div className='action-bar absolute top-10 right-5'>
             <div className='d-flex flex-column gap-15'>
                 <button className='border-0 bg-transparent'>
                     <img src="/images/add-cart.svg" alt="cart" />
@@ -45,7 +83,7 @@ const FeaturedCard = (props) => {
 
         </div>
     </Link>
-   </div>
+   {/* </div> */}
 
 </>
   )

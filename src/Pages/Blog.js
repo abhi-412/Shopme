@@ -15,8 +15,8 @@ const Blog = () => {
     <Container class1="blog-wrapper home-wrapper-2 py-5">
 
 
-            <div className="row">
-                    <div className="col-3">
+            <div className="grid grid-cols-12 gap-3">
+                    <div className="md:col-span-3 hidden md:block">
                     <div className='text-dark filter-card mb-3'>
                         <h3 className="filter-title">Shop By Category</h3>
                         <ul>
@@ -26,22 +26,14 @@ const Blog = () => {
                         </ul>
                      </div>
                     </div>
-                    <div className="col-9">
-                        <div className="row">
-                            <div className="col-6 mb-3">
+                    <div className="md:col-span-9 col-span-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                                 <Card />
-                            </div>
-                            <div className="col-6 mb-3">
-                                <Card />
-                            </div>
-                            <div className="col-6 mb-3">
-                                <Card />
-                            </div>
-                            <div className="col-6 mb-3">
-                                <Card />
-                            </div>
-                        </div>
                             
+                                <Card />
+                           
+                                <Card />
+                            
+                                <Card /> 
                         
                     </div>
                 </div>
