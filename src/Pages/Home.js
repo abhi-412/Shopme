@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Marquee from 'react-fast-marquee'
 import Card from '../Components/Card'
@@ -9,8 +9,27 @@ import Container from '../Components/Container'
 import {services} from '../utils/data'
 import SwitchableCard from '../Components/SwitchableCard'
 import Carousel from '../Components/Carasoul'
+import { useDispatch, useSelector } from 'react-redux'
+import { getBlogs } from '../features/blog/blogSlice'
+import { getProducts } from '../features/products/productSlice'
 
 const Home = () => {
+
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+    dispatch(getBlogs());
+    dispatch(getProducts());
+  },[dispatch])
+
+  const blogs = useSelector((state)=>state.blog?.blogs)
+  const products = useSelector((state)=>state.product?.products)
+
+  const featuredProducts = products?.filter((item)=>item?.tags.includes('Featured'));
+  const specialProducts = products?.filter((item)=>item?.tags.includes('Special'));
+  const popularProducts = products?.filter((item)=>item?.tags.includes('Popular'));
+
+  console.log(specialProducts);
 
   const services = [
     {title:"Cameras",quant:"4,986 Items",src:"/images/camera.jpg"},
@@ -93,19 +112,16 @@ const Home = () => {
         </div>
     </Container>
     
-    <Container class1 = " py-5 ">
+    <Container class1 = " py-5 md:hidden block">
        <div className="row">
             <div className='w-full'>
-              <h3 className='section-heading'>Featured Collections</h3>
+              <h3 className='section-heading'>Featured Products</h3>
             </div>
             
              <div className='flex flex-nowrap  overflow-scroll hide-scrollbar gap-3'>
-             <FeaturedCard />
-              <FeaturedCard />
-              <FeaturedCard />
-
-              <FeaturedCard />
-              <FeaturedCard />
+             {featuredProducts?.map((item,index)=>(
+               <FeaturedCard key={index} product={item} />
+             ))}
               
 
              </div>
@@ -114,7 +130,7 @@ const Home = () => {
     </Container>
 
     <div className='w-full hidden md:block'>
-    <SwitchableCard />
+    <SwitchableCard featuredProducts={featuredProducts} specialProducts={specialProducts}/>
     </div>
 
     {/* <Container class1=" py-5  md:hidden block ">
@@ -170,9 +186,9 @@ const Home = () => {
             <h3 className='section-heading'> Special Products</h3>
           </div>
           <div className='flex flex-nowrap  overflow-scroll hide-scrollbar gap-3'>
-              <SpecialProducts />
-              <SpecialProducts />
-              <SpecialProducts />
+             {specialProducts?.map((item,index)=>(
+               <SpecialProducts key={index} product={item} />
+             ))}
           </div>
         </div>
 
@@ -184,17 +200,13 @@ const Home = () => {
 <Container class1 = " py-5  md:hidden block ">
        <div className="row">
             <div className='w-full'>
-              <h3 className='section-heading'>Featured Collections</h3>
+              <h3 className='section-heading'>Popular This Week</h3>
             </div>
             
             <div className='flex flex-nowrap  overflow-scroll hide-scrollbar gap-3'>
-             <FeaturedCard />
-              <FeaturedCard />
-
-              <FeaturedCard />
-              <FeaturedCard />
-              
-
+            {popularProducts?.map((item,index)=>(
+              <FeaturedCard key={index} product={item} />
+            ))}
              </div>
 
           </div>
@@ -227,10 +239,9 @@ const Home = () => {
             </div>
     <div className="flex flex-no-wrap gap-3 overflow-x-scroll hide-scrollbar">
             
-            <Card />
-            <Card />
-            <Card />
-            <Card />
+            {blogs?.map((blog)=>(
+                <Card key={blog._id} blog={blog} />
+            ))}
           </div>
 
     </Container>

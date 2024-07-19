@@ -37,18 +37,18 @@ const FeaturedCard = (props) => {
 
   return (
     <>
-   {/* <div className={`${location.pathname === "/store" ? `gr-${grid}` : "cols-3"}`} > */}
     <Link 
-        // to={'/product/:id'}
+        to={`/product/${product?.slug}`}
+        state={{ id: product?._id}}
          className=" relative min-w-[250px] hover:shadow-xl hover:scale-105 transition delay-50 bg-white rounded"
          >
         <div className='icon absolute right-5 top-2'>
         <button className='border-0 bg-transparent' onClick={()=>{addToWishlist(product?._id)}}>{wishIds?.includes(product?._id) ? <FaHeart className='text-danger'/> : <GoHeart/>}</button>
         </div>
-        <div className='mb-3 mx-4'>
+        <div className='mb-3 mx-4 p-4 featured-image'>
         <img className='img-fluid object-cover w-100'  src={product?.images[0]?.url || "/assets/watch.jpg"} alt="Featured product" />
         {product?.images?.length > 1 && 
-            <img className='img-fluid hidden'  src={product?.images[1]?.url || "/assets/watch.jpg"} alt="Featured product" />
+            <img className='img-fluid'  src={product?.images[1]?.url || "/assets/watch.jpg"} alt="Featured product" />
         }
         </div>
         <div className="px-4 py-3">

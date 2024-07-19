@@ -29,6 +29,20 @@ body {
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
+  
+}
+
+.featured-image :nth-child(2){
+  display: none;
+}
+
+.featured-image:hover{
+  :nth-child(1){
+      display: none;
+  }
+  :last-child{
+      display: block;
+  }
 }
 
 .bounce-animation {

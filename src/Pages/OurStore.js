@@ -251,7 +251,7 @@ const OurStore = () => {
                              className='border py-1.5 px-2 rounded md:hidden' type="button" data-drawer-target="drawer-backdrop" data-drawer-show="drawer-backdrop" data-drawer-backdrop="true" aria-controls="drawer-backdrop">
                             <MdTune className='text-2xl'/>
                             </button>
-                            <div className="flex gap-3 items-center">
+                            <div className="flex gap-3 items-center cursor-pointer">
                                 
                                 <img src="images/gr3.svg"
                                     className='w-5 h-5 md:block hidden'  

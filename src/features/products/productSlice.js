@@ -79,7 +79,7 @@ export const productSlice = createSlice({
             state.isLoading = false;
             state.isError = false;
             state.isSuccess = true;
-            state.products = action.payload;
+            state.product = action.payload;
         })
         .addCase(getProduct.rejected,(state,action)=>{
             state.isLoading = false;
@@ -104,8 +104,6 @@ export const productSlice = createSlice({
                 toast.error("Something went wrong")
             }
         })
-        
-        
     },
 })
 

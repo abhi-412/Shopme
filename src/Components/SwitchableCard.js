@@ -3,7 +3,7 @@ import Container from './Container';
 import  SpecialProducts from './SpecialProducts';
 import FeaturedCard from './FeaturedCard';
 
-const SwitchableCard = () => {
+const SwitchableCard = ({featuredProducts,specialProducts}) => {
     const [activeTab, setActiveTab] = useState('featured-products');
   
     const handleTabClick = (tab) => {
@@ -19,9 +19,9 @@ const SwitchableCard = () => {
             className="bg-gray-200 border-0 border-b border-gray-200 text-gray-900 text-sm rounded-t-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             onChange={(e) => handleTabClick(e.target.value)}
           >
-            <option value="featured-products">Featured Products</option>
+            <option value="featured-products">Featured Collections</option>
             <option value="special-products">Special Products</option>
-            <option value="featured-collections">Featured Collections</option>
+            <option value="featured-collections">Featured Products</option>
           </select>
         </div>
         <ul
@@ -70,7 +70,7 @@ const SwitchableCard = () => {
           </li>
         </ul>
         <div id="fullWidthTabContent" className="border-t border-gray-200 dark:border-gray-600">
-          {activeTab === 'featured-products' && (
+          {activeTab === 'featured-collections' && (
             <div className="p-4  rounded-lg md:p-8 dark:bg-gray-800" id="featured-products" role="tabpanel" aria-labelledby="featured-products-tab">
               <Container class1="py-5">
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-cols-5 gap-4">
@@ -118,26 +118,25 @@ const SwitchableCard = () => {
                     <h3 className="section-heading">Special Products</h3>
                   </div>
                   <div className="grid md:grid-cols-2 xl:grid-cols-3 grid-cols-2 gap-3">
-                    <SpecialProducts />
-                    <SpecialProducts />
-                    <SpecialProducts />
+                    {specialProducts?.map((product) => (
+                      <SpecialProducts key={product.id} product={product} />
+                    ))}
                   </div>
                 </div>
               </Container>
             </div>
           )}
-          {activeTab === 'featured-collections' && (
-            <div className="p-4 rounded-lg dark:bg-gray-800" id="featured-collections" role="tabpanel" aria-labelledby="featured-collections-tab">
+          {activeTab === 'featured-products' && (
+            <div className="p-4 rounded-lg dark:bg-gray-800" id="featured-products" role="tabpanel" aria-labelledby="featured-products-tab">
               <Container class1="py-5">
                 <div className="row">
                   <div className="w-full">
-                    <h3 className="section-heading">Featured Collections</h3>
+                    <h3 className="section-heading">Featured Products</h3>
                   </div>
                   <div className="grid lg:grid-cols-3 md:grid-cols-2 xl:grid-cols-4 grid-cols-2 flex-wrap gap-3">
-                    <FeaturedCard />
-                    <FeaturedCard />
-                    <FeaturedCard />
-                    <FeaturedCard />
+                    {featuredProducts?.map((product) => (
+                      <FeaturedCard key={product.id} product={product} />
+                    ))}
                   </div>
                 </div>
               </Container>

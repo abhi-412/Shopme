@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BreadCrumb from '../Components/BreadCrumb'
 import Meta from '../Components/Meta'
 import FeaturedCard from '../Components/FeaturedCard'
@@ -6,8 +6,14 @@ import ReactStars from 'react-stars'
 import ReactImageZoom from 'react-image-zoom'
 import Color from '../Components/Color'
 import { IoIosHeartEmpty } from "react-icons/io";
-import { GoGitCompare } from "react-icons/go";
+import { GoGitCompare, GoHeart, GoHeartFill } from "react-icons/go";
 import Container from '../Components/Container'
+import { useLocation } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { addToWishList, getProduct, getProducts } from '../features/products/productSlice'
+import Breadcrumb2 from '../Components/BreadCrumb2'
+import { getUserWishlist } from '../features/user/userSlice'
+import { FaHeart } from 'react-icons/fa'
 
 const Categories = ["Watch","Tv","Camera","Laptop"];
 const size = ["S","M","L","XL","XXL"]; 
@@ -19,6 +25,44 @@ const tags = ["Laptops","Mobiles","Watches","Earphones"];
 const MainProduct = () => {
     const [ordered, setOrdered] = useState(true);
     const [rating,setRating] = useState(0);
+    const [imgActive, setImgActive] = useState(0)
+
+    const location = useLocation();
+    const path = location.pathname;
+    const id = location.state.id;
+    const dispatch = useDispatch();
+
+    useEffect(()=>{
+        dispatch(getProducts());
+        dispatch(getUserWishlist());
+
+        if(id){
+            dispatch(getProduct(id))
+        }
+    },[])
+
+    const wishlist = useSelector(state=>state.auth?.wishlist);
+
+   
+
+    const addToWishlist = (id)=>{
+        dispatch(addToWishList(id));
+        setTimeout(() =>{
+            dispatch(getUserWishlist());
+        },600)
+    }
+    const wishIds = wishlist?.map((item)=>{
+        if(item?._id === curProduct?._id){
+            return item?._id;
+        }
+    })
+
+   
+
+    const curProduct = useSelector((state)=>state.product?.product);
+    const products = useSelector((state)=>state.product?.products)
+
+    const featuredProducts = products?.filter((item)=>item?.tags.includes('Featured'));
 
     const copyToClipboard = (text) => {
         // console.log('text', text)
@@ -31,101 +75,118 @@ const MainProduct = () => {
         alert("Link was Copied")
       }
 
-    const props={width:500,height:600,zoomWidth:600,img:"/assets/watch.jpg"}
+      const imagesUrls = curProduct?.images?.length > 0 ? curProduct?.images?.map((img)=>img.url) : [];
+        const activeImage = imagesUrls[imgActive] ? imagesUrls[imgActive] : '/assets/sample-img.jpg';
+      let width = 400, height = 400;
+      if(window.innerWidth<768){
+        width = 200;
+        height = 200;
+      }
+    const props={zoomWidth:600,width:width, height:height,img:activeImage}
   return (
     <>
-    <Meta title={"Product Name"} />
-    <BreadCrumb title={"Product Name"} />
+    <Meta title={curProduct?.title} />
+    <BreadCrumb title={curProduct?.title} />
 
-    <Container class1="main-product-wrapper py-5 home-wrapper-2">
-        <div className="row">
-                <div className="col-6">
-                    <div className="main-product-image">
-                        <div>
+    <Container class1="main-product-wrapper bg-white absolute py-5 home-wrapper-2 relative">
+        <div className="w-full  grid md:grid-cols-2 grid-cols-1">
+                <div className="col-span-1  h-fit md:p-5 p-2 flex md:flex-col gap-2">
+                    <div className="w-full flex items-center justify-center  border border-gray-600 p-2">
+                        <div className="">
                             <ReactImageZoom {...props} />
                         </div>
-                        </div>
-                        <div className="other-product-images d-flex flex-wrap gap-15">
-                            <div> <img className='img-fluid' src="/assets/watch.jpg" alt="" /></div>
-                            <div> <img className='img-fluid' src="/assets/watch.jpg" alt="" /></div>
-                            <div> <img className='img-fluid' src="/assets/watch.jpg" alt="" /></div>
-                            <div> <img className='img-fluid' src="/assets/watch.jpg" alt="" /></div>
+                    </div>
+                        <div className="flex md:flex-row  flex-col flex-nowrap overflow-scroll hide-scrollbar gap-2">
+                            {imagesUrls.map((url,i)=>(
+                                <div key={i} className={`cursor-pointer ${imgActive === i ? 'border-2 border-blue-500 ' : 'border border-gray-300 '} p-1 md:p-2`}>
+                                 <img  
+                                    onMouseOver={()=>setImgActive(i)} 
+                                    src={url} 
+                                    alt={`Product ${i+1}`}
+                                 
+                                    className='md:w-20 md:h-20 w-14 h-14 object-contain'/>
+                                </div>
+                            ))}
                         </div>
                 </div>
-                <div className="col-6">
-                    <div className="main-product-details p-5">
+                <div className="col-span-1">
+                    <div className=" rounded-lg md:p-5 p-3">
                         <div className='border-bottom'>
-                        <h3 className='title'>Sony Bravia LED Watch MultiColored pack of 10</h3>
+                        <h3 className='text-xl font-semibold'>{curProduct?.title}</h3>
                         </div>
 
                         <div className="border-bottom py-3">
-                            <p className='price'>$100.00</p>
+                            <p className='text-base font-semibold'>₹ {curProduct?.price} <span className='text-gray-400 ml-4 line-through text-sm'>₹ {curProduct?.price + 200 }</span></p>
                             <div className="d-flex align-items-center gap-10">
                             <ReactStars
                                 count={5}
-                                value={3}
+                                value={(curProduct?.totalRating)}
                                 edit={false}
                                 size={24}
                                 color2={'#ffd700'} 
+                                
                             />
-                            <p className='mb-0'>(2 reviews)</p>
+                            <p className='mb-0'>({curProduct?.totalRating} reviews)</p>
                         </div>
                         <a href="#review" className='write-review'>Write a Review</a>
                         </div>
                        
 
-                        <div className="d-flex flex-column py-3 gap-15">
-                            <div className='d-flex align-items-center flex-wrap gap-10'>
+                        <div className="d-flex flex-column py-3 gap-3">
+                            <div className='flex items-center flex-wrap gap-2'>
                                 <h6 className='mb-0'>Type :</h6>
-                                <p className='mb-0'>Watch</p>
+                                <p className='mb-0'>{curProduct?.category}</p>
                             </div>
 
-                            <div className='d-flex align-items-center flex-wrap gap-10'>
+                            <div className='flex items-center flex-wrap gap-2'>
                                 <h6 className='mb-0'>Brand :</h6>
-                                <p className='mb-0'>Sony</p>
+                                <p className='mb-0'>{curProduct?.brand}</p>
                             </div>
 
-                            <div className='d-flex align-items-center flex-wrap gap-10'>
+                            <div className='flex items-center flex-wrap gap-2'>
                             <h6 className='mb-0'>Categories :</h6>
-                                {Categories.map((cat)=>{
-                                    return <p className='mb-0'>{cat},</p>
-                                })}
+                                {curProduct?.category}
                             </div>
 
-                            <div className='d-flex align-items-center flex-wrap gap-10'>
+                            <div className='flex items-center flex-wrap gap-3'>
                             <h6 className='mb-0'>Tags :</h6>
-                                {tags.map((cat)=>{
-                                    return <p className='mb-0'>{cat},</p>
+                                {curProduct?.tags?.map((tag,i)=>{
+                                    return <p key={i} className='mb-0'>{tag}</p>
                                 })}
                             </div>
 
-                            <div className='d-flex align-items-center flex-wrap gap-10 mt-2 mb-3'>
+                            <div className='flex items-center flex-wrap gap-2'>
                                 <h6 className='mb-0'>SKU :</h6>
                                 <p className='mb-0'>AFSYKM</p>
                             </div>
 
-                            <div className='d-flex align-items-center flex-wrap gap-10'>
+                            <div className='flex items-center flex-wrap gap-2'>
                                 <h6 className='mb-0'>Availibility :</h6>
-                                <p className='mb-0'>In Stock[864]</p>
+                                <p className='mb-0'>{curProduct?.outOfStock ? "Out of Stock" : `In Stock[${curProduct?.quantity - curProduct?.sold}]`}</p>
                             </div>
 
-                            <div className='d-flex flex-column flex-wrap mt-2 mb-3 gap-10'>
+                            <div className='flex items-center flex-wrap gap-2'>
                                 <h6>Size :</h6>
                                 <div className='d-flex flex-wrap gap-15'>
-                                    {size.map((s)=>{
-                                    return <span className='badge border border-1 border-secondary bg-white text-dark'>{s}</span>
+                                    {size.map((s,i)=>{
+                                    return <span key={i} className='badge border border-1 border-secondary bg-white text-dark'>{s}</span>
                                     })}
                                 </div>
                             </div>
 
-                            <div className='d-flex flex-column flex-wrap gap-10'>
-                                <h6 className='mb-0'>Color</h6>
-                                <Color />
+                            <div className='flex items-center flex-wrap gap-2 '>
+                                <h6 className='mb-0'>Colors:</h6>
+                                <ul className='flex gap-2 '>
+                                {curProduct?.color?.map((c,i)=>(
+                                    
+                                    <li className='text-center rounded-full border border-gray-900' key={i} style={{backgroundColor:`${c.color === "Voilet" ? "violet" : c.color}`, width:"20px", height:"20px", borderRadius:"50%"}}></li>
+                                ))}
+                                </ul>
                             </div>
 
-                            <div className='d-flex flex-row mt-2 mb-3 gap-30 align-items-center'>
-                                <h6 className='mb-0'>Quantity :</h6>
-                                <div>
+                            <div className='flex md:flex-row flex-col mt-2 mb-3 gap-3 items-start md:items-center'>
+                                <div className='flex gap-2  items-center'> 
+                                <h6>Quantity:</h6>
                                     <input type="number"
                                     style={{width:"60px"}} 
                                     min={0}
@@ -134,19 +195,15 @@ const MainProduct = () => {
                                     className='form-control'
                                     />
                                 </div>
-                                <div className="d-flex gap-30 align-items-center">
-                                    <button className='button login'>Add to Cart</button>
-                                    <button className='signup-button'>Buy Now</button>
-                                </div>
                             </div>
+                            <div className="flex md:gap-5 gap-3 items-center flex-wrap">
+                                    <button className='button login text-nowrap'>Add to Cart</button>
+                                    <button className='signup-button text-nowrap'>Buy Now</button>
+                                </div>
                             
-                            <div className='d-flex align-items-center gap-30'>
-                               <div>
-                                <a href=""><GoGitCompare />  Add to Compare</a>
-                               </div>
-                               <div>
-                                <a href=""><IoIosHeartEmpty />  Add to Wishlist</a>
-                               </div>
+                            <div className='flex items-center gap-3 flex-wrap'>
+                                <button className='flex gap-1 items-center text-nowrap' ><GoGitCompare className='text-lg' />  Add to Compare</button>
+                                <button className='flex gap-1 items-center text-nowrap' onClick={()=>{addToWishlist(curProduct?._id)}}>{wishIds?.includes(curProduct?._id) ? <FaHeart className='text-lg text-red-500'/> : <GoHeart className='text-lg'/>} Add to Wishlist</button>
                             </div>
                             
                             <div className='d-flex flex-column mt-2 mb-3 flex-wrap gap-10'>
@@ -157,9 +214,9 @@ const MainProduct = () => {
 
                             <div className='d-flex align-items-center mt-2 mb-3 flex-wrap gap-30'>
                                 <h6 className='mb-0'>Copy Product Link: </h6>
-                                <a href="javascript:void(0)"
+                                <a href="/"
                                 onClick={()=>{copyToClipboard(
-                                    "/assets/watch.jpg"
+                                    `http://localhost:3001${location.pathname}`
                                 )}}
                                 >
                                     Click Here to Copy
@@ -171,6 +228,13 @@ const MainProduct = () => {
                     </div>
                 </div>
             </div>
+
+
+
+
+
+
+
     </Container>
     <Container class1="description-wrapper py-5 home-wrapper-2">
     <div className="row">
@@ -272,22 +336,19 @@ const MainProduct = () => {
                 </div>
             </div>
     </Container>
-    <Container class1="featured-wrapper py-5 home-wrapper-2">
-    <div className="row">
-            <div className='col-12'>
+    <Container class1 = " py-5 block">
+       <div className="row">
+            <div className='w-full'>
               <h3 className='section-heading'>You May Also Like</h3>
             </div>
             
-              <FeaturedCard />
-              <FeaturedCard />
-
-              <FeaturedCard />
-              <FeaturedCard />
-              
-
+             <div className='flex flex-nowrap  overflow-scroll hide-scrollbar gap-3'>
+             {featuredProducts?.map((item,index)=>(
+               <FeaturedCard key={index} product={item} />
+             ))}
+             </div>
 
           </div>
-
     </Container>
     </>
   )

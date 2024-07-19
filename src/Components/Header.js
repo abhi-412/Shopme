@@ -3,13 +3,447 @@ import { Link, NavLink } from 'react-router-dom';
 import { BsSearch } from 'react-icons/bs';
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import { IoGitCompareOutline } from "react-icons/io5";
-import { FaRegHeart,FaShoppingCart,FaRegUserCircle } from "react-icons/fa";
+import { FaRegHeart,FaShoppingCart,FaRegUserCircle, FaChevronRight } from "react-icons/fa";
+import { FiMenu } from 'react-icons/fi';
+import { FaChevronDown } from 'react-icons/fa';
+import Header2 from './Header2';
 
 
+
+const productCategories = [
+  {
+    name: 'Electronics',
+    image: '/assets/electronics-cat.jpg',
+    subcategories: [
+      {
+        name: 'Mobile Phones',
+        subcategories: [
+          'Smartphones',
+          'Feature Phones',
+          'Refurbished Phones',
+          'Phone Accessories',
+          'Mobile Phone Parts',
+        ],
+      },
+      {
+        name: 'Laptops',
+        subcategories: [
+          'Gaming Laptops',
+          'Business Laptops',
+          '2-in-1 Laptops',
+          'MacBooks',
+          'Laptop Accessories',
+        ],
+      },
+      {
+        name: 'Tablets',
+        subcategories: [
+          'Android Tablets',
+          'iPads',
+          'Windows Tablets',
+          'Tablet Accessories',
+          'Kids Tablets',
+        ],
+      },
+      {
+        name: 'Cameras',
+        subcategories: [
+          'DSLR Cameras',
+          'Mirrorless Cameras',
+          'Point & Shoot Cameras',
+          'Action Cameras',
+          'Camera Accessories',
+        ],
+      },
+      {
+        name: 'Televisions',
+        subcategories: [
+          'LED TVs',
+          'OLED TVs',
+          'QLED TVs',
+          'Smart TVs',
+          'TV Accessories',
+        ],
+      },
+      {
+        name: 'Audio',
+        subcategories: [
+          'Headphones',
+          'Earbuds',
+          'Speakers',
+          'Soundbars',
+          'Home Theater Systems',
+        ],
+      },
+      {
+        name: 'Wearables',
+        subcategories: [
+          'Smartwatches',
+          'Fitness Trackers',
+          'VR Headsets',
+          'Wearable Accessories',
+          'Smart Glasses',
+        ],
+      },
+      {
+        name: 'Gaming',
+        subcategories: [
+          'Gaming Consoles',
+          'Gaming Laptops',
+          'Gaming Accessories',
+          'VR Gaming',
+          'PC Games',
+        ],
+      },
+      {
+        name: 'Home Appliances',
+        subcategories: [
+          'Refrigerators',
+          'Washing Machines',
+          'Microwaves',
+          'Air Conditioners',
+          'Vacuum Cleaners',
+        ],
+      },
+      {
+        name: 'Power Banks',
+        subcategories: [
+          'Portable Chargers',
+          'Solar Power Banks',
+          'Wireless Power Banks',
+          'Power Bank Cases',
+          'High Capacity Power Banks',
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Fashion',
+    image: '/assets/fashion-cat.jpg',
+    subcategories: [
+      {
+        name: 'Men\'s Clothing',
+        subcategories: [
+          'Shirts',
+          'T-Shirts',
+          'Jeans',
+          'Jackets',
+          'Suits',
+        ],
+      },
+      {
+        name: 'Women\'s Clothing',
+        subcategories: [
+          'Dresses',
+          'Tops',
+          'Skirts',
+          'Pants',
+          'Jackets',
+        ],
+      },
+      {
+        name: 'Footwear',
+        subcategories: [
+          'Men\'s Shoes',
+          'Women\'s Shoes',
+          'Kids\' Shoes',
+          'Sports Shoes',
+          'Formal Shoes',
+        ],
+      },
+      {
+        name: 'Accessories',
+        subcategories: [
+          'Bags',
+          'Watches',
+          'Belts',
+          'Hats',
+          'Sunglasses',
+        ],
+      },
+      {
+        name: 'Jewelry',
+        subcategories: [
+          'Necklaces',
+          'Earrings',
+          'Rings',
+          'Bracelets',
+          'Watches',
+        ],
+      },
+      {
+        name: 'Kids\' Clothing',
+        subcategories: [
+          'Boys\' Clothing',
+          'Girls\' Clothing',
+          'Baby Clothing',
+          'School Uniforms',
+          'Winter Wear',
+        ],
+      },
+      {
+        name: 'Sportswear',
+        subcategories: [
+          'Men\'s Sportswear',
+          'Women\'s Sportswear',
+          'Kids\' Sportswear',
+          'Yoga Wear',
+          'Gym Wear',
+        ],
+      },
+      {
+        name: 'Ethnic Wear',
+        subcategories: [
+          'Sarees',
+          'Kurtas & Kurtis',
+          'Lehengas',
+          'Sherwanis',
+          'Dupattas',
+        ],
+      },
+      {
+        name: 'Innerwear',
+        subcategories: [
+          'Men\'s Innerwear',
+          'Women\'s Innerwear',
+          'Kids\' Innerwear',
+          'Lingerie',
+          'Socks',
+        ],
+      },
+      {
+        name: 'Swimwear',
+        subcategories: [
+          'Men\'s Swimwear',
+          'Women\'s Swimwear',
+          'Kids\' Swimwear',
+          'Swim Accessories',
+          'Beachwear',
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Home & Kitchen',
+    image: '/assets/home-cat.webp',
+    subcategories: [
+      {
+        name: 'Furniture',
+        subcategories: [
+          'Living Room Furniture',
+          'Bedroom Furniture',
+          'Office Furniture',
+          'Outdoor Furniture',
+          'Furniture Accessories',
+        ],
+      },
+      {
+        name: 'Home Decor',
+        subcategories: [
+          'Wall Art',
+          'Vases',
+          'Candles',
+          'Photo Frames',
+          'Clocks',
+        ],
+      },
+      {
+        name: 'Kitchenware',
+        subcategories: [
+          'Cookware',
+          'Bakeware',
+          'Kitchen Storage',
+          'Kitchen Tools',
+          'Kitchen Appliances',
+        ],
+      },
+      {
+        name: 'Bedding',
+        subcategories: [
+          'Bed Sheets',
+          'Blankets',
+          'Pillows',
+          'Mattress Protectors',
+          'Bedding Sets',
+        ],
+      },
+      {
+        name: 'Bath',
+        subcategories: [
+          'Towels',
+          'Bath Mats',
+          'Shower Curtains',
+          'Bathroom Accessories',
+          'Bathrobes',
+        ],
+      },
+      {
+        name: 'Lighting',
+        subcategories: [
+          'Ceiling Lights',
+          'Table Lamps',
+          'Wall Lights',
+          'Floor Lamps',
+          'Outdoor Lighting',
+        ],
+      },
+      {
+        name: 'Storage & Organization',
+        subcategories: [
+          'Closet Storage',
+          'Shelving',
+          'Storage Boxes',
+          'Laundry Storage',
+          'Garage Storage',
+        ],
+      },
+      {
+        name: 'Garden & Outdoor',
+        subcategories: [
+          'Garden Furniture',
+          'BBQ & Outdoor Dining',
+          'Gardening Tools',
+          'Outdoor Decor',
+          'Planters',
+        ],
+      },
+      {
+        name: 'Cleaning Supplies',
+        subcategories: [
+          'Cleaning Tools',
+          'Cleaning Chemicals',
+          'Trash & Recycling',
+          'Laundry Care',
+          'Dishwashing',
+        ],
+      },
+      {
+        name: 'Pet Supplies',
+        subcategories: [
+          'Dog Supplies',
+          'Cat Supplies',
+          'Bird Supplies',
+          'Fish Supplies',
+          'Small Animal Supplies',
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Beauty & Personal Care',
+    image: '/assets/beauty-cat.jpg',
+    subcategories: [
+      {
+        name: 'Skincare',
+        subcategories: [
+          'Moisturizers',
+          'Cleansers',
+          'Toners',
+          'Serums',
+          'Sunscreens',
+        ],
+      },
+      {
+        name: 'Hair Care',
+        subcategories: [
+          'Shampoos',
+          'Conditioners',
+          'Hair Treatments',
+          'Hair Styling',
+          'Hair Accessories',
+        ],
+      },
+      {
+        name: 'Makeup',
+        subcategories: [
+          'Face Makeup',
+          'Eye Makeup',
+          'Lip Makeup',
+          'Makeup Tools',
+          'Makeup Removers',
+        ],
+      },
+      {
+        name: 'Fragrances',
+        subcategories: [
+          'Perfumes',
+          'Body Sprays',
+          'Deodorants',
+          'Fragrance Sets',
+          'Home Fragrances',
+        ],
+      },
+      {
+        name: 'Bath & Body',
+        subcategories: [
+          'Body Wash',
+          'Body Lotion',
+          'Hand Care',
+          'Foot Care',
+          'Body Scrubs',
+        ],
+      },
+      {
+        name: 'Men\'s Grooming',
+        subcategories: [
+          'Shaving',
+          'Beard Care',
+          'Hair Care',
+          'Skincare',
+          'Body Care',
+        ],
+      },
+      {
+        name: 'Oral Care',
+        subcategories: [
+          'Toothpaste',
+          'Toothbrushes',
+          'Mouthwash',
+          'Dental Floss',
+          'Teeth Whitening',
+        ],
+      },
+      {
+        name: 'Tools & Accessories',
+        subcategories: [
+          'Hair Tools',
+          'Skincare Tools',
+          'Makeup Tools',
+          'Manicure & Pedicure Tools',
+          'Bath Accessories',
+        ],
+      },
+      {
+        name: 'Wellness',
+        subcategories: [
+          'Supplements',
+          'Vitamins',
+          'Essential Oils',
+          'Massage & Relaxation',
+          'Fitness Equipment',
+        ],
+      },
+      {
+        name: 'Feminine Care',
+        subcategories: [
+          'Sanitary Pads',
+          'Tampons',
+          'Menstrual Cups',
+          'Intimate Washes',
+          'Panty Liners',
+        ],
+      },
+    ],
+  },
+];
 
 const Header = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dropdown,setDropDown] = useState(false)
+
+  const [hoveredCategory, setHoveredCategory] = useState(null);
+  const [hoveredSubCategory, setHoveredSubCategory] = useState(null);
+
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -20,8 +454,8 @@ const Header = () => {
   }
 
   return (
-    <nav className="bg-white border-gray-200  dark:bg-gray-900">
-      <div className="flex flex-nowrap justify-between md:justify-center items-center gap-5 px-2 py-4">
+    <nav className="flex flex-col gap-3">
+      <div className="flex flex-nowrap justify-between bg-white border-gray-200  dark:bg-gray-900  md:justify-center items-center gap-5 px-2 py-4">
         <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <img src="/assets/shopme_logo.png" className="w-32" alt="Logo" />
           {/* <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"></span> */}
@@ -109,8 +543,19 @@ const Header = () => {
 
         </div>
       </div>
+
+
+    <Header2 
+      productCategories={productCategories}
+      hoveredCategory={hoveredCategory} 
+      setHoveredCategory={setHoveredCategory}
+      hoveredSubCategory={hoveredSubCategory}
+      setHoveredSubCategory={setHoveredSubCategory}
+      />
+
+
       <div className={`${sidebarOpen ? 'block' : 'hidden'} md:hidden fixed inset-0 bg-black bg-opacity-50 z-40`} onClick={toggleSidebar}></div>
-      <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:hidden fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out`}>
+      <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} overflow-scroll md:hidden fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out`}>
         <div className="p-4 relative">
         <button
             type="button"
@@ -128,17 +573,37 @@ const Header = () => {
               Shopnow
             </Link>
           </div>
-          <div className="relative mb-4">
+          <div className="bg-gray-200 mb-4 px-2 flex border items-center">
             <input
               type="text"
-              className="form-control py-2 w-full border rounded-md pl-4"
+              className=" py-2 w-full bg-inherit focus:outline-none rounded-md pl-4"
               placeholder="Search Product"
               aria-label="Search Product"
-              aria-describedby="basic-addon2"
+              // aria-describedby="basic-addon2"
             />
-            <span className="absolute right-0 top-0 bg-amber-800 p-3 rounded-r-md" id="basic-addon2">
-              <BsSearch className="text-white" />
+            <span id="basic-addon2">
+              <BsSearch className="text-black" />
             </span>
+          </div>
+          
+          <div className="flex gap-3 mb-4  justify-between">
+              <Link to="/wishlist" className="flex flex-col items-center gap-1 text-black">
+                <img src="/images/wishlist.svg" className="w-6" alt="wishlist" />
+                <p className="mb-0">WishList</p>
+              </Link>
+           
+              <Link to="/cart" className="flex flex-col items-center gap-1 text-black">
+                <img src="/images/cart.svg" className="w-6" alt="cart" />
+                <div className="flex gap-1">
+                  <p className="mb-0">$ 500</p>
+                </div>
+              </Link>
+           
+              <Link to="/login" className="flex flex-col items-center gap-1 text-black">
+                <img src="/assets/login.svg" className="w-6" alt="signUp" />
+                <p className="mb-0">Login</p>
+              </Link>
+            
           </div>
           <nav className="flex flex-col gap-3 mb-4">
             <NavLink to="/" className="text-black">HOME</NavLink>
@@ -170,70 +635,68 @@ const Header = () => {
                   </svg>
                 </button>
                 <div
+                onMouseLeave={()=>{setHoveredCategory(null)}}
                   id="doubleDropdown"
                   className={` ${dropdown ? 'block' : 'hidden'} bg-white divide-y divide-gray-100 rounded-lg  w-44 dark:bg-gray-700`}
                 >
-                  <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="doubleDropdownButton">
-                    <li>
-                      <a href="/" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                        Overview
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                        My downloads
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                        Billing
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" >
-                        Rewards
-                      </a>
-                    </li>
+                  {/* <Header2 /> */}
+                  <ul  className=" md:p-0  rounded-lg  space-x-8 rtl:space-x-reverse  mt-0 border-0 bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                    {productCategories.map((category, index) => (
+                      <li
+                        key={index}
+                        className="relative group "
+                        onMouseEnter={() => setHoveredCategory(category.name)}
+                        onClick={() => setHoveredCategory(category.name ? null : category.name)}
+                      >
+                        <button
+                          className="flex flex-col flex-nowrap w-full gap-2 justify-start  items-center py-2 px-3 text-gray-900 rounded hover:bg-gray-100 hover:bg-transparent md:border-0 hover:text-blue-600 md:p-0 dark:text-white  dark:hover:bg-gray-700 dark:hover:text-blue-500 dark:hover:bg-transparent dark:border-gray-700"
+                            onMouseEnter={() => setTimeout(() => setHoveredCategory(category.name), 200)}
+                            
+                        >
+                          {/* <img className='w-16 h-12' src={category.image} alt={category.name} /> */}
+                          <p className='flex items-center justify-center  gap-3 flex-nowrap'>{category.name} <span><FaChevronDown className={`w-3 h-3 ${hoveredCategory === category.name ? 'rotate-180' : ''} transition delay-100 duration-100`} /></span></p>
+                        </button>
+                        {hoveredCategory === category.name && (
+                          <div className=" z-10 mt-1 w-48 bg-white border border-gray-200  shadow-lg dark:bg-gray-800 dark:border-gray-600">
+                            <ul className="py-1 z-10">
+                              {category.subcategories.map((subcategory, subIndex) => (
+                                <li
+                                  key={subIndex}
+                                  className="relative group"
+                                  onMouseEnter={() => setHoveredSubCategory(subcategory.name)}
+                                  onMouseLeave={() => setHoveredSubCategory(null)}
+                                >
+                                  <button className=" w-full flex gap-2 items-center justify-between z-10 text-left px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+                                    {/* {subcategory.name} */}
+                                    <p className='flex items-center justify-center  gap-3 flex-nowrap'>{subcategory.name} <span><FaChevronDown className={`w-3 h-3 ${hoveredSubCategory === subcategory.name ? 'rotate-180' : ''} transition delay-100 duration-100`} /></span></p>
+                                    {/* <FaChevronRight className="ml-2 w-2.5 h-2.5 hover:rotate-90 transition delay-50" /> */}
+                                  </button>
+                                  {hoveredSubCategory === subcategory.name && (
+                                    <div className="right-full mt-1 w-48 bg-white border border-gray-200 shadow-lg dark:bg-gray-800 dark:border-gray-600">
+                                      <ul className="py-1">
+                                        {subcategory.subcategories.map((subSubCategory, subSubIndex) => (
+                                          <li key={subSubIndex}>
+                                            <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+                                              {subSubCategory}
+                                            </button>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </li>
+                    ))}
                   </ul>
-                  <div className="py-1">
-                    <a href="/" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                      Sign out
-                    </a>
-                  </div>
                 </div>
               </NavLink>
             <NavLink to="/blogs" className="text-black">BLOGS</NavLink>
             <NavLink to="/contact" className="text-black">CONTACT</NavLink>
           </nav>
-          <div className="flex flex-col gap-3">
-            <div>
-              <Link to="/compare-product" className="flex items-center gap-3 text-black">
-                <img src="/images/compare.svg" className="w-6" alt="compare" />
-                <p className="mb-0">Compare</p>
-              </Link>
-            </div>
-            <div>
-              <Link to="/wishlist" className="flex items-center gap-3 text-black">
-                <img src="/images/wishlist.svg" className="w-6" alt="wishlist" />
-                <p className="mb-0">WishList</p>
-              </Link>
-            </div>
-            <div>
-              <Link to="/cart" className="flex items-center gap-3 text-black">
-                <img src="/images/cart.svg" className="w-6" alt="cart" />
-                <div className="flex flex-col">
-                  <span className="badge bg-black text-white">0</span>
-                  <p className="mb-0">$ 500</p>
-                </div>
-              </Link>
-            </div>
-            <div>
-              <Link to="/login" className="flex items-center gap-3 text-black">
-                <img src="/assets/login.svg" className="w-6" alt="signUp" />
-                <p className="mb-0">Login</p>
-              </Link>
-            </div>
-          </div>
         </div>
       </div>
     </nav>

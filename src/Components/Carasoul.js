@@ -51,7 +51,7 @@ const Carousel = () => {
           </div>
         ))}
       </div>
-      <div className="absolute z-30 flex -translate-x-1/2 space-x-3 bottom-5 left-1/2">
+      <div className="absolute z-5 flex -translate-x-1/2 space-x-3 bottom-5 left-1/2">
         {imageArr.map((_, index) => (
           <button
             key={index}

@@ -39,10 +39,10 @@ const StoreCard = (props) => {
 
   return (
     <>
-   <div className={`${location.pathname === "/store" ? `col-span-${col}` : "col-span-3"}`} >
+   <div className={`${col ? `col-span-${col}` : "col-span-4"}`} >
     <Link 
         // to={'/product/:id'}
-         className="featured-card md:flex relative hover:shadow-xl md:gap-2 hover:scale-105 transition delay-50 bg-white rounded"
+         className={`featured-card flex ${col===4 || col===6 ? "flex-col" : "flex-row"} gap-3 relative hover:shadow-xl hover:scale-105 transition delay-50 bg-white rounded`}
          >
         <div className='icon absolute right-5 top-2'>
         <button className='border-0 bg-transparent' onClick={()=>{addToWishlist(product?._id)}}>{wishIds?.includes(product?._id) ? <FaHeart className='text-danger'/> : <GoHeart/>}</button>
