@@ -76,7 +76,7 @@ const MainProduct = () => {
                 return null;
             }
         })
-        if(cartIds.includes(curProduct?._id)){
+        if(cartIds?.includes(curProduct?._id)){
             setInCart(true);
         }else{
             setInCart(false)
