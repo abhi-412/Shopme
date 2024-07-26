@@ -27,8 +27,31 @@ const login = async (userData)=>{
     }
 }
 
-const getUserWishlist = async (userData)=>{
+const logout = async()=>{
+    localStorage.removeItem('token');
+}
+
+const addToCart = async(cart)=>{
+    console.log(config);
+    const response = await axios.post(`${base_url}user/cart`,cart,config);
+    if(response.data){
+        return response.data;
+    }else{
+        console.log("Error Occured");
+    }
+}
+
+const getUserWishlist = async ()=>{
     const response = await axios.get(`${base_url}user/wishlist`,config);
+    if(response.data){
+        return response.data;
+    }else{
+        console.log("Error Occured");
+    }
+}
+
+const getUserCart = async ()=>{
+    const response = await axios.get(`${base_url}user/get-cart`,config);
     if(response.data){
         return response.data;
     }else{
@@ -40,5 +63,8 @@ export const authService = {
     register,
     login,
     getOneUser,
-    getUserWishlist
+    getUserWishlist,
+    logout,
+    addToCart,
+    getUserCart,
 }

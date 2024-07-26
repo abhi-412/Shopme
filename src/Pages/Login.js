@@ -15,20 +15,21 @@ const Login = () => {
 
   const dispatch = useDispatch();
 
+
   let userSchema =  Yup.object({
     email : Yup.string().email("Email is Invalid").required("Email is required"),
     password : Yup.string().required("Password is required")
    })
- 
    let formik = useFormik({
      initialValues: {     
        email: "",
        password: "",
      },
      validationSchema:userSchema,
-     onSubmit: values => {
+     onSubmit: async values => {
        const userData = values;
        dispatch(loginUser(userData));
+       
      },
    })
 

@@ -10,6 +10,7 @@ import { getProducts } from '../features/products/productSlice'
 import StoreCard from '../Components/StoreCard'
 import { MdTune } from "react-icons/md";
 import Drawer from './Drawer'
+import { addToCart } from '../features/user/userSlice'
 
 const Categories = ["Watch","Tv","Camera","Laptop"];
 
@@ -54,6 +55,13 @@ const OurStore = () => {
         const price = e.target.value;
         setPriceFilterBy(price);
     }
+
+    const changeGrid = (cols)=>{
+        setGrid(cols);
+    }
+
+
+    
 
   return (
     <>
@@ -256,17 +264,17 @@ const OurStore = () => {
                                 <img src="images/gr3.svg"
                                     className='w-5 h-5 md:block hidden'  
                                     alt="" 
-                                    onClick={()=>{setGrid(4)}}
+                                    onClick={()=>{changeGrid(4)}}
                                     />
                                 <img src="images/gr2.svg"
                                     className='w-5 h-5 md:block hidden'  
                                     alt="" 
-                                    onClick={()=>{setGrid(6)}}
+                                    onClick={()=>{changeGrid(6)}}
                                     />
                                 <img src="images/gr.svg"
                                     className='w-5 h-5 md:block hidden'  
                                     alt="" 
-                                    onClick={()=>{setGrid(12)}}
+                                    onClick={()=>{changeGrid(12)}}
                                     />
                             </div>
                         </div>

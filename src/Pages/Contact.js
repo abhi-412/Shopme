@@ -1,14 +1,58 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import BreadCrumb from '../Components/BreadCrumb'
+import CustomInput from '../Components/CustomInput'
 import Meta from '../Components/Meta'
 import {FaHome,FaAddressBook} from 'react-icons/fa'
 import { IoIosMail } from "react-icons/io";
 import { BiInfoCircle } from "react-icons/bi";
 import Container from '../Components/Container';
-import CustomInput from '../Components/BreadCrumb'
+import { useFormik } from 'formik'
+import * as Yup from 'yup';
+import { useDispatch, useSelector } from 'react-redux';
+import { createEnquiry } from '../features/enquiry/enquirySlice'
+import { Link } from 'react-router-dom'
 
 
 const Contact = () => {
+
+  const [successPage,setSuccessPage] = useState(false);
+
+  const dispatch = useDispatch();
+
+  let enqSchema =  Yup.object({
+    name : Yup.string().required("Name is required").min(3,"Name should be at least 3 characters"),
+    email : Yup.string().email("Email is Invalid").required("Email is required"),
+    mobile : Yup.number().required("Mobile is required").min(1000000000,"Mobile number should have minimum 10 digits").max(9999999999,"Mobile number should should have maximum 10 digits"),
+    comment : Yup.string().required("Message is required").min(10,"Message should be at least 10 characters")
+   })
+ 
+   let formik = useFormik({
+     initialValues: {     
+       name: "",
+       email: "",
+       mobile: "",
+       comment: "",
+     },
+
+     validationSchema:enqSchema,
+     onSubmit: values => {
+       const enqData = values;
+       dispatch(createEnquiry(enqData));
+     },
+   })
+
+
+   let {isSuccess,createdEnquiry} = useSelector(state=>state.enquiry)
+
+  useEffect(()=>{
+    if(isSuccess && createdEnquiry?._id){
+      setSuccessPage(true);
+     }
+  },[isSuccess,createdEnquiry])
+
+   console.log(successPage);
+
+
   return (
     <>
     <Meta title={"Contact Us"} />
@@ -34,31 +78,89 @@ const Contact = () => {
         <div className="col-12 mt-5 mb-5">
             <div className="content-wrapper d-flex justify-content-between">
               <div>
-                <h3 className='contact-title'>Contact Us</h3>
-                <form action="" className='d-flex flex-column gap-15'>
-                  <div>
-                    <input type="text" className="form-control" placeholder='Name' />
+                <h3 className='contact-title mb-3'>Contact Us</h3>
+                {successPage && <div className='my-3 flex flex-col items-center gap-2 justify-center'>
+                  <p className='text-green-600'>Enquiry Submitted Successfully. We will get back to you shortly.</p>
+                  <div className='flex gap-3 flex-wrap items-center'>
+                  <button className='bg-gray-800 py-1.5 px-4 rounded-full text-gray-50' onClick={()=>setSuccessPage(false)}>Add New Enquiry</button>
+                  <Link className='bg-gray-400 py-1.5 px-4 rounded-full text-gray-50' to="/store">Continue Shopping</Link>
                   </div>
-                  <div>
-                    <input type="email" placeholder='Email' className="form-control" />
-                  </div>
-                  <div>
-                    <input type="tel" placeholder='Mobile' className="form-control" />
-                  </div>
-                  <div>
-                    <textarea
-                      cols="30"
-                      rows="4" 
-                      className="form-control w-100" 
-                      placeholder='Comments'
-                      />
-                  </div>
-                  <div>
-                    <button className='button'>
-                        Submit
-                    </button>
-                  </div>
-                </form>
+                  
+                  </div>}
+                {!successPage && (
+                            <form onSubmit={formik.handleSubmit} className='d-flex flex-column gap-15'>
+                              <div className="d-flex flex-column  justify-items-center gap-2"> 
+                                <CustomInput
+                                type="text"
+                                name='name'
+                                placeholder='Full Name'
+                                onCh={formik.handleChange}
+                                val={formik.values.name}  
+                                //  onBl={formik.handleBlur("name")}
+                                />
+                                    <div>
+                                        {formik.touched.name && formik.errors.name ? (
+                                            <div><p className='text-sm text-red-400 text-danger'>{formik.errors.name}</p></div>
+                                        ) : null}
+                                    </div>
+                              </div>
+                              <div className="d-flex flex-column  justify-items-center gap-2"> 
+                                <CustomInput
+                                type="text"
+                                name='email'
+                                placeholder='Email Address'
+                                onCh={formik.handleChange}
+                                val={formik.values.email}  
+                                //  onBl={formik.handleBlur("email")}
+                                />
+                                    <div>
+                                        {formik.touched.email && formik.errors.email ? (
+                                            <div><p className='text-sm text-red-400 text-danger'>{formik.errors.email}</p></div>
+                                        ) : null}
+                                    </div>
+                              </div>
+                              <div className="d-flex flex-column  justify-items-center gap-2"> 
+                                <CustomInput
+                                type="text"
+                                name='mobile'
+                                placeholder='Phone Number'
+                                onCh={formik.handleChange}
+                                val={formik.values.mobile}  
+                                //  onBl={formik.handleBlur("mobile")}
+                                />
+                                    <div>
+                                        {formik.touched.mobile && formik.errors.mobile ? (
+                                            <div><p className='text-sm text-red-400 text-danger'>{formik.errors.mobile}</p></div>
+                                        ) : null}
+                                    </div>
+                              </div>
+                              <div className="d-flex flex-column  justify-items-center gap-2"> 
+
+                                  <textarea
+                                    cols="30"
+                                    name='comment'
+                                    onChange={formik.handleChange}
+                                    value={formik.values.comment}
+                                    rows="4" 
+                                    className="form-control w-100" 
+                                    placeholder='Comments'
+                                    />
+                                    <div>
+                                        {formik.touched.comment && formik.errors.comment ? (
+                                            <div><p className='text-sm text-red-400 text-danger'>{formik.errors.comment}</p></div>
+                                        ) : null}
+                                    </div>
+                              </div>
+                      
+                        
+                      
+                              <div>
+                                <button className='button'>
+                                    Submit
+                                </button>
+                              </div>
+                            </form>
+                )}
               </div>
               <div>
                 <h3 className='contact-title mb-4'>Get in Touch with Us</h3>

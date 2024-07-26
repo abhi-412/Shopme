@@ -4,16 +4,15 @@ import Meta from '../Components/Meta'
 import FeaturedCard from '../Components/FeaturedCard'
 import ReactStars from 'react-stars'
 import ReactImageZoom from 'react-image-zoom'
-import Color from '../Components/Color'
-import { IoIosHeartEmpty } from "react-icons/io";
 import { GoGitCompare, GoHeart, GoHeartFill } from "react-icons/go";
 import Container from '../Components/Container'
 import { useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { addToWishList, getProduct, getProducts } from '../features/products/productSlice'
-import Breadcrumb2 from '../Components/BreadCrumb2'
-import { getUserWishlist } from '../features/user/userSlice'
+import { addToCart, getUserCart, getUserWishlist } from '../features/user/userSlice'
 import { FaHeart } from 'react-icons/fa'
+import { IoBagAddSharp } from "react-icons/io5";
+import { BsBagDash } from "react-icons/bs";
 
 const Categories = ["Watch","Tv","Camera","Laptop"];
 const size = ["S","M","L","XL","XXL"]; 
@@ -23,27 +22,35 @@ const tags = ["Laptops","Mobiles","Watches","Earphones"];
 
 
 const MainProduct = () => {
+
+    const {wishlist,cart} = useSelector(state=>state.auth);
+    const curProduct = useSelector((state)=>state.product?.product);
+
+
     const [ordered, setOrdered] = useState(true);
     const [rating,setRating] = useState(0);
     const [imgActive, setImgActive] = useState(0)
+    const [color,setColor] = useState("");
+    const [pSize,setPsize] = useState('M');
+    const [count,setCount] = useState(1)
+    const [inCart,setInCart] = useState(false)
 
     const location = useLocation();
-    const path = location.pathname;
     const id = location.state.id;
     const dispatch = useDispatch();
 
     useEffect(()=>{
         dispatch(getProducts());
         dispatch(getUserWishlist());
-
+        dispatch(getUserCart());
         if(id){
             dispatch(getProduct(id))
         }
+        if(curProduct?._id){
+            setColor(curProduct?.color[0]?.color);
+        }
     },[])
 
-    const wishlist = useSelector(state=>state.auth?.wishlist);
-
-   
 
     const addToWishlist = (id)=>{
         dispatch(addToWishList(id));
@@ -58,11 +65,47 @@ const MainProduct = () => {
     })
 
    
+        
+   
 
-    const curProduct = useSelector((state)=>state.product?.product);
+    useEffect(()=>{
+        const cartIds = cart?.products?.map((item)=>{
+            if(item?.product?._id === curProduct?._id){
+                return item?.product?._id;
+            }else{
+                return null;
+            }
+        })
+        if(cartIds.includes(curProduct?._id)){
+            setInCart(true);
+        }else{
+            setInCart(false)
+        }
+    },[cart?.products, curProduct?._id,dispatch])
     const products = useSelector((state)=>state.product?.products)
 
+
     const featuredProducts = products?.filter((item)=>item?.tags.includes('Featured'));
+
+const addProductToCart = ()=>{
+
+    const cart = {
+   
+        cart: [
+            {
+                _id: curProduct?._id,
+                count: count,
+                color: color,
+                size:pSize
+            },
+        ]
+    }
+    dispatch(addToCart(cart));
+    setTimeout(()=>{
+        dispatch(getUserCart());
+    },2000)
+    
+}
 
     const copyToClipboard = (text) => {
         // console.log('text', text)
@@ -120,7 +163,7 @@ const MainProduct = () => {
                             <div className="d-flex align-items-center gap-10">
                             <ReactStars
                                 count={5}
-                                value={(curProduct?.totalRating)}
+                                value={parseInt(curProduct?.totalRating)}
                                 edit={false}
                                 size={24}
                                 color2={'#ffd700'} 
@@ -169,7 +212,7 @@ const MainProduct = () => {
                                 <h6>Size :</h6>
                                 <div className='d-flex flex-wrap gap-15'>
                                     {size.map((s,i)=>{
-                                    return <span key={i} className='badge border border-1 border-secondary bg-white text-dark'>{s}</span>
+                                    return <button onClick={()=>setPsize(s)} key={i} className='badge border border-1 border-secondary bg-white text-dark'>{s}</button>
                                     })}
                                 </div>
                             </div>
@@ -178,28 +221,33 @@ const MainProduct = () => {
                                 <h6 className='mb-0'>Colors:</h6>
                                 <ul className='flex gap-2 '>
                                 {curProduct?.color?.map((c,i)=>(
-                                    
-                                    <li className='text-center rounded-full border border-gray-900' key={i} style={{backgroundColor:`${c.color === "Voilet" ? "violet" : c.color}`, width:"20px", height:"20px", borderRadius:"50%"}}></li>
+                                    <button onClick={()=>setColor(c.color)} className='text-center rounded-full border border-gray-900' key={i} style={{backgroundColor:`${c.color === "Voilet" ? "violet" : c.color}`, width:"20px", height:"20px", borderRadius:"50%"}}></button>
                                 ))}
                                 </ul>
                             </div>
 
                             <div className='flex md:flex-row flex-col mt-2 mb-3 gap-3 items-start md:items-center'>
-                                <div className='flex gap-2  items-center'> 
+                                <div className='flex  gap-2  items-center'> 
                                 <h6>Quantity:</h6>
-                                    <input type="number"
-                                    style={{width:"60px"}} 
+                                    <div className='flex flex-col gap-1'>
+                                    <input 
+                                    type="number"
+                                    onChange={(e)=>{setCount(e.target.value)}}
+                                    value={count}
                                     min={0}
-                                    max={10}
+                                    max={200}
                                     id='' 
-                                    className='form-control'
+                                    className='w-24 p-2 border border-gray-200 focus:decoration-none'
                                     />
+                                    {count > 200 && <p className='text-sm text-red-500 mt-1'>Please select a value between 1 and 200 </p>}
+                                    </div>
                                 </div>
                             </div>
                             <div className="flex md:gap-5 gap-3 items-center flex-wrap">
-                                    <button className='button login text-nowrap'>Add to Cart</button>
-                                    <button className='signup-button text-nowrap'>Buy Now</button>
-                                </div>
+                                {!inCart && <button disabled={inCart} onClick={addProductToCart} className='button login text-nowrap flex items-center gap-2'><IoBagAddSharp />Add To Cart</button>}
+                                {inCart && <button disabled={!inCart} onClick={addProductToCart} className='button login text-nowrap flex items-center gap-2'><BsBagDash className='font-bold' />Remove from Cart</button>}
+                                <button className='signup-button text-nowrap'>Buy Now</button>
+                            </div>
                             
                             <div className='flex items-center gap-3 flex-wrap'>
                                 <button className='flex gap-1 items-center text-nowrap' ><GoGitCompare className='text-lg' />  Add to Compare</button>
@@ -287,7 +335,7 @@ const MainProduct = () => {
                                 <div>
                                 <ReactStars
                                     count={5}
-                                    value={rating}
+                                    value={parseInt(rating)}
                                     edit={true}
                                     size={24}
                                     color2={'#ffd700'} 
@@ -317,7 +365,7 @@ const MainProduct = () => {
                                     <h6 className='mb-0'>Abhi</h6>
                                     <ReactStars
                                         count={5}
-                                        value={3.5}
+                                        value={3}
                                         edit={false}
                                         size={24}
                                         color2={'#ffd700'} 

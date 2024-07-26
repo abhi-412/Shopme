@@ -5,7 +5,9 @@ import ReactStars from 'react-stars';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToWishList } from '../features/products/productSlice';
 import { FaHeart } from "react-icons/fa";
-import { getOneUser, getUserWishlist } from '../features/user/userSlice';
+import { addToCart, getOneUser, getUserCart, getUserWishlist } from '../features/user/userSlice';
+import { TbLoader } from 'react-icons/tb';
+import { IoBagAddSharp,IoBagCheck } from "react-icons/io5";
 
 const StoreCard = (props) => {
     const {col,product} = props;
@@ -16,10 +18,11 @@ const StoreCard = (props) => {
 
     const parser = new DOMParser();
 
-    const wishlist = useSelector(state=>state.auth?.wishlist);
+    const {wishlist,cart} = useSelector(state=>state.auth);
 
     useEffect(()=>{
         dispatch(getUserWishlist());
+        dispatch(getUserCart());
     },[dispatch])
 
     const addToWishlist = (id)=>{
@@ -33,20 +36,61 @@ const StoreCard = (props) => {
             return item?._id;
         }
     })
+    const [inCart,setInCart] = useState(false)
 
-    console.log(col)
 
+    useEffect(()=>{
+        const cartIds = cart?.products?.map((item)=>{
+            if(item?.product?._id === product?._id){
+                return item?.product?._id;
+            }else{
+                return null;
+            }
+        })
+        console.log(cartIds);
+        if(cartIds?.includes(product?._id)){
+            setInCart(true);
+        }else{
+            setInCart(false)
+        }
+    },[cart?.products, product?._id,dispatch])
+
+    const isAddingToCart = useSelector((state)=>state.auth?.isLoading)
+
+    let isLoading = useSelector((state) => state.product?.isLoading);
+
+
+    const addProductToCart = ()=>{
+        const cart = {
+            cart: [
+                {
+                    _id: product?._id,
+                    count: 1,
+                    color: product?.colors?.length ? product.colors[0] : "all",
+                    size:"M"
+                },
+            ]
+        }
+        dispatch(addToCart(cart));
+        setTimeout(()=>{
+            dispatch(getUserCart());
+        },2000)
+    }
+   
 
   return (
     <>
-   <div className={`${col ? `col-span-${col}` : "col-span-4"}`} >
+   <div className={`${col!==1 ? `col-span-${col}` : "col-span-4"}`} >
     <Link 
         // to={'/product/:id'}
          className={`featured-card flex ${col===4 || col===6 ? "flex-col" : "flex-row"} gap-3 relative hover:shadow-xl hover:scale-105 transition delay-50 bg-white rounded`}
          >
         <div className='icon absolute right-5 top-2'>
-        <button className='border-0 bg-transparent' onClick={()=>{addToWishlist(product?._id)}}>{wishIds?.includes(product?._id) ? <FaHeart className='text-danger'/> : <GoHeart/>}</button>
-        </div>
+                    <button hidden={isLoading} className='border-0 bg-transparent' onClick={() => {addToWishlist(product?._id); }}>
+                         {wishIds?.includes(product?._id) ? <FaHeart className='text-danger' /> : <GoHeart />}
+                    </button>
+                    {isLoading && <TbLoader className='text-danger' />}
+                </div>
         <div className='featured-image mb-3 mx-4'>
         <img className='img-fluid'  src={product?.images[0]?.url || "/assets/watch.jpg"} alt="Featured product" />
         {product?.images?.length > 1 && 
@@ -72,11 +116,13 @@ const StoreCard = (props) => {
             </div>
             <h5 className='price'>₹ {product?.price} only</h5>
         </div>
-        <div className='action-bar absolute top-10 right-5'>
+        <div className='action-bar absolute top-10 right-3'>
             <div className='d-flex flex-column gap-15'>
-                <button className='border-0 bg-transparent'>
-                    <img src="/images/add-cart.svg" alt="cart" />
-                </button>
+                    <button hidden={isAddingToCart} disabled={isAddingToCart} className='border-0 bg-transparent' onClick={() => {addProductToCart(product?._id); }}>
+                       {!inCart ? <IoBagAddSharp /> : <IoBagCheck className='text-green-500'/>}
+                    </button>
+                    {isAddingToCart && <TbLoader hidden={!isAddingToCart} className='text-green-500' />}
+                    
                 <button className='border-0 bg-transparent'>
                     <img src="/images/view.svg" alt="view" />
                 </button>

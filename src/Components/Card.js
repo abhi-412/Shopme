@@ -6,9 +6,9 @@ const Card = ({blog}) => {
   const parser = new DOMParser();
   return (
     <>
-        <div className=" bg-gray-50 rounded min-w-[200px] p-2 flex flex-col gap-2">
+        <div className=" bg-gray-50 rounded w-[250px] min-w-[240px] p-2 flex flex-col gap-2">
           <div className='w-full flex flex-col gap-2 mb-2'>
-          <img className=" w-full h-[130px] " src={blog?.images?.length ? blog.images[0]?.url : "/images/blog-1.jpg" } alt="Card cap" />
+          <img className=" w-full h-[150px] " src={blog?.images?.length ? blog.images[0]?.url : "/images/blog-1.jpg" } alt="Card cap" />
           <p className='text-sm font font-semibold text-purple-500'>{blog?.author}</p>
           </div>
         <div className="card-body">

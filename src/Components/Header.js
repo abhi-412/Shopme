@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { BsSearch } from 'react-icons/bs';
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
@@ -7,7 +7,9 @@ import { FaRegHeart,FaShoppingCart,FaRegUserCircle, FaChevronRight } from "react
 import { FiMenu } from 'react-icons/fi';
 import { FaChevronDown } from 'react-icons/fa';
 import Header2 from './Header2';
-
+import { IoIosLogOut } from "react-icons/io";
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../features/user/userSlice';
 
 
 const productCategories = [
@@ -453,6 +455,18 @@ const Header = () => {
     setDropDown(!dropdown)
   }
 
+const customer = localStorage.getItem('customer') ? JSON.stringify(localStorage.getItem('customer')) : null
+
+  const dispatch = useDispatch();
+
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
+  const handleLogout = ()=>{
+   if(customer){
+    dispatch(logout())
+   }
+  } 
+
   return (
     <nav className="flex flex-col gap-3">
       <div className="flex flex-nowrap justify-between bg-white border-gray-200  dark:bg-gray-900  md:justify-center items-center gap-5 px-2 py-4">
@@ -532,10 +546,21 @@ const Header = () => {
                       
                     </Link>
                   
-                    <Link to="/login" className="flex items-center gap-2 text-black">
-                      <FaRegUserCircle className='text-xl text-orange-800'/>
-                      <p className="mb-0">Login</p>
-                    </Link>
+                  {isLoggedIn ?
+                    
+                    <button onClick={handleLogout}  className="flex items-center gap-2 text-black">
+                      <IoIosLogOut className='text-xl text-orange-800'/>
+                      <p className="mb-0">Logout</p>
+                    </button>
+
+                    :
+
+                        <Link to="/login" className="flex items-center gap-2 text-black">
+                        <FaRegUserCircle className='text-xl text-orange-800'/>
+                        <p className="mb-0">Login</p>
+                      </Link>
+                  }
+                   
                 
                 
                 </ul>
@@ -599,10 +624,20 @@ const Header = () => {
                 </div>
               </Link>
            
-              <Link to="/login" className="flex flex-col items-center gap-1 text-black">
-                <img src="/assets/login.svg" className="w-6" alt="signUp" />
-                <p className="mb-0">Login</p>
-              </Link>
+              {isLoggedIn ?
+                    
+                    <button onClick={handleLogout}   className="flex items-center gap-2 text-black">
+                      <IoIosLogOut className='text-xl text-orange-800'/>
+                      <p className="mb-0">Logout</p>
+                    </button>
+
+                    :
+
+                        <Link to="/login" className="flex items-center gap-2 text-black">
+                        <FaRegUserCircle className='text-xl text-orange-800'/>
+                        <p className="mb-0">Login</p>
+                      </Link>
+                  }
             
           </div>
           <nav className="flex flex-col gap-3 mb-4">
@@ -627,9 +662,9 @@ const Header = () => {
                   >
                     <path
                       stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="m1 1 4 4 4-4"
                     />
                   </svg>

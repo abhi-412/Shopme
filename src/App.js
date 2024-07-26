@@ -20,8 +20,33 @@ import PrivacyPolicy from './Pages/PrivacyPolicy'
 import MainProduct from './Pages/MainProduct';
 import Cart from './Pages/Cart';
 import Checkout from './Pages/Checkout';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import {checkTokenExpiration} from "./features/user/userSlice"
 
 function App() {
+  const dispatch = useDispatch();
+const [isLoggedIn,setIsLoggedIn] = useState(false);
+
+
+  useEffect(() => {
+    const res = dispatch(checkTokenExpiration());
+    console.log(res);
+    if(res){
+      setIsLoggedIn(false);
+    }
+}, []);
+
+const customer = localStorage.getItem('customer') ? JSON.stringify(localStorage.getItem('customer')) : null
+
+useEffect(()=>{
+    if(customer){
+      setIsLoggedIn(true)
+    }else{
+      setIsLoggedIn(false);
+    }
+},[])
+
   return (
     <>
         <BrowserRouter>

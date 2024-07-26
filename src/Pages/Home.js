@@ -24,6 +24,7 @@ const Home = () => {
 
   const blogs = useSelector((state)=>state.blog?.blogs)
   const products = useSelector((state)=>state.product?.products)
+  
 
   const featuredProducts = products?.filter((item)=>item?.tags.includes('Featured'));
   const specialProducts = products?.filter((item)=>item?.tags.includes('Special'));
@@ -237,10 +238,10 @@ const Home = () => {
     <div className='my-3'>
               <h4 className='text-2xl font-semibold'>Read Our Blogs Here</h4>
             </div>
-    <div className="flex flex-no-wrap gap-3 overflow-x-scroll hide-scrollbar">
+    <div className="flex flex-nowrap gap-3 overflow-x-scroll hide-scrollbar">
             
             {blogs?.map((blog)=>(
-                <Card key={blog._id} blog={blog} />
+                <Card key={blog?._id} blog={blog} />
             ))}
           </div>
 

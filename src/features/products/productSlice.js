@@ -59,7 +59,9 @@ export const productSlice = createSlice({
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(getProducts.pending,(state)=>{
-            state.isLoading = true
+            state.isLoading = true;
+            state.isSuccess = false;
+            state.isError = false;
         })
         .addCase(getProducts.fulfilled,(state,action)=>{
             state.isLoading = false;
@@ -73,7 +75,9 @@ export const productSlice = createSlice({
             state.isSuccess = false;
             state.message = action.error;
         }).addCase(getProduct.pending,(state)=>{
-            state.isLoading = true
+            state.isLoading = true;
+            state.isSuccess = false;
+            state.isError = false;
         })
         .addCase(getProduct.fulfilled,(state,action)=>{
             state.isLoading = false;
@@ -87,7 +91,9 @@ export const productSlice = createSlice({
             state.isSuccess = false;
             state.message = action.error;
         }).addCase(addToWishList.pending,(state)=>{
-            state.isLoading = true
+            state.isLoading = true;
+            state.isSuccess = false;
+            state.isError = false;
         })
         .addCase(addToWishList.fulfilled,(state,action)=>{
             state.isLoading = false;

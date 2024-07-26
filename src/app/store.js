@@ -3,11 +3,13 @@ import authReducer from "../features/user/userSlice";
 import productReducer from "../features/products/productSlice";
 import blogReducer from "../features/blog/blogSlice";
 import couponReducer from "../features/coupon/couponSlice";
+import enquiryReducer from "../features/enquiry/enquirySlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     product:productReducer,
     blog:blogReducer,
     coupon:couponReducer,
+    enquiry:enquiryReducer,
   },
 });
