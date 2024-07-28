@@ -459,7 +459,7 @@ const customer = localStorage.getItem('customer') ? JSON.stringify(localStorage.
 
   const dispatch = useDispatch();
 
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn); 
 
   const handleLogout = ()=>{
    if(customer){

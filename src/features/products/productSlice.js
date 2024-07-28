@@ -41,12 +41,25 @@ export const addToWishList = createAsyncThunk(
     }
 )
 
+export const addReview = createAsyncThunk(
+    "product/rating",
+    async(review,ThunkAPI)=>{
+        try{
+            const res = await productService.addReview(review);
+            return res;
+        }catch(error){
+            return ThunkAPI.rejectWithValue(error);
+        }
+    }
+)
+
 
 
 
 const initialState = {
     products: [],
     product:{},
+    newReview:{},
     isError:false,
     isLoading:false,
     isSuccess:false,
@@ -108,6 +121,25 @@ export const productSlice = createSlice({
             state.message = action.error;
             if(state.isError){
                 toast.error("Something went wrong")
+            }
+        }).addCase(addReview.pending,(state)=>{
+            state.isLoading = true;
+            state.isSuccess = false;
+            state.isError = false;
+        })
+        .addCase(addReview.fulfilled,(state,action)=>{
+            state.isLoading = false;
+            state.isError = false;
+            state.isSuccess = true;
+            state.newReview = action.payload;
+        })
+        .addCase(addReview.rejected,(state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.isSuccess = false;
+            state.message = action.error;
+            if(state.isError){
+                toast.error("Couldn't add Review");
             }
         })
     },

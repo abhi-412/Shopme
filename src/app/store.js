@@ -4,6 +4,9 @@ import productReducer from "../features/products/productSlice";
 import blogReducer from "../features/blog/blogSlice";
 import couponReducer from "../features/coupon/couponSlice";
 import enquiryReducer from "../features/enquiry/enquirySlice";
+import categoryReducer from "../features/category/categorySlice";
+import colorReducer from "../features/color/colorSlice";
+
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -11,5 +14,7 @@ export const store = configureStore({
     blog:blogReducer,
     coupon:couponReducer,
     enquiry:enquiryReducer,
+    category:categoryReducer,
+    color:colorReducer,
   },
 });

@@ -11,20 +11,13 @@ import { IoBagAddSharp,IoBagCheck } from "react-icons/io5";
 
 const StoreCard = (props) => {
     const {col,product} = props;
-
     const dispatch = useDispatch();
-    // console.log(grid);
-    let location=useLocation();
-
     const parser = new DOMParser();
-
     const {wishlist,cart} = useSelector(state=>state.auth);
-
     useEffect(()=>{
         dispatch(getUserWishlist());
         dispatch(getUserCart());
     },[dispatch])
-
     const addToWishlist = (id)=>{
         dispatch(addToWishList(id));
         setTimeout(() =>{
@@ -37,8 +30,7 @@ const StoreCard = (props) => {
         }
     })
     const [inCart,setInCart] = useState(false)
-
-
+    
     useEffect(()=>{
         const cartIds = cart?.products?.map((item)=>{
             if(item?.product?._id === product?._id){
@@ -47,7 +39,6 @@ const StoreCard = (props) => {
                 return null;
             }
         })
-        console.log(cartIds);
         if(cartIds?.includes(product?._id)){
             setInCart(true);
         }else{
@@ -59,7 +50,7 @@ const StoreCard = (props) => {
 
     let isLoading = useSelector((state) => state.product?.isLoading);
 
-
+    let desc = product?.description && parser.parseFromString(product?.description,"text/html").body.textContent;
     const addProductToCart = ()=>{
         const cart = {
             cart: [
@@ -80,27 +71,27 @@ const StoreCard = (props) => {
 
   return (
     <>
-   <div className={`${col!==1 ? `col-span-${col}` : "col-span-4"}`} >
+   <div className={`${col===4 ? "col-span-4" : col===6 ? "col-span-6" : "col-span-12"}  relative hover:shadow-xl hover:scale-105 transition delay-50 bg-white rounded`} >
     <Link 
-        // to={'/product/:id'}
-         className={`featured-card flex ${col===4 || col===6 ? "flex-col" : "flex-row"} gap-3 relative hover:shadow-xl hover:scale-105 transition delay-50 bg-white rounded`}
+        to={`/product/${product?._id}`}
+         className={`featured-card flex ${col===4 || col===6 ? "flex-col " : "md:flex-row flex-col"} gap-3`}
          >
-        <div className='icon absolute right-5 top-2'>
+                <div className='icon absolute right-5 top-2'>
                     <button hidden={isLoading} className='border-0 bg-transparent' onClick={() => {addToWishlist(product?._id); }}>
                          {wishIds?.includes(product?._id) ? <FaHeart className='text-danger' /> : <GoHeart />}
                     </button>
                     {isLoading && <TbLoader className='text-danger' />}
                 </div>
         <div className='featured-image mb-3 mx-4'>
-        <img className='img-fluid'  src={product?.images[0]?.url || "/assets/watch.jpg"} alt="Featured product" />
+        <img className='img-fluid h-[170px]'  src={product?.images[0]?.url || "/assets/watch.jpg"} alt="Featured product" />
         {product?.images?.length > 1 && 
-            <img className='img-fluid'  src={product?.images[1]?.url || "/assets/watch.jpg"} alt="Featured product" />
+            <img className='img-fluid h-[170px]'  src={product?.images[1]?.url || "/assets/watch.jpg"} alt="Featured product" />
         } 
         </div>
         <div className="px-4 py-3">
             <h6 className="brand">{product?.brand || 'Timex'}</h6>
             <p className="featured-item-text">{product?.title} </p>
-            <p className={`description ${col===12 ? "block" : "hidden"}`}>{parser.parseFromString(product?.description,"text/html").body.textContent}</p>
+            <p className={`description ${col===12 ? "block" : "hidden"}`}>{desc.length > 140 ? `${desc.slice(0,140)}...` : desc}</p>
             <div className='d-flex align-items-center gap-3'>
                 
             <ReactStars
@@ -116,6 +107,8 @@ const StoreCard = (props) => {
             </div>
             <h5 className='price'>₹ {product?.price} only</h5>
         </div>
+    </Link>
+
         <div className='action-bar absolute top-10 right-3'>
             <div className='d-flex flex-column gap-15'>
                     <button hidden={isAddingToCart} disabled={isAddingToCart} className='border-0 bg-transparent' onClick={() => {addProductToCart(product?._id); }}>
@@ -132,7 +125,6 @@ const StoreCard = (props) => {
             </div>
 
         </div>
-    </Link>
    </div>
 
 </>

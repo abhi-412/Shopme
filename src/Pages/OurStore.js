@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import BreadCrumb from '../Components/BreadCrumb'
 import Meta from '../Components/Meta'
 import ReactStars from 'react-stars'
-import FeaturedCard from '../Components/FeaturedCard'
 import Color from '../Components/Color'
 import Container from '../Components/Container'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,9 +9,9 @@ import { getProducts } from '../features/products/productSlice'
 import StoreCard from '../Components/StoreCard'
 import { MdTune } from "react-icons/md";
 import Drawer from './Drawer'
-import { addToCart } from '../features/user/userSlice'
+import { getcategories } from '../features/category/categorySlice'
+import { getColors } from '../features/color/colorSlice'
 
-const Categories = ["Watch","Tv","Camera","Laptop"];
 
 const size = ["S","M","L","XL","XXL"]; 
 
@@ -27,6 +26,7 @@ const options = [["manual","Featured"],["best-selling","Best Selling"],
 const OurStore = () => {
     const [priceFilterBy, setPriceFilterBy] = useState(50000);
     const [grid,setGrid] = useState(12);
+    const [color,setColor] = useState("");
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -37,10 +37,14 @@ const OurStore = () => {
     const dispatch = useDispatch();
 
     const productState = useSelector(state=>state.product);
+    const categories = useSelector(state=>state.category.categories);
+    const colors = useSelector(state=>state.color.colors);
     const {products, isLoading,isError,message,isSuccess} = productState;
 
     useEffect(()=>{
         dispatch(getProducts());
+        dispatch(getcategories());
+        dispatch(getColors());
     },[])
 
     useEffect(()=>{
@@ -73,33 +77,36 @@ const OurStore = () => {
     {/* <Drawer handlePriceRange={handlePriceRange} Categories={Categories} size={size} tags={tags} priceFilterBy={priceFilterBy}/> */}
     {isDrawerOpen && (
         <Drawer 
-          Categories={Categories} 
+          Categories={categories} 
           priceFilterBy={priceFilterBy} 
           handlePriceRange={handlePriceRange} 
           size={size} 
           tags={tags} 
+          colors={colors}
+          setColor={setColor}
+          color={color}
           toggleDrawer={toggleDrawer}
           isDrawerOpen={isDrawerOpen}
         />
       )}
 
         <div className="grid grid-cols-12 gap-8">
-                <div className="md:col-span-3 md:block hidden p-0">
-                     <div className='text-dark filter-card mb-3'>
-                        <h3 className="filter-title">Shop By Category</h3>
-                        <ul>
-                            {Categories.map((cat)=>{
-                                return <li>{cat}</li>
+                <div className="md:col-span-3  hidden p-0 md:flex flex-col gap-4">
+                     <div className='text-dark bg-white rounded-xl p-3 flex flex-wrap gap-3 mb-3'>
+                        <h3 className="text-md font-semibold">Shop By Category</h3>
+                        <ul className='flex flex-wrap gap-3'>
+                            {categories?.length > 0 && categories.map((cat)=>{
+                                return <li key={cat?._id} className='badge bg-light text-secondary cursor-pointer rounded-3 py-2 px-2'>{cat.title}</li>
                             })}
                         </ul>
                      </div>
 
 
 
-                     <div className='text-dark filter-card mb-3'>
-                     <h3 className="filter-title mb-3">Filter By</h3>
-                        <div>
-                            <h5 className='sub-title'>Availibility</h5>
+                     <div className='text-dark bg-white rounded-xl p-3 flex flex-col flex-wrap gap-3 mb-3'>
+                     <h3 className="text-md font-semibold mb-3">Filter By</h3>
+                        <div className='flex flex-col cursor-pointer'>
+                            <h5 className='text-md mb-2'>Availibility</h5>
 
                             <div className="form-check">
                                 <input type="checkbox" 
@@ -109,7 +116,7 @@ const OurStore = () => {
                             
                                 />
                                 <label htmlFor="" 
-                                className="form-check-label"
+                                className="form-check-label text-sm"
                                 >
                                    In Stock [1]
                                 </label>
@@ -117,24 +124,23 @@ const OurStore = () => {
 
                             <div className="form-check">
                                 <input type="checkbox" 
-                                className="form-check-input" 
+                                className="form-check-input " 
                                 value={""}
                                 id=''
-                                checked
                                 />
                                 <label htmlFor="" 
-                                className="form-check-label"
+                                className="form-check-label text-sm"
                                 >
                                    Out of Stock [0]
                                 </label>
                             </div>
                         </div>
                         
-                        <div className='mb-3'>
-                            <h5 className='sub-title mb-3'>Price</h5>
+                        <div >
+                            <h5 className='text-md mb-2'>Price</h5>
 
-                            <div className="form-range d-flex flex-column justify-content-center gap-2">
-                            <h6 className=''>From $0 to ${priceFilterBy}</h6>
+                            <div className="flex flex-col justify-center gap-2">
+                            <h6 className='text-sm'>From $0 to ${priceFilterBy}</h6>
                                 <div className="filter-range">
                                 <input type="range"
                                 className="form-range"
@@ -149,26 +155,27 @@ const OurStore = () => {
                          </div>
                         </div>
                         
-                        <div className='mb-3'>
-                            <h5 className='sub-title mb-3'>Colors</h5>
-
-                            <div>
-                                <Color />
+                        <div className='flex items-center flex-wrap gap-2 '>
+                                <h6 className='mb-0'>Colors:</h6>
+                                <ul className='flex gap-2 flex-wrap'>
+                                {colors?.map((c,i)=>(
+                                    <button onClick={()=>setColor(c.color)} className={`text-center rounded-full ${color === c.color  ? "border-2 border-black scale-110" : ""} border-2  border-gray-600`} key={i} style={{backgroundColor:`${c.color?.toLowerCase()}`, width:"20px", height:"20px", borderRadius:"50%"}}></button>
+                                ))}
+                                </ul>
                             </div>
-                        </div>
 
-                        <div className='mb-3'>
-                        <h5 className='sub-title'>Size</h5>
-                           <div className='d-flex gap-10 justify-content-around align-items-center flex-wrap'>
+                        <div>
+                        <h5 className='text-md mb-2'>Size</h5>
+                           <div className='flex gap-3 items-center flex-wrap'>
                            {size.map((size)=>{
-                                return  <div className="form-check d-flex gap-10 align-items-center">
+                                return  <div className="flex gap-1 items-center">
                                 <input type="checkbox" 
                                 className="form-check-input" 
                                 value={""}
                                 id=''
                                 />
                                 <label htmlFor="" 
-                                className="form-check-label mt-1"
+                                className="mt-1 text-sm"
                                 >
                                     {size}
                                 </label>
@@ -184,7 +191,7 @@ const OurStore = () => {
                      <div className='text-dark filter-card mb-3'>
                      <h3 className="filter-title">Product Tags</h3>
                     
-                     <div className='product-tags d-flex flex-wrap gap-10'>
+                     <div className='flex flex-wrap gap-2'>
                             {tags.map((tag)=>{
                                 return <span className='badge bg-light text-secondary rounded-3 py-2 px-2'>{tag}</span>
                             })}
@@ -240,24 +247,24 @@ const OurStore = () => {
                 
                 <div className={`md:col-span-9 col-span-12 p-2 ${isDrawerOpen && "opacity-50"}`}>
                         <div className="flex bg-white p-3 mb-4 justify-between flex-wrap gap-3 items-center">
-                        <div className="d-flex align-items-center gap-3">
-                            <p className='mb-0 d-block'>Sort:</p>
+                        <div className="d-flex align-items-center gap-2">
+                            <p className='mb-0 d-block text-sm md:text-base'>Sort:</p>
                             <select 
                             name="" 
                             id="" 
-                            className='border py-1.5 px-2 rounded'>
-                                {options.map((op)=>{
-                                    return <option value={op[0]}>{op[1]}</option>
+                            className='border py-1.5 px-1 rounded text-sm'>
+                                {options.map((op,i)=>{
+                                    return <option key={i}  value={op[0]}>{op[1]}</option>
                                 })}
                             </select>
                         </div>
 
                         <div className="flex items-center gap-3">
-                            {/* <p className='mb-0'>21 Products</p> */}
+                            <p className='mb-0 text-sm'>Filters</p>
                             <button
                             onClick={toggleDrawer}
                              className='border py-1.5 px-2 rounded md:hidden' type="button" data-drawer-target="drawer-backdrop" data-drawer-show="drawer-backdrop" data-drawer-backdrop="true" aria-controls="drawer-backdrop">
-                            <MdTune className='text-2xl'/>
+                            <MdTune className='text-xl'/>
                             </button>
                             <div className="flex gap-3 items-center cursor-pointer">
                                 
@@ -282,7 +289,7 @@ const OurStore = () => {
                     
                     
                     <div className="products-list">
-                        <div className="grid grid-cols-12 flex-wrap gap-3">
+                        <div className="grid grid-cols-12 gap-3">
                         {products.map((product)=>{
                             return <StoreCard  col={grid} key={product.id} product={product} />
                         })}

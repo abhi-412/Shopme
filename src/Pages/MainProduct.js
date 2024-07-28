@@ -6,13 +6,15 @@ import ReactStars from 'react-stars'
 import ReactImageZoom from 'react-image-zoom'
 import { GoGitCompare, GoHeart, GoHeartFill } from "react-icons/go";
 import Container from '../Components/Container'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { addToWishList, getProduct, getProducts } from '../features/products/productSlice'
+import { addReview, addToWishList, getProduct, getProducts } from '../features/products/productSlice'
 import { addToCart, getUserCart, getUserWishlist } from '../features/user/userSlice'
 import { FaHeart } from 'react-icons/fa'
 import { IoBagAddSharp } from "react-icons/io5";
-import { BsBagDash } from "react-icons/bs";
+import { MdOutlineShoppingCartCheckout,MdOutlineContentCopy } from "react-icons/md";
+import CustomModel from '../Components/CustomModal'
+import { LuCopyCheck } from "react-icons/lu";
 
 const Categories = ["Watch","Tv","Camera","Laptop"];
 const size = ["S","M","L","XL","XXL"]; 
@@ -29,14 +31,16 @@ const MainProduct = () => {
 
     const [ordered, setOrdered] = useState(true);
     const [rating,setRating] = useState(0);
-    const [imgActive, setImgActive] = useState(0)
+    const [imgActive, setImgActive] = useState(0);
     const [color,setColor] = useState("");
     const [pSize,setPsize] = useState('M');
-    const [count,setCount] = useState(1)
-    const [inCart,setInCart] = useState(false)
+    const [count,setCount] = useState(1);
+    const [inCart,setInCart] = useState(false);
+    const [comment,setComment] = useState("");
+    const [copied,setCopied] = useState(false);
 
     const location = useLocation();
-    const id = location.state.id;
+    const id = location.pathname.split("/")[2];
     const dispatch = useDispatch();
 
     useEffect(()=>{
@@ -63,7 +67,6 @@ const MainProduct = () => {
             return item?._id;
         }
     })
-
    
         
    
@@ -84,8 +87,8 @@ const MainProduct = () => {
     },[cart?.products, curProduct?._id,dispatch])
     const products = useSelector((state)=>state.product?.products)
 
-
-    const featuredProducts = products?.filter((item)=>item?.tags.includes('Featured'));
+    const parser = new DOMParser();
+    // const featuredProducts = products?.filter((item)=>item?.tags.includes('Featured'));
 
 const addProductToCart = ()=>{
 
@@ -103,9 +106,16 @@ const addProductToCart = ()=>{
     dispatch(addToCart(cart));
     setTimeout(()=>{
         dispatch(getUserCart());
+        toggleModal();
     },2000)
-    
 }
+
+        
+    const [isOpen, setIsOpen] = useState(false);
+        
+        const toggleModal = () => {
+            setIsOpen(!isOpen);
+        };
 
     const copyToClipboard = (text) => {
         // console.log('text', text)
@@ -115,31 +125,51 @@ const addProductToCart = ()=>{
         textField.select()
         document.execCommand('copy')
         textField.remove()
-        alert("Link was Copied")
+        setCopied(true)
       }
 
       const imagesUrls = curProduct?.images?.length > 0 ? curProduct?.images?.map((img)=>img.url) : [];
         const activeImage = imagesUrls[imgActive] ? imagesUrls[imgActive] : '/assets/sample-img.jpg';
-      let width = 400, height = 400;
+      let width = 500,zoom = 100,height=400;
       if(window.innerWidth<768){
         width = 200;
         height = 200;
+        zoom = 100;
       }
-    const props={zoomWidth:600,width:width, height:height,img:activeImage}
+    const props={zoomWidth:zoom, scale:1.5,height:height, width:width, img:activeImage,opacity: 0.7,"background-color": "green"}
+
+
+
+      const submitReview = ()=>{
+        const review = {
+            star:rating,
+            comment:comment,
+            productId:curProduct?._id
+        }
+        dispatch(addReview(review));
+        setTimeout(()=>{
+            setComment("");
+            setRating(0);
+            dispatch(getProduct(curProduct?._id));
+        },1000)
+      }
+
   return (
     <>
     <Meta title={curProduct?.title} />
     <BreadCrumb title={curProduct?.title} />
-
-    <Container class1="main-product-wrapper bg-white absolute py-5 home-wrapper-2 relative">
-        <div className="w-full  grid md:grid-cols-2 grid-cols-1">
-                <div className="col-span-1  h-fit md:p-5 p-2 flex md:flex-col gap-2">
-                    <div className="w-full flex items-center justify-center  border border-gray-600 p-2">
-                        <div className="">
+    <Container class1="main-product-wrapper absolute py-5 home-wrapper-2 relative">
+        <div className="w-full  grid md:grid-cols-2 gap-3 grid-cols-1">
+                <div className="col-span-1 bg-gray-50 rounded  md:p-5 p-2 flex md:flex-col gap-2">
+                    <div className="w-full  p-2">
+                        <div className="border-1 hidden  w-full sm:flex justify-center items-center border-gray-800 z-10">
                             <ReactImageZoom {...props} />
                         </div>
+                        <div className="border-1 w-full h-[350px] flex items-center justify-center sm:hidden  border-gray-800 z-10">
+                            <img src={activeImage} alt="" />
+                        </div>
                     </div>
-                        <div className="flex md:flex-row  flex-col flex-nowrap overflow-scroll hide-scrollbar gap-2">
+                        <div className="flex md:flex-row flex-col flex-nowrap overflow-scroll hide-scrollbar gap-2">
                             {imagesUrls.map((url,i)=>(
                                 <div key={i} className={`cursor-pointer ${imgActive === i ? 'border-2 border-blue-500 ' : 'border border-gray-300 '} p-1 md:p-2`}>
                                  <img  
@@ -153,7 +183,7 @@ const addProductToCart = ()=>{
                         </div>
                 </div>
                 <div className="col-span-1">
-                    <div className=" rounded-lg md:p-5 p-3">
+                    <div className=" rounded-lg bg-white md:p-5 p-3">
                         <div className='border-bottom'>
                         <h3 className='text-xl font-semibold'>{curProduct?.title}</h3>
                         </div>
@@ -169,7 +199,7 @@ const addProductToCart = ()=>{
                                 color2={'#ffd700'} 
                                 
                             />
-                            <p className='mb-0'>({curProduct?.totalRating} reviews)</p>
+                            <p className='mb-0'>({curProduct?.ratings?.length} reviews)</p>
                         </div>
                         <a href="#review" className='write-review'>Write a Review</a>
                         </div>
@@ -212,7 +242,7 @@ const addProductToCart = ()=>{
                                 <h6>Size :</h6>
                                 <div className='d-flex flex-wrap gap-15'>
                                     {size.map((s,i)=>{
-                                    return <button onClick={()=>setPsize(s)} key={i} className='badge border border-1 border-secondary bg-white text-dark'>{s}</button>
+                                    return <button onClick={()=>setPsize(s)} key={i} className={`text-xs font-semibold p-1.5 rounded-md  ${pSize === s ? "bg-blue-600 text-white border-1 border-black" : "bg-white"}   border-1 border-gray-500`}>{s}</button>
                                     })}
                                 </div>
                             </div>
@@ -221,7 +251,7 @@ const addProductToCart = ()=>{
                                 <h6 className='mb-0'>Colors:</h6>
                                 <ul className='flex gap-2 '>
                                 {curProduct?.color?.map((c,i)=>(
-                                    <button onClick={()=>setColor(c.color)} className='text-center rounded-full border border-gray-900' key={i} style={{backgroundColor:`${c.color === "Voilet" ? "violet" : c.color}`, width:"20px", height:"20px", borderRadius:"50%"}}></button>
+                                    <button onClick={()=>setColor(c.color)} className={`text-center rounded-full ${color === c.color && color!=="Black" ? "border-2 border-black scale-110" : " border-white"} border focus:border-2 border-gray-900`} key={i} style={{backgroundColor:`${c.color === "Voilet" ? "violet" : c.color}`, width:"20px", height:"20px", borderRadius:"50%"}}></button>
                                 ))}
                                 </ul>
                             </div>
@@ -244,8 +274,11 @@ const addProductToCart = ()=>{
                                 </div>
                             </div>
                             <div className="flex md:gap-5 gap-3 items-center flex-wrap">
-                                {!inCart && <button disabled={inCart} onClick={addProductToCart} className='button login text-nowrap flex items-center gap-2'><IoBagAddSharp />Add To Cart</button>}
-                                {inCart && <button disabled={!inCart} onClick={addProductToCart} className='button login text-nowrap flex items-center gap-2'><BsBagDash className='font-bold' />Remove from Cart</button>}
+                               {!inCart && <button disabled={inCart} onClick={toggleModal} className='button login text-nowrap flex items-center gap-2'><IoBagAddSharp />Add To Cart</button>}
+                                {inCart && <Link to="/cart"  className='bg-purple-500 rounded-full px-4 text-white py-1.5 text-nowrap flex items-center gap-2'>CheckOut<MdOutlineShoppingCartCheckout className='font-bold' /></Link>}
+    
+                                {isOpen && <CustomModel isOpen={isOpen} setIsOpen={setIsOpen} toggleModal={toggleModal} onOk={addProductToCart} product={curProduct} count={count} color={color} total={count*curProduct?.price} size={pSize} />  }
+                                
                                 <button className='signup-button text-nowrap'>Buy Now</button>
                             </div>
                             
@@ -254,61 +287,114 @@ const addProductToCart = ()=>{
                                 <button className='flex gap-1 items-center text-nowrap' onClick={()=>{addToWishlist(curProduct?._id)}}>{wishIds?.includes(curProduct?._id) ? <FaHeart className='text-lg text-red-500'/> : <GoHeart className='text-lg'/>} Add to Wishlist</button>
                             </div>
                             
-                            <div className='d-flex flex-column mt-2 mb-3 flex-wrap gap-10'>
-                                <h6 className='mb-0'>Shipping and Returns:</h6>
-                                <p className='mb-0'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Pariatur, velit quod saepe distinctio sunt ipsum nulla qui quidem soluta autem eius provident omnis quam ratione laudantium obcaecati cum voluptate et!</p>
-                            </div>    
+                           
                             
 
                             <div className='d-flex align-items-center mt-2 mb-3 flex-wrap gap-30'>
                                 <h6 className='mb-0'>Copy Product Link: </h6>
-                                <a href="/"
+                                {!copied &&
+                                <button
                                 onClick={()=>{copyToClipboard(
                                     `http://localhost:3001${location.pathname}`
                                 )}}
+                                className='flex gap-1 items-center'
                                 >
-                                    Click Here to Copy
+                                    <MdOutlineContentCopy /> Click Here to Copy
                                 
-                                </a>
-                                
+                                </button>
+                                }
+                                {copied && <p className='text-green-500 flex items-center gap-2'><LuCopyCheck className='text-lg'/> Copied</p>}
                             </div>    
                         </div>
                     </div>
                 </div>
             </div>
 
-
-
-
-
-
-
-    </Container>
-    <Container class1="description-wrapper py-5 home-wrapper-2">
-    <div className="row">
-                <div className="col-12">
-                    <h4>Description</h4>
-                    <div className="bg-white p-3">
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla nisi 
-                            sunt quis laborum omnis similique ipsa commodi ducimus molestiae! 
-                            Iure possimus sapiente animi optio at asperiores officia beatae tempore cumque?
-                            Fuga velit totam sunt illo mollitia distinctio, expedita excepturi
-                            perferendis praesentium veritatis fugit? Voluptatum, earum deleniti 
-                            nulla dicta perferendis provident temporibus fuga?
+            <div className='bg-gray-50 rounded p-4 my-3'>
+                    <div className='flex flex-col mt-2 mb-3  flex-wrap gap-2 md:mx-4 mx-1'>
+                    <h2 className='text-lg font-semibold'>Product Details</h2>
+                        <p className='md:text-sm text-xs'>
+                            <div className='dang-description'
+                                dangerouslySetInnerHTML={{ __html: curProduct?.description }}
+                            />
                         </p>
                     </div>
-                </div>
+
+
+                    <div className='flex flex-col mt-2 mb-3 flex-wrap gap-2 md:mx-4 mx-1'>
+                                        <h2 className='text-lg font-semibold'>Shipping & Returns</h2>
+                                        <ol className='md:text-sm text-xs flex flex-col gap-1'>
+                                            <li>
+                                            
+                                            We offer Standard (5-7 business days, $5.99 or free over $50), Expedited (2-3 business days, $14.99), 
+                                            and Overnight Shipping (next day, $29.99). Orders are processed within 1-2 business days with tracking details provided. 
+                                            </li>
+                                            <li>
+                                            International shipping times and costs vary. You can return items within 30 days for a full refund if they are in original condition. 
+                                            </li>
+                                            <li>
+                                            Contact customer service to start a return, pack items with the return form, and use the provided prepaid label or your own shipping method. 
+                                            </li>
+                                        <li>
+                                        Refunds are processed within 7-10 business days of receipt. Exchanges require a new order. Non-returnable items include gift cards, 
+                                        final sale, and personalized items.
+                                            </li> 
+                                            <li>
+                                            For questions, contact our customer service team.
+                                            </li>
+                                        </ol>
+                                    
+                    </div>    
             </div>
+ 
+
     </Container>
-    <Container class1="reviews-wrapper home-wrapper-2">
-            <div className="row">
-                <div id='review' className="col-12">
-                    <h4>Reviews</h4>
-                    <div className="review-inner-wrapper">
-                    <div className="review-head d-flex justify-content-between align-items-end">
+
+    
+    <Container class1="w-full bg-white mt-5 md:p-5 p-2">
+            <div className="row w-full">
+                <div id='' className="col-12">
+                    
+                    
+
+                        
+                    {ordered &&
+                        <div  className="py-4 flex flex-col gap-2">
+                        <h4 className='text-xl'>Write a Review</h4>
+                        
+                           
+                            <ReactStars
+                                count={5}
+                                value={rating}
+                                edit={true}
+                                size={24}
+                                color2={'#ffd700'} 
+                                onChange={(e)=>{setRating(e)}}
+                            />
+                          
+                            
+                                <textarea
+                                cols="30"
+                                rows="4" 
+                                name='comment'
+                                value={comment}
+                                className="form-control w-100" 
+                                placeholder='Comments'
+                                onChange={(e)=>{setComment(e.target.value)}}
+                                />
+                            
+                            <div className='d-flex justify-content-end'>
+                                <button onClick={submitReview} type='submit' className='px-4 py-1.5 bg-orange-800 text-white rounded-full'>
+                                    Submit Review
+                                </button>
+                            </div>
+                       
+                    </div>
+                    }
+
+                        <div className=" d-flex justify-content-between align-items-end">
                         <div >
-                            <h4 className='mb-2'>Customer Reviews</h4>
+                            <h4 className='mb-2 md:text-3xl text-2xl font-semibold'>Customer Reviews</h4>
                            <div className='d-flex gap-10 align-items-center'>
                            <ReactStars
                                 count={5}
@@ -317,72 +403,40 @@ const addProductToCart = ()=>{
                                 size={24}
                                 color2={'#ffd700'} 
                             />
-                            <p className='mb-0'>Based on 2 reviews</p>
+                            <p className='mb-0'>{curProduct?.ratings?.length} reviews</p>
                            </div>
                         </div>
 
                         {ordered && 
                         <div>
-                            <a className='text-dark text-decoration-underline' href="">Write a Review</a>
+                            <button className='text-dark text-decoration-underline'>Write a Review</button>
                         </div>
                         }
                     </div>
-
-                        
-                        <div  className="review-form py-4">
-                            <h4>Write a Review</h4>
-                            <form action="" className='d-flex flex-column gap-15'>
-                                <div>
-                                <ReactStars
-                                    count={5}
-                                    value={parseInt(rating)}
-                                    edit={true}
-                                    size={24}
-                                    color2={'#ffd700'} 
-                                    onChange={(e)=>{setRating(e)}}
-                                />
-                                </div>
-                                <div>
-                                    <textarea
-                                    cols="30"
-                                    rows="4" 
-                                    className="form-control w-100" 
-                                    placeholder='Comments'
-                                    />
-                                </div>
-                                <div className='d-flex justify-content-end '>
-                                    <button className='button'>
-                                        Submit Review
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-
-
-                        <div className="reviews mt-4">
-                            <div className="review">
+                        <div className="reviews mt-2">
+                            {curProduct?.ratings?.map((item,index)=>(
+                                <div className="review">
                                 <div className='d-flex gap-10 align-items-center'>
                                     <h6 className='mb-0'>Abhi</h6>
                                     <ReactStars
                                         count={5}
-                                        value={3}
+                                        value={item.star}
                                         edit={false}
                                         size={24}
                                         color2={'#ffd700'} 
                                     />
                                 </div>
-                                <p className='mb-3'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
-                                Minus sint ipsam laudantium voluptatem eligendi aliquam doloribus
-                                 dicta sunt, at sed consequuntur, porro itaque distinctio.
-                                  Cupiditate tenetur consequuntur odit nesciunt temporibus?
+                                <p className='mb-3'>
+                                    {item.comment}
                                   </p>
                             </div>
+                            ))}
                         </div>
 
 
                     </div>
                 </div>
-            </div>
+           
     </Container>
     <Container class1 = " py-5 block">
        <div className="row">
@@ -391,8 +445,10 @@ const addProductToCart = ()=>{
             </div>
             
              <div className='flex flex-nowrap  overflow-scroll hide-scrollbar gap-3'>
-             {featuredProducts?.map((item,index)=>(
-               <FeaturedCard key={index} product={item} />
+             {products?.map((item,index)=>(
+               item?._id !== curProduct?._id && item?.category === curProduct?.category && (
+                <FeaturedCard key={index} product={item} />
+               )
              ))}
              </div>
 

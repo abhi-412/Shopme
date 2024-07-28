@@ -90,7 +90,7 @@ const initialState = {
     curUser: customer ? customer : {},
     wishlist:[],
     cart:[],
-    isLoggedIn: false,
+    isLoggedIn: customer ? true : false,
     isError: false,
     isLoading: false,
     isSuccess: false,
@@ -226,6 +226,9 @@ export const authSlice = createSlice({
             state.isLoading = false;
             state.isSuccess = false;
             state.message = action.payload || "Something went wrong";
+            if(state.isError){
+                toast.error(state.message);
+            }
         })
     }
 });

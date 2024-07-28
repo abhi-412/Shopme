@@ -20,12 +20,18 @@ const addToWishList = async (id)=>{
     return response.data;
 }
 
+const addReview = async(review)=>{
+    const response = await axios.put(`${base_url}product/rating`,{star:review.star , comment:review.comment, productId:review.productId},config)
+    return response.data;
+}
+
 
 
 const productService = {
     getProducts,
     getProduct,
-    addToWishList
+    addToWishList,
+    addReview
 }
 
 export default productService

@@ -5,18 +5,16 @@ import ReactStars from 'react-stars';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToWishList } from '../features/products/productSlice';
 import { FaHeart } from "react-icons/fa";
-import { getUserWishlist } from '../features/user/userSlice';
+import { addToCart, getUserCart, getUserWishlist } from '../features/user/userSlice';
 import { TbLoader } from "react-icons/tb";
+import { IoBagAddSharp, IoBagCheck } from 'react-icons/io5';
 
 const FeaturedCard = (props) => {
     const { grid, product } = props;
 
-    const dispatch = useDispatch();
     let location = useLocation();
 
-    const parser = new DOMParser();
 
-    const wishlist = useSelector(state => state.auth?.wishlist);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -25,32 +23,69 @@ const FeaturedCard = (props) => {
 
     const user = localStorage.getItem('customer') ? JSON.parse(localStorage.getItem('customer')) : null;
 
-    const addToWishlist = (id) => {
-        if (user) {
-            dispatch(addToWishList(id));
-            setTimeout(() => {
-                dispatch(getUserWishlist());
-            }, 600);
-        } else {
-            navigate('/login', { state: { from: location } });
-        }
-    };
-
-    const wishIds = wishlist?.map((item) => {
-        if (item?._id === product?._id) {
+    const dispatch = useDispatch();
+    const parser = new DOMParser();
+    const {wishlist,cart} = useSelector(state=>state.auth);
+    useEffect(()=>{
+        dispatch(getUserWishlist());
+        dispatch(getUserCart());
+    },[dispatch])
+    const addToWishlist = (id)=>{
+        dispatch(addToWishList(id));
+        setTimeout(() =>{
+            dispatch(getUserWishlist());
+        },600)
+    }
+    const wishIds = wishlist?.map((item)=>{
+        if(item?._id === product?._id){
             return item?._id;
         }
-    });
+    })
+    const [inCart,setInCart] = useState(false)
+    
+    useEffect(()=>{
+        const cartIds = cart?.products?.map((item)=>{
+            if(item?.product?._id === product?._id){
+                return item?.product?._id;
+            }else{
+                return null;
+            }
+        })
+        console.log(cartIds);
+        if(cartIds?.includes(product?._id)){
+            setInCart(true);
+        }else{
+            setInCart(false)
+        }
+    },[cart?.products, product?._id,dispatch])
+
+    const isAddingToCart = useSelector((state)=>state.auth?.isLoading)
 
     let isLoading = useSelector((state) => state.product?.isLoading);
 
 
-
+    const addProductToCart = ()=>{
+        const cart = {
+            cart: [
+                {
+                    _id: product?._id,
+                    count: 1,
+                    color: product?.colors?.length ? product.colors[0] : "all",
+                    size:"M"
+                },
+            ]
+        }
+        dispatch(addToCart(cart));
+        setTimeout(()=>{
+            dispatch(getUserCart());
+        },2000)
+    }
+   
 
 
     return (
         <>
-        <div className="relative min-w-[250px] hover:shadow-xl hover:scale-105 transition delay-50 bg-white rounded">
+        <div className="relative min-w-[250px] max-w-[255px]  hover:shadow-xl hover:scale-105 transition delay-50 bg-white rounded">
         
                 <div className='icon absolute right-5 top-2'>
                     <button hidden={isLoading} className='border-0 bg-transparent' onClick={() => {addToWishlist(product?._id); }}>
@@ -58,10 +93,8 @@ const FeaturedCard = (props) => {
                     </button>
                     {isLoading && <TbLoader className='text-danger' />}
                 </div>
-                <Link
-                to={`/product/${product?.slug}`}
-                state={{ id: product?._id }}
-                
+                <a
+                href={`/product/${product?._id}`}
             >
                 <div className='mb-3 mx-4 p-4 featured-image'>
                     <img className='img-fluid object-cover w-100' src={product?.images[0]?.url || "/assets/watch.jpg"} alt="Featured product" />
@@ -85,11 +118,13 @@ const FeaturedCard = (props) => {
                     </div>
                     <h5 className='price'>₹ {product?.price} only</h5>
                 </div>
+                </a>
                 <div className='action-bar absolute top-10 right-5'>
                     <div className='d-flex flex-column gap-15'>
-                        <button className='border-0 bg-transparent' >
-                            <img src="/images/add-cart.svg" alt="cart" />
-                        </button>
+                    <button hidden={isAddingToCart} disabled={isAddingToCart} className='border-0 bg-transparent' onClick={() => {addProductToCart(product?._id); }}>
+                       {!inCart ? <IoBagAddSharp /> : <IoBagCheck className='text-green-500'/>}
+                    </button>
+                    {isAddingToCart && <TbLoader hidden={!isAddingToCart} className='text-green-500' />}
                         <button className='border-0 bg-transparent' >
                             <img src="/images/view.svg" alt="view" />
                         </button>
@@ -98,7 +133,7 @@ const FeaturedCard = (props) => {
                         </button>
                     </div>
                 </div>
-            </Link>
+            
         </div>
             
         </>

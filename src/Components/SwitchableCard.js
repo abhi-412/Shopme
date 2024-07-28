@@ -69,7 +69,7 @@ const SwitchableCard = ({featuredProducts,specialProducts}) => {
             </button>
           </li>
         </ul>
-        <div id="fullWidthTabContent" className="border-t border-gray-200 dark:border-gray-600">
+        <div id="fullWidthTabContent" className="border-t w-full border-gray-200 dark:border-gray-600">
           {activeTab === 'featured-collections' && (
             <div className="p-4  rounded-lg md:p-8 dark:bg-gray-800" id="featured-products" role="tabpanel" aria-labelledby="featured-products-tab">
               <Container class1="py-5">
@@ -127,18 +127,18 @@ const SwitchableCard = ({featuredProducts,specialProducts}) => {
             </div>
           )}
           {activeTab === 'featured-products' && (
-            <div className="p-4 rounded-lg dark:bg-gray-800" id="featured-products" role="tabpanel" aria-labelledby="featured-products-tab">
-              <Container class1="py-5">
-                <div className="row">
+            <div className="w-full rounded-lg dark:bg-gray-800" id="featured-products" role="tabpanel" aria-labelledby="featured-products-tab">
+              <Container class1="p-5">
+                
                   <div className="w-full">
                     <h3 className="section-heading">Featured Products</h3>
                   </div>
-                  <div className="grid lg:grid-cols-3 md:grid-cols-2 xl:grid-cols-4 grid-cols-2 flex-wrap gap-3">
+                  <div className="flex justify-start flex-wrap gap-3">
                     {featuredProducts?.map((product) => (
                       <FeaturedCard key={product.id} product={product} />
                     ))}
                   </div>
-                </div>
+             
               </Container>
             </div>
           )}

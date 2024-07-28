@@ -54,7 +54,7 @@ useEffect(()=>{
                 <Route path="/" element={<Layout />} >
                   <Route index element={<Home />}/>
                   <Route path="store" element={<OurStore />}/>
-                  <Route path="product/:slug" element={<MainProduct />}/>
+                  <Route path="product/:id" element={<MainProduct />}/>
                   <Route path="about" element={<About />}/>
                   <Route path="blogs" element={<Blog />}/>
                   <Route path="blog/:id" element={<MainBlog />}/>

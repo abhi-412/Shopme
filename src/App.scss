@@ -953,3 +953,17 @@ button.login:hover, .auth-card .reset-button:hover{
 
 
 
+
+.dang-description {
+    p{
+        margin-bottom: 4px;
+    }
+
+    ul{
+        display:flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-left: 20px;
+    }
+
+}

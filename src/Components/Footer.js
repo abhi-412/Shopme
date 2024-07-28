@@ -8,7 +8,7 @@ const Footer = () => {
     <>
         <footer className="py-3 w-full ">
             <div className="w-full flex justify-center">
-              <div className="flex md:flex-row flex-col gap-3 px-3 justify-between w-10/12 items-center">
+              <div className="flex md:flex-row flex-col gap-3 px-3 justify-between md:w-10/12 w-full items-center">
                 <div className="flex w-full items-center gap-3">
                       <img src="/images/newsletter.png" alt="newsletter" />
                       <h2 className='text-white'>Sign Up for Newsletter</h2>
@@ -38,10 +38,10 @@ const Footer = () => {
 
 
         <footer className="py-3 w-full">
-          <div className="w-full flex justify-center md:px-10 px-4">
-            <div className="container grid md:grid-cols-12 grid-cols-4 gap-4">
+          <div className="w-full flex justify-center md:px-10 px-2">
+            <div className="md:container flex flex-wrap justify-between gap-4">
 
-              <div className="md:col-span-5 col-span-2 flex flex-col flex-wrap">
+              <div className="md:col-span-5 col-span-3 flex flex-col flex-wrap">
                 <h4 className='text-white mb-4'>Contact Us</h4>
                 <div className='text-sm md:text-base flex flex-col flex-wrap md:gap-3 gap-2'>
                   <address className='text-white mb-0'>
@@ -70,7 +70,7 @@ const Footer = () => {
                   
                 </div>
               </div>
-              <div className="col-span-2">
+              <div className="col-span-3">
                 <h4 className='text-white mb-4'>Account</h4>
                 <div className='text-sm md:text-base flex flex-col gap-2'>
 

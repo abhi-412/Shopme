@@ -14,21 +14,21 @@ const SpecialProducts = ({product}) => {
     <Link className="min-w-[450px] md:min-w-[300px]">
         
         <div className='bg-white hover:shadow-xl hover:scale-105 transition delay-50 rounded p-3'> 
-        <h6 className="text-sm text-start font-semibold mb-2 text-red-500">{product?.brand}</h6>
 
-                <div className='flex w-full items-center gap-3'>
+                <div className='w-full items-center gap-3  grid grid-cols-5'>
                     
                     
-                        <div className='mb-3 featured-image'>
-                        <img className='img-fluid object-cover w-100'  src={product?.images[0]?.url || "/assets/watch.jpg"} alt="Featured product" />
+                        <div className=' col-span-2 featured-image'>
+                        <img className='img-fluid h-[170px]'  src={product?.images[0]?.url || "/assets/watch.jpg"} alt="Featured product" />
                         {product?.images?.length > 1 && 
-                            <img className='img-fluid'  src={product?.images[1]?.url || "/assets/watch.jpg"} alt="Featured product" />
+                            <img className='img-fluid h-[170px]'  src={product?.images[1]?.url || "/assets/watch.jpg"} alt="Featured product" />
                         }
                         </div>
                    
-                    <div className='flex flex-col p-2 w-full'>
+                    <div className='flex flex-col col-span-3 h-full  w-full'>
+                    <h6 className="text-sm text-start font-semibold mb-2 text-red-500">{product?.brand}</h6>
 
-                        <p className="text-base mb-2">{product?.title}</p>
+                        <p className="text-base">{product?.title?.slice(0,25)}</p>
                         <ReactStars
                             count={5}
                             value={product?.totalRating}
@@ -47,16 +47,16 @@ const SpecialProducts = ({product}) => {
 
                             </div>
                         </div> */}
-                        <div className="flex flex-col gap-2 mt-2">
-                                <p className='text-sm text-gray-600'>Only {product?.quantity} remaining</p>
-                                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-3 dark:bg-gray-700">
+                        <div className="flex flex-col gap-2 mb-1">
+                                <p className='text-sm text-gray-600'>{product?.quantity} remaining</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1 dark:bg-gray-700">
                                     <div class="bg-blue-600 h-2.5 rounded-full dark:bg-blue-500" style={{width:`${100-progress}%`}}></div>
                                 </div>
                         </div>
 
-                        <p className='text-sm'>{parser.parseFromString(product?.description,"text/html").body.textContent.slice(0,100)}</p>
+                        <p className='text-sm font-semibold text-gray-600'>₹ {product.price} /-</p>
 
-                        
+                         
                     </div>
                 </div>
             </div>
