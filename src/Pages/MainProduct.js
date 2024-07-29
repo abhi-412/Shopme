@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addReview, addToWishList, getProduct, getProducts } from '../features/products/productSlice'
 import { addToCart, getUserCart, getUserWishlist } from '../features/user/userSlice'
 import { FaHeart } from 'react-icons/fa'
-import { IoBagAddSharp } from "react-icons/io5";
+import { IoBagAddSharp,IoArrowBackOutline } from "react-icons/io5";
 import { MdOutlineShoppingCartCheckout,MdOutlineContentCopy } from "react-icons/md";
 import CustomModel from '../Components/CustomModal'
 import { LuCopyCheck } from "react-icons/lu";
@@ -130,13 +130,13 @@ const addProductToCart = ()=>{
 
       const imagesUrls = curProduct?.images?.length > 0 ? curProduct?.images?.map((img)=>img.url) : [];
         const activeImage = imagesUrls[imgActive] ? imagesUrls[imgActive] : '/assets/sample-img.jpg';
-      let width = 500,zoom = 100,height=400;
+      let width = 500,zoom = 100,height=350;
       if(window.innerWidth<768){
         width = 200;
         height = 200;
         zoom = 100;
       }
-    const props={zoomWidth:zoom, scale:1.5,height:height, width:width, img:activeImage,opacity: 0.7,"background-color": "green"}
+    const props={zoomWidth:zoom, scale:1.5,height:height, width:"100%", img:activeImage,opacity: 0.7,"background-color": "green"}
 
 
 
@@ -154,19 +154,57 @@ const addProductToCart = ()=>{
         },1000)
       }
 
+      const [isFullscreen, setIsFullscreen] = useState(false);
+
+        const handleImageClick = () => {
+            setIsFullscreen(!isFullscreen);
+        };
+
   return (
+    
+
     <>
-    <Meta title={curProduct?.title} />
-    <BreadCrumb title={curProduct?.title} />
+    <Meta title={curProduct?.title?.slice(0,25)} />
+    <BreadCrumb title={curProduct?.title?.slice(0,25)} />
+    <div className="w-full py-5">
+    {isFullscreen ? (
+      <div className="w-full min-h-screen flex flex-col gap-3 items-start p-5 justify-center bg-white">
+        <button className='flex items-center gap-2' onClick={handleImageClick}><IoArrowBackOutline className='text-gray-600' /> Go back</button>
+        <div className='w-full h-full flex flex-col gap-4'>
+        <div className='p-3 border w-fit flex justify-center items-center'>
+        <img 
+          src={activeImage} 
+          alt="" 
+          className=" img-fluid cursor-pointer max-h-[500px]" 
+          onClick={handleImageClick}
+        />
+        </div>
+        <div className="flex flex-row flex-nowrap overflow-scroll hide-scrollbar gap-2">
+                {imagesUrls.map((url,i)=>(
+                    <div key={i} className={`cursor-pointer ${imgActive === i ? 'border-2 border-blue-500 ' : 'border border-gray-300 '} p-1 md:p-2`}>
+                    <img  
+                        onMouseOver={()=>setImgActive(i)} 
+                        src={url} 
+                        alt={`Product ${i+1}`}
+                    
+                        className='md:w-20 md:h-20 w-14 h-14 object-contain'/>
+                    </div>
+                ))}
+            </div>
+        </div>
+      </div>
+      
+    ) : (
+    <>
     <Container class1="main-product-wrapper absolute py-5 home-wrapper-2 relative">
         <div className="w-full  grid md:grid-cols-2 gap-3 grid-cols-1">
                 <div className="col-span-1 bg-gray-50 rounded  md:p-5 p-2 flex md:flex-col gap-2">
                     <div className="w-full  p-2">
-                        <div className="border-1 hidden  w-full sm:flex justify-center items-center border-gray-800 z-10">
+                        <div onClick={handleImageClick} className="border-1 hidden cursor-pointer py-3  w-full sm:flex md:flex justify-center items-center border-gray-800 z-10">
                             <ReactImageZoom {...props} />
                         </div>
                         <div className="border-1 w-full h-[350px] flex items-center justify-center sm:hidden  border-gray-800 z-10">
-                            <img src={activeImage} alt="" />
+                            <img className='cursor-pointer' src={activeImage} onClick={handleImageClick} alt="" />
                         </div>
                     </div>
                         <div className="flex md:flex-row flex-col flex-nowrap overflow-scroll hide-scrollbar gap-2">
@@ -454,7 +492,12 @@ const addProductToCart = ()=>{
 
           </div>
     </Container>
+    
     </>
+    )}
+    </div>
+    </> 
+    
   )
 }
 

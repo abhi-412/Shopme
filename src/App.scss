@@ -967,3 +967,18 @@ button.login:hover, .auth-card .reset-button:hover{
     }
 
 }
+
+
+.ui-slider {
+    background: blue;
+  }
+  
+  .ui-slider-handle {
+    background: blue;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    // transform: translateY(-50%);
+  }
+  
