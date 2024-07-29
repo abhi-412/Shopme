@@ -3,11 +3,10 @@ import productService from "./productService";
 import { toast } from "react-toastify";
 
 
-export const getProducts = createAsyncThunk('product/get-products',async(thunkAPI)=>{
+export const getProducts = createAsyncThunk('product/get-products',async(filters,thunkAPI)=>{
 
     try{
-        return await productService.getProducts();
-
+        return await productService.getProducts(filters);
     }catch(error){
         return thunkAPI.rejectWithValue(error);
     }
@@ -59,6 +58,8 @@ export const addReview = createAsyncThunk(
 const initialState = {
     products: [],
     product:{},
+    totalPages:0,
+    totalProducts:0,
     newReview:{},
     isError:false,
     isLoading:false,
@@ -80,7 +81,9 @@ export const productSlice = createSlice({
             state.isLoading = false;
             state.isError = false;
             state.isSuccess = true;
-            state.products = action.payload;
+            state.products = action.payload.products;
+            state.totalPages = action.payload.totalPages;
+            state.totalProducts = action.payload.totalProducts;
         })
         .addCase(getProducts.rejected,(state,action)=>{
             state.isLoading = false;

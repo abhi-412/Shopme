@@ -83,14 +83,14 @@ const StoreCard = (props) => {
                     {isLoading && <TbLoader className='text-danger' />}
                 </div>
         <div className='featured-image mb-3 mx-4'>
-        <img className='img-fluid h-[170px]'  src={product?.images[0]?.url || "/assets/watch.jpg"} alt="Featured product" />
+        <img className='img-fluid h-[170px]'  src={product?.images[0]?.url || "/assets/sample-img.jpg"} alt="Featured product" />
         {product?.images?.length > 1 && 
-            <img className='img-fluid h-[170px]'  src={product?.images[1]?.url || "/assets/watch.jpg"} alt="Featured product" />
+            <img className='img-fluid h-[170px]'  src={product?.images[1]?.url || "/assets/sample-img.jpg"} alt="Featured product" />
         } 
         </div>
         <div className="px-4 py-3">
             <h6 className="brand">{product?.brand || 'Timex'}</h6>
-            <p className="featured-item-text">{product?.title} </p>
+            <p className="featured-item-text">{product?.title?.length > 50 ? `${product?.title?.slice(0,50)}...` : product?.title} </p>
             <p className={`description ${col===12 ? "block" : "hidden"}`}>{desc.length > 140 ? `${desc.slice(0,140)}...` : desc}</p>
             <div className='d-flex align-items-center gap-3'>
                 
