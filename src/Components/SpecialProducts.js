@@ -11,7 +11,9 @@ const SpecialProducts = ({product}) => {
     const parser = new DOMParser();
   return (
     <>
-    <Link className="min-w-[450px] md:min-w-[300px]">
+    <Link
+    to={`/product/${product?._id}`}
+    className="min-w-[450px] md:min-w-[300px]">
         
         <div className='bg-white hover:shadow-xl hover:scale-105 transition delay-50 rounded p-3'> 
 
@@ -37,16 +39,7 @@ const SpecialProducts = ({product}) => {
                             color2={'#ffd700'} />
 
 
-                        {/* <h5 className='text-sm mb-2'><span className='text-gray-500'>Rs. 100 /-</span> &nbsp; <strike>Rs 200</strike></h5>
-                        <div className='flex items-center gap-3'>
-                            <p className='limit mb-0 md:block hidden'><b>7</b>d</p>
-                            <div className='flex gap-2 flex-wrap'>
-                                <span className='rounded-full px-2.5 justify-center items-center flex py-0.5 text-sm text-white font-semibold bg-red-600'>1</span>:
-                                <span className='rounded-full px-2 justify-center items-center flex py-1 text-sm text-white font-semibold bg-red-600'>12</span>:
-                                <span className='rounded-full px-2 justify-center items-center flex py-1 text-sm text-white font-semibold bg-red-600'>14</span>
-
-                            </div>
-                        </div> */}
+                        
                         <div className="flex flex-col gap-2 mb-1">
                                 <p className='text-sm text-gray-600'>{product?.quantity} remaining</p>
                                 <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1 dark:bg-gray-700">

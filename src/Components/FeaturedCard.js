@@ -100,7 +100,7 @@ const FeaturedCard = (props) => {
                 </div>
                 <div className="px-4 py-3">
                     <h6 className="brand">{product?.brand || 'Timex'}</h6>
-                    <p className="featured-item-text">{product?.title}</p>
+                    <p className="featured-item-text">{product?.title?.length > 50 ? `${product?.title?.slice(0,50)}...` : product?.title}</p>
                     <p className={`description ${grid === 12 ? "d-block" : "d-none"}`}>{parser.parseFromString(product?.description, "text/html").body.textContent}</p>
                     <div className='d-flex align-items-center gap-3'>
                         <ReactStars

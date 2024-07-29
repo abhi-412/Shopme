@@ -6,6 +6,7 @@ import Container from '../Components/Container';
 import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getBlogs } from '../features/blog/blogSlice';
+import Loader from "./Loader"
 
 const Categories = ["Watch","Tv","Camera","Laptop"];
 
@@ -19,6 +20,7 @@ const Blog = () => {
   },[dispatch]);
 
   const blog = useSelector((state)=>state.blog?.blogs)
+  const isLoading = useSelector((state)=>state.blog?.isLoading)
 
 
   return (
@@ -40,9 +42,16 @@ const Blog = () => {
                             })}
                         </ul>
                      </div>
-                      {blog?.map((item)=>{
-                          return <Card key={item._id} blog={item}/>
-                      })}
+
+                    {isLoading ? <div className='w-full flex justify-center items-center h-[200px]'>
+                      <Loader/> 
+                    </div>: (
+                      
+                        blog?.map((item)=>{
+                        return <Card key={item._id} blog={item}/>
+                    })
+                  )}
+                      
                         
                   
                 </div>

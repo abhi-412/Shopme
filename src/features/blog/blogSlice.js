@@ -75,6 +75,8 @@ export const blogSlice = createSlice({
             }
         }).addCase(getBlog.pending,(state)=>{
             state.isLoading = true
+            state.isSuccess=false;
+            state.isError = false;
         })
         .addCase(getBlog.fulfilled,(state,action)=>{
             state.isError=false;

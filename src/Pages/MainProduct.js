@@ -15,6 +15,7 @@ import { IoBagAddSharp,IoArrowBackOutline } from "react-icons/io5";
 import { MdOutlineShoppingCartCheckout,MdOutlineContentCopy } from "react-icons/md";
 import CustomModel from '../Components/CustomModal'
 import { LuCopyCheck } from "react-icons/lu";
+import Loader from "./Loader"
 
 const Categories = ["Watch","Tv","Camera","Laptop"];
 const size = ["S","M","L","XL","XXL"]; 
@@ -27,6 +28,7 @@ const MainProduct = () => {
 
     const {wishlist,cart} = useSelector(state=>state.auth);
     const curProduct = useSelector((state)=>state.product?.product);
+    const isLoading = useSelector((state)=>state.product?.isLoading);
 
 
     const [ordered, setOrdered] = useState(true);
@@ -43,7 +45,7 @@ const MainProduct = () => {
     const id = location.pathname.split("/")[2];
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    
+
     useEffect(()=>{
         const filters = {
             page: 1,
@@ -178,7 +180,10 @@ const addProductToCart = ()=>{
     <>
     <Meta title={curProduct?.title?.slice(0,25)} />
     <BreadCrumb title={curProduct?.title?.slice(0,25)} />
-    <div className="w-full py-5">
+    {isLoading ? (
+        <Loader />
+):(
+<div className="w-full py-5">
     {isFullscreen ? (
       <div className="w-full min-h-screen flex flex-col gap-3 items-start p-5 justify-center bg-white">
         <button className='flex items-center gap-2' onClick={handleImageClick}><IoArrowBackOutline className='text-gray-600' /> Go back</button>
@@ -508,6 +513,7 @@ const addProductToCart = ()=>{
     </>
     )}
     </div>
+)}
     </> 
     
   )
