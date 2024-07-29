@@ -6,7 +6,7 @@ import ReactStars from 'react-stars'
 import ReactImageZoom from 'react-image-zoom'
 import { GoGitCompare, GoHeart, GoHeartFill } from "react-icons/go";
 import Container from '../Components/Container'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { addReview, addToWishList, getProduct, getProducts } from '../features/products/productSlice'
 import { addToCart, getUserCart, getUserWishlist } from '../features/user/userSlice'
@@ -42,7 +42,8 @@ const MainProduct = () => {
     const location = useLocation();
     const id = location.pathname.split("/")[2];
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
+    
     useEffect(()=>{
         const filters = {
             page: 1,
@@ -78,6 +79,7 @@ const MainProduct = () => {
         }
     })
    
+    const user = localStorage.getItem('customer') ? JSON.parse(localStorage.getItem('customer')) : null;
         
    
 
@@ -322,7 +324,7 @@ const addProductToCart = ()=>{
                                 </div>
                             </div>
                             <div className="flex md:gap-5 gap-3 items-center flex-wrap">
-                               {!inCart && <button disabled={inCart} onClick={toggleModal} className='button login text-nowrap flex items-center gap-2'><IoBagAddSharp />Add To Cart</button>}
+                               {!inCart && <button disabled={inCart} onClick={!user? navigate('/login') : toggleModal} className='button login text-nowrap flex items-center gap-2'><IoBagAddSharp />Add To Cart</button>}
                                 {inCart && <Link to="/cart"  className='bg-purple-500 rounded-full px-4 text-white py-1.5 text-nowrap flex items-center gap-2'>CheckOut<MdOutlineShoppingCartCheckout className='font-bold' /></Link>}
     
                                 {isOpen && <CustomModel isOpen={isOpen} setIsOpen={setIsOpen} toggleModal={toggleModal} onOk={addProductToCart} product={curProduct} count={count} color={color} total={count*curProduct?.price} size={pSize} />  }
@@ -332,7 +334,7 @@ const addProductToCart = ()=>{
                             
                             <div className='flex items-center gap-3 flex-wrap'>
                                 <button className='flex gap-1 items-center text-nowrap' ><GoGitCompare className='text-lg' />  Add to Compare</button>
-                                <button className='flex gap-1 items-center text-nowrap' onClick={()=>{addToWishlist(curProduct?._id)}}>{wishIds?.includes(curProduct?._id) ? <FaHeart className='text-lg text-red-500'/> : <GoHeart className='text-lg'/>} Add to Wishlist</button>
+                                <button className='flex gap-1 items-center text-nowrap' onClick={!user? navigate('/login') : ()=>{addToWishlist(curProduct?._id)}}>{wishIds?.includes(curProduct?._id) ? <FaHeart className='text-lg text-red-500'/> : <GoHeart className='text-lg'/>} Add to Wishlist</button>
                             </div>
                             
                            
