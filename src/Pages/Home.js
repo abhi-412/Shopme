@@ -15,11 +15,24 @@ import { getProducts } from '../features/products/productSlice'
 
 const Home = () => {
 
+
   const dispatch = useDispatch();
 
+
   useEffect(()=>{
+    
+  const filters = {
+    page: 1,
+    limit: 10,
+    sortBy: { sort: 'createdAt', order: 'desc' },
+    price: { lte: 82000,gte:0 },
+    color:"",
+    categories: [],
+    outOfStock:false,
+    tags:[]
+}
     dispatch(getBlogs());
-    dispatch(getProducts());
+    dispatch(getProducts(filters));
   },[dispatch])
 
   const blogs = useSelector((state)=>state.blog?.blogs)

@@ -44,7 +44,17 @@ const MainProduct = () => {
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        dispatch(getProducts());
+        const filters = {
+            page: 1,
+            limit: 10,
+            sortBy: { sort: 'createdAt', order: 'desc' },
+            price: { lte: 82000,gte:0 },
+            color:"",
+            categories: [],
+            outOfStock:false,
+            tags:[]
+        }
+        dispatch(getProducts(filters));
         dispatch(getUserWishlist());
         dispatch(getUserCart());
         if(id){
