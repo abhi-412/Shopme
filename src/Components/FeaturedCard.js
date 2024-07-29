@@ -13,6 +13,7 @@ const FeaturedCard = (props) => {
     const { grid, product } = props;
 
     const dispatch = useDispatch();
+    const navigate =useNavigate();
 
     useEffect(()=>{
         dispatch(getUserWishlist());
@@ -83,7 +84,7 @@ const FeaturedCard = (props) => {
         <div className="relative min-w-[250px] max-w-[255px]  hover:shadow-xl hover:scale-105 transition delay-50 bg-white rounded">
         
                 <div className='icon absolute right-5 top-2'>
-                    <button hidden={isLoading} className='border-0 bg-transparent' onClick={() => {addToWishlist(product?._id); }}>
+                    <button onClick={!user ? ()=>{navigate('/login')}: () => {addToWishlist(product?._id)}} disabled={isAddingToCart || isLoading} hidden={isLoading} className='border-0 bg-transparent' >
                          {wishIds?.includes(product?._id) ? <FaHeart className='text-danger' /> : <GoHeart />}
                     </button>
                     {isLoading && <TbLoader className='text-danger' />}
@@ -116,7 +117,7 @@ const FeaturedCard = (props) => {
                 </a>
                 <div className='action-bar absolute top-10 right-5'>
                     <div className='d-flex flex-column gap-15'>
-                    <button hidden={isAddingToCart} disabled={isAddingToCart} className='border-0 bg-transparent' onClick={() => {addProductToCart(product?._id); }}>
+                    <button onClick={!user ? ()=>{navigate('/login')} : null} hidden={isAddingToCart} disabled={isAddingToCart} className='border-0 bg-transparent' onClick={() => {addProductToCart(product?._id); }}>
                        {!inCart ? <IoBagAddSharp /> : <IoBagCheck className='text-green-500'/>}
                     </button>
                     {isAddingToCart && <TbLoader hidden={!isAddingToCart} className='text-green-500' />}

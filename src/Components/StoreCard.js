@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { GoHeart } from "react-icons/go";
 import ReactStars from 'react-stars';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +12,8 @@ import { IoBagAddSharp,IoBagCheck } from "react-icons/io5";
 const StoreCard = (props) => {
     const {col,product} = props;
     const dispatch = useDispatch();
+    const navigate =useNavigate();
+
     const parser = new DOMParser();
     const {wishlist,cart} = useSelector(state=>state.auth);
     useEffect(()=>{
@@ -67,6 +69,7 @@ const StoreCard = (props) => {
             dispatch(getUserCart());
         },2000)
     }
+    const user = localStorage.getItem('customer') ? JSON.parse(localStorage.getItem('customer')) : null;
    
 
   return (
@@ -77,7 +80,7 @@ const StoreCard = (props) => {
          className={`featured-card flex ${col===4 || col===6 ? "flex-col " : "md:flex-row flex-col"} gap-3`}
          >
                 <div className='icon absolute right-5 top-2'>
-                    <button hidden={isLoading} className='border-0 bg-transparent' onClick={() => {addToWishlist(product?._id); }}>
+                    <button onClick={!user ? ()=>{navigate('/login')}: () => {addToWishlist(product?._id)}} disabled={isAddingToCart || isLoading } className='border-0 bg-transparent'>
                          {wishIds?.includes(product?._id) ? <FaHeart className='text-danger' /> : <GoHeart />}
                     </button>
                     {isLoading && <TbLoader className='text-danger' />}
@@ -111,7 +114,7 @@ const StoreCard = (props) => {
 
         <div className='action-bar absolute top-10 right-3'>
             <div className='d-flex flex-column gap-15'>
-                    <button hidden={isAddingToCart} disabled={isAddingToCart} className='border-0 bg-transparent' onClick={() => {addProductToCart(product?._id); }}>
+                    <button onClick={!user ? ()=>{navigate('/login')} : null} hidden={isAddingToCart} disabled={isAddingToCart || isLoading} className='border-0 bg-transparent' onClick={() => {addProductToCart(product?._id); }}>
                        {!inCart ? <IoBagAddSharp /> : <IoBagCheck className='text-green-500'/>}
                     </button>
                     {isAddingToCart && <TbLoader hidden={!isAddingToCart} className='text-green-500' />}
