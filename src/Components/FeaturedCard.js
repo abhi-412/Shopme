@@ -12,24 +12,19 @@ import { IoBagAddSharp, IoBagCheck } from 'react-icons/io5';
 const FeaturedCard = (props) => {
     const { grid, product } = props;
 
-    let location = useLocation();
-
-
-    const navigate = useNavigate();
-
-    useEffect(() => {
+    useEffect(()=>{
         dispatch(getUserWishlist());
-    }, []);
+        dispatch(getUserCart());
+        dispatch(getUserWishlist());
+    },[dispatch])
+
 
     const user = localStorage.getItem('customer') ? JSON.parse(localStorage.getItem('customer')) : null;
 
     const dispatch = useDispatch();
     const parser = new DOMParser();
     const {wishlist,cart} = useSelector(state=>state.auth);
-    useEffect(()=>{
-        dispatch(getUserWishlist());
-        dispatch(getUserCart());
-    },[dispatch])
+   
     const addToWishlist = (id)=>{
         dispatch(addToWishList(id));
         setTimeout(() =>{
@@ -51,7 +46,6 @@ const FeaturedCard = (props) => {
                 return null;
             }
         })
-        console.log(cartIds);
         if(cartIds?.includes(product?._id)){
             setInCart(true);
         }else{
