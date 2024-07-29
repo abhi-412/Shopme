@@ -209,9 +209,7 @@ export const authSlice = createSlice({
             state.isLoading = false;
             state.isSuccess = false;
             state.message = action.payload;
-            if(state.isError){
-                toast.error(state.message);
-            }
+           
         }).addCase(getUserCart.pending,(state,action)=>{
             state.isError = false;
             state.isLoading = true;
@@ -226,9 +224,7 @@ export const authSlice = createSlice({
             state.isLoading = false;
             state.isSuccess = false;
             state.message = action.payload || "Something went wrong";
-            if(state.isError){
-                toast.error(state.message);
-            }
+            
         })
     }
 });

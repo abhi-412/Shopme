@@ -12,6 +12,8 @@ import { IoBagAddSharp, IoBagCheck } from 'react-icons/io5';
 const FeaturedCard = (props) => {
     const { grid, product } = props;
 
+    const dispatch = useDispatch();
+
     useEffect(()=>{
         dispatch(getUserWishlist());
         dispatch(getUserCart());
@@ -21,7 +23,6 @@ const FeaturedCard = (props) => {
 
     const user = localStorage.getItem('customer') ? JSON.parse(localStorage.getItem('customer')) : null;
 
-    const dispatch = useDispatch();
     const parser = new DOMParser();
     const {wishlist,cart} = useSelector(state=>state.auth);
    

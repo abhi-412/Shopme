@@ -30,8 +30,6 @@ const Home = () => {
   const specialProducts = products?.filter((item)=>item?.tags.includes('Special'));
   const popularProducts = products?.filter((item)=>item?.tags.includes('Popular'));
 
-  console.log(specialProducts);
-
   const services = [
     {title:"Cameras",quant:"4,986 Items",src:"/images/camera.jpg"},
     {title:"Headset",quant:"8,915 Items",src:"/images/headphone.jpg"},
@@ -133,52 +131,6 @@ const Home = () => {
     <div className='w-full hidden md:block'>
     <SwitchableCard featuredProducts={featuredProducts} specialProducts={specialProducts}/>
     </div>
-
-    {/* <Container class1=" py-5  md:hidden block ">
-        <div className="grid md:grid-cols-4 grid-cols-2 gap-4">
-          <div className="col-span-1 bg-black hover:shadow-xl hover:scale-105 transition delay-50 relative">
-            <img className='object-contain' src="/assets/famous-watch.jpg" alt="famous" />
-            <div className=" text-light absolute md:top-10 top-4 gap-1 flex flex-col left-3">
-              <h5 className='md:text-base text-xs'>Rolex Watch</h5>
-              <h6 className='md:text-2xl text-base'>Luxary Watch Series 4</h6>
-              <p className='md:text-sm text-xs'>From $11k or $1.2k/mo. for 12 mo. *</p>
-            </div>
-          </div>
-
-
-          <div className="col-span-1 hover:shadow-xl bg-white hover:scale-105 transition delay-50  relative">
-            <img className='object-contain' src="/assets/laptop-1.jpg" alt="famous" />
-            <div className="absolute md:top-10 top-4 gap-1 flex flex-col left-3 text-black ">
-              <h5 className='md:text-base text-xs'>Mackbook</h5>
-              <h6 className='md:text-2xl text-base'>Mackbook Pro Series</h6>
-              <p className='md:text-sm text-xs'>From $11k or $1.2k/mo. for 12 mo. *</p>
-            </div>
-          </div>
-
-          <div className="col-span-1 hover:shadow-xl hover:scale-105 transition bg-white delay-50 relative">
-            <img className='object-contain' src="/assets/headphones-3.png" alt="famous" /> 
-          <div className="absolute md:top-10 top-4 gap-1 flex flex-col left-3 text-black">
-              <h5 className='md:text-base text-xs'>Headset</h5>
-              <h6 className='md:text-2xl text-base'>Sony Expira Series 2</h6>
-              <p className='md:text-sm text-xs'>From $60 with flat 10% cashback</p>
-            </div>
-          </div>
-
-
-          <div className="col-span-1 hover:shadow-xl hover:scale-105 transition delay-50 bg-white relative">
-            <img className='object-contain' src="/assets/mobile.jpg" alt="famous" /> 
-          <div className="absolute md:top-10 top-4 gap-1 flex flex-col left-3 text-dark ">
-              <h5 className='md:text-base text-xs'>Samsung</h5>
-              <h6 className='md:text-2xl text-base'>Samsung Pro Series 9</h6>
-              <p className='md:text-sm text-xs'>From $300 or $30/mo. for 12 mo. *</p>
-            </div>
-          </div>
-
-
-        </div>
-
-
-    </Container> */}
 
 
     <Container class1="py-5  md:hidden block">
