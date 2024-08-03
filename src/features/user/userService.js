@@ -59,6 +59,24 @@ const getUserCart = async ()=>{
     }
 }
 
+const saveAddress = async (address)=>{
+    const response = await axios.put(`${base_url}user/save-address`,address,config);
+    if(response.data){
+        return response.data;
+    }else{
+        console.log("Error Occured");
+    }
+}
+
+const getUserAddress = async ()=>{
+    const response = await axios.get(`${base_url}user/address`,config);
+    if(response.data){
+        return response.data;
+    }else{
+        console.log("Error Occured");
+    }
+}
+
 export const authService = {
     register,
     login,
@@ -67,4 +85,6 @@ export const authService = {
     logout,
     addToCart,
     getUserCart,
+    saveAddress,
+    getUserAddress
 }

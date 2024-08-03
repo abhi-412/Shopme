@@ -102,7 +102,6 @@ const MainProduct = () => {
     const products = useSelector((state)=>state.product?.products)
 
     const parser = new DOMParser();
-    // const featuredProducts = products?.filter((item)=>item?.tags.includes('Featured'));
 
 const addProductToCart = ()=>{
 
@@ -174,6 +173,10 @@ const addProductToCart = ()=>{
             setIsFullscreen(!isFullscreen);
         };
 
+        const goTologin = ()=>{
+            navigate('/login')
+        }
+
   return (
     
 
@@ -185,14 +188,14 @@ const addProductToCart = ()=>{
 ):(
 <div className="w-full py-5">
     {isFullscreen ? (
-      <div className="w-full min-h-screen flex flex-col gap-3 items-start p-5 justify-center bg-white">
+      <div className="w-full min-h-screen flex flex-col gap-3 items-start md:p-5 p-2 justify-center bg-white">
         <button className='flex items-center gap-2' onClick={handleImageClick}><IoArrowBackOutline className='text-gray-600' /> Go back</button>
         <div className='w-full h-full flex flex-col gap-4'>
-        <div className='p-3 border w-fit flex justify-center items-center'>
+        <div className='p-3 border flex justify-center items-center w-full md:w-fit h-[400px] lg:h-[500px]'>
         <img 
           src={activeImage} 
           alt="" 
-          className=" img-fluid cursor-pointer max-h-[500px]" 
+          className=" img-fluid cursor-pointer  max-h-[380px] lg:max-h-[480px] max-w-full object-contain" 
           onClick={handleImageClick}
         />
         </div>
@@ -329,7 +332,7 @@ const addProductToCart = ()=>{
                                 </div>
                             </div>
                             <div className="flex md:gap-5 gap-3 items-center flex-wrap">
-                               {!inCart && <button disabled={inCart} onClick={!user? navigate('/login') : toggleModal} className='button login text-nowrap flex items-center gap-2'><IoBagAddSharp />Add To Cart</button>}
+                               {!inCart && <button disabled={inCart} onClick={!user ? goTologin : toggleModal} className='button login text-nowrap flex items-center gap-2'><IoBagAddSharp />Add To Cart</button>}
                                 {inCart && <Link to="/cart"  className='bg-purple-500 rounded-full px-4 text-white py-1.5 text-nowrap flex items-center gap-2'>CheckOut<MdOutlineShoppingCartCheckout className='font-bold' /></Link>}
     
                                 {isOpen && <CustomModel isOpen={isOpen} setIsOpen={setIsOpen} toggleModal={toggleModal} onOk={addProductToCart} product={curProduct} count={count} color={color} total={count*curProduct?.price} size={pSize} />  }
@@ -339,7 +342,7 @@ const addProductToCart = ()=>{
                             
                             <div className='flex items-center gap-3 flex-wrap'>
                                 <button className='flex gap-1 items-center text-nowrap' ><GoGitCompare className='text-lg' />  Add to Compare</button>
-                                <button className='flex gap-1 items-center text-nowrap' onClick={!user? navigate('/login') : ()=>{addToWishlist(curProduct?._id)}}>{wishIds?.includes(curProduct?._id) ? <FaHeart className='text-lg text-red-500'/> : <GoHeart className='text-lg'/>} Add to Wishlist</button>
+                                <button className='flex gap-1 items-center text-nowrap' onClick={!user? goTologin : ()=>{addToWishlist(curProduct?._id)}}>{wishIds?.includes(curProduct?._id) ? <FaHeart className='text-lg text-red-500'/> : <GoHeart className='text-lg'/>} Add to Wishlist</button>
                             </div>
                             
                            

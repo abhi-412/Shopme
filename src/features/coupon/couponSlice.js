@@ -46,6 +46,8 @@ export const couponSlice = createSlice({
     extraReducers:(builder)=>{
         builder.addCase(getCoupons.pending,(state)=>{
             state.isLoading = true;
+            state.isError=false;
+            state.isSuccess=false;
         })
         .addCase(getCoupons.fulfilled,(state,action)=>{
             state.isError=false;
@@ -60,6 +62,8 @@ export const couponSlice = createSlice({
             state.message = action.error;
         }).addCase(getCoupon.pending,(state)=>{
             state.isLoading = true;
+            state.isError=false;
+            state.isSuccess=false;
         })
         .addCase(getCoupon.fulfilled,(state,action)=>{
             state.isError=false;

@@ -42,6 +42,12 @@ const getProducts = async (filters)=>{
     return response.data;
 }
 
+// const getProducts = async (filters)=>{
+   
+//     const response = await axios.get(`${base_url}product?${filters}`);
+//     return response.data;
+// }
+
 const getProduct = async (id)=>{
     const response = await axios.get(`${base_url}product/${id}`);
     return response.data;

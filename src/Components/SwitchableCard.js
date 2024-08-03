@@ -127,8 +127,8 @@ const SwitchableCard = ({featuredProducts,specialProducts}) => {
             </div>
           )}
           {activeTab === 'featured-products' && (
-            <div className="w-full rounded-lg dark:bg-gray-800" id="featured-products" role="tabpanel" aria-labelledby="featured-products-tab">
-              <Container class1="p-5">
+            <div className="flex justify-center w-full rounded-lg dark:bg-gray-800" id="featured-products" role="tabpanel" aria-labelledby="featured-products-tab">
+              <div className="p-5">
                 
                   <div className="w-full">
                     <h3 className="section-heading">Featured Products</h3>
@@ -139,7 +139,7 @@ const SwitchableCard = ({featuredProducts,specialProducts}) => {
                     ))}
                   </div>
              
-              </Container>
+              </div>
             </div>
           )}
         </div>

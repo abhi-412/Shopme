@@ -570,13 +570,13 @@ const customer = localStorage.getItem('customer') ? JSON.stringify(localStorage.
       </div>
 
 
-    <Header2 
+    {/* <Header2 
       productCategories={productCategories}
       hoveredCategory={hoveredCategory} 
       setHoveredCategory={setHoveredCategory}
       hoveredSubCategory={hoveredSubCategory}
       setHoveredSubCategory={setHoveredSubCategory}
-      />
+      /> */}
 
 
       <div className={`${sidebarOpen ? 'block' : 'hidden'} md:hidden fixed inset-0 bg-black bg-opacity-50 z-40`} onClick={toggleSidebar}></div>

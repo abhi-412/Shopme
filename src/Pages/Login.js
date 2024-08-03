@@ -1,7 +1,7 @@
 import React from 'react'
 import BreadCrumb from '../Components/BreadCrumb'
 import Meta from '../Components/Meta'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Container from '../Components/Container'
 import CustomInput from '../Components/CustomInput'
 import { useFormik } from 'formik'
@@ -14,7 +14,7 @@ import * as Yup from 'yup';
 const Login = () => {
 
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
 
   let userSchema =  Yup.object({
     email : Yup.string().email("Email is Invalid").required("Email is required"),
@@ -29,7 +29,9 @@ const Login = () => {
      onSubmit: async values => {
        const userData = values;
        dispatch(loginUser(userData));
-       
+       setTimeout(() => {
+         navigate('/')
+       },600)
      },
    })
 

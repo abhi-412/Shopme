@@ -82,13 +82,33 @@ export const addToCart = createAsyncThunk('auth/addToCart',async(cart,thunkAPI)=
     }
 })
 
+export const saveAddress = createAsyncThunk('auth/save-address',async(address,thunkAPI)=>{
+    try{
+        const res = await authService.saveAddress(address);
+        return res;
+    }catch(error){
+        return thunkAPI.rejectWithValue(error?.response?.data?.message)
+    }
+})
+
+export const getUserAddress = createAsyncThunk('auth/get-address',async(thunkAPI)=>{
+    try{
+        const res = await authService.getUserAddress();
+        return res;
+    }catch(error){
+        return thunkAPI.rejectWithValue(error?.response?.data?.message)
+    }
+})
+
 
 const customer = JSON.parse(localStorage.getItem('customer'));
 
 const initialState = {
     user: {},
+    newAddress: {},
     curUser: customer ? customer : {},
     wishlist:[],
+    address:[],
     cart:[],
     isLoggedIn: customer ? true : false,
     isError: false,
@@ -225,6 +245,34 @@ export const authSlice = createSlice({
             state.isSuccess = false;
             state.message = action.payload || "Something went wrong";
             
+        }).addCase(getUserAddress.pending,(state,action)=>{
+            state.isError = false;
+            state.isLoading = true;
+            state.isSuccess = false;
+        }).addCase(getUserAddress.fulfilled,(state,action)=>{
+            state.isError = false;
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.address = action.payload;
+        }).addCase(getUserAddress.rejected,(state,action)=>{
+            state.isError = true;
+            state.isLoading = false;
+            state.isSuccess = false;
+            state.message = action.payload || "Something went wrong";
+        }).addCase(saveAddress.pending,(state,action)=>{
+            state.isError = false;
+            state.isLoading = true;
+            state.isSuccess = false;
+        }).addCase(saveAddress.fulfilled,(state,action)=>{
+            state.isError = false;
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.newAddress = action.payload;
+        }).addCase(saveAddress.rejected,(state,action)=>{
+            state.isError = true;
+            state.isLoading = false;
+            state.isSuccess = false;
+            state.message = action.payload || "Something went wrong";
         })
     }
 });
