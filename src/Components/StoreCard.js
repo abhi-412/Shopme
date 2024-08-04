@@ -59,7 +59,7 @@ const StoreCard = (props) => {
                 {
                     _id: product?._id,
                     count: 1,
-                    color: product?.colors?.length ? product.colors[0] : "all",
+                    color: product?.colors?.length ? product.colors[0] : "Black",
                     size:"M"
                 },
             ]

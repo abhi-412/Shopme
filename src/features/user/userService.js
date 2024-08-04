@@ -77,6 +77,24 @@ const getUserAddress = async ()=>{
     }
 }
 
+const createOrder = async(orderDetails)=>{
+    const response = await axios.post(`${base_url}user/create-order`,orderDetails,config);
+    if(response.data){
+        return response.data;
+    }else{
+        console.log("Error Occured");
+    }
+}
+
+const getOrders = async(id)=>{
+    const response = await axios.get(`${base_url}user/orders/${id}`,config);
+    if(response.data){
+        return response.data;
+    }else{
+        console.log("Error Occured");
+    }
+}
+
 export const authService = {
     register,
     login,
@@ -86,5 +104,7 @@ export const authService = {
     addToCart,
     getUserCart,
     saveAddress,
-    getUserAddress
+    getUserAddress,
+    createOrder,
+    getOrders
 }

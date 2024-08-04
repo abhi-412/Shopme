@@ -1,22 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { getUserCart } from '../features/user/userSlice';
+import { createOrder, getUserCart } from '../features/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { BiSolidPencil } from 'react-icons/bi';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { GrLocationPin } from "react-icons/gr";
 import { getCoupons } from '../features/coupon/couponSlice';
+import { getColors } from '../features/color/colorSlice';
+import axios from 'axios';
+import logo from "../shopme_logo.png"
+import config from '../utils/config';
+import { FaLock } from 'react-icons/fa';
 
-// Dummy Data
-const cartItems = [
-  { id: 1, name: 'Product 1', price: 200, quantity: 2 },
-  { id: 2, name: 'Product 2', price: 150, quantity: 1 },
-];
 
-const user = {
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-  address: '123 Main St, City, Country',
-};
 
 // Function to calculate total cost
 const calculateTotalCost = (items) => {
@@ -24,7 +19,7 @@ const calculateTotalCost = (items) => {
 };
 
 const Checkout = () => {
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('Credit Card');
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('UPI');
     const [coupon, setCoupon] = useState('');
     const [isCouponApplied, setIsCouponApplied] = useState(false);
     const [appliedCoupon, setAppliedCoupon] = useState(null);
@@ -32,6 +27,7 @@ const Checkout = () => {
     const [taxes] = useState(0.1); // 10% tax
     const [deliveryCharges,setDeliveryCharges] = useState(50); // Fixed delivery charge
     const [CouponDiscount, setCouponDiscount] = useState(0);
+    const [paymentInfo,setPaymentInfo] = useState({razorpayOrderID: "", razorpayPaymentID: ""});
 
   const dispatch = useDispatch();
   
@@ -53,25 +49,29 @@ const Checkout = () => {
   };
 
 
-  
+  const navigate = useNavigate();
   const location = useLocation();
   const address = location?.state?.address;
   const customer = JSON.parse(localStorage.getItem('customer'));
+  
 
   useEffect(() => {
     dispatch(getUserCart());
     dispatch(getCoupons());
-    setCoupons(Curcoupons)
+    dispatch(getColors())
 
   }, [dispatch]);
 
   const cart = useSelector((state) => state.auth.cart);
   const Curcoupons = useSelector((state) => state.coupon?.coupons);
+ 
 
-//   useEffect(() => {
-//     const validCoupons = coupons.filter(c => new Date(c.expiry) > new Date());
-//     setValidCoupons(validCoupons);
-//   }, [coupons]);
+  useEffect(() => {
+    setCoupons(Curcoupons)
+    if(!address){
+      navigate('/cart/information')
+    }
+  }, [Curcoupons, address, navigate]);
 
   const [isVisible, setIsVisible] = useState(false);
   const buttonRef = useRef(null);
@@ -108,23 +108,163 @@ const Checkout = () => {
   let tax = subTotal* taxes;
   let discount = subTotal * CouponDiscount/100;
   let total = subTotal + tax - discount + deliveryCharges;
+
+  const colors = useSelector((state)=>state.color?.colors);
+
+  let items = []
+  for(let i = 0; i < cart?.products?.length; i++){
+    let obj = {};
+    const product = cart?.products[i]?.product;
+    obj['product'] = product;
+    obj['count'] = cart?.products[i]?.count;
+    const curColor = colors?.find((col)=>col?.color === cart?.products[i]?.color);
+    obj['color'] = curColor?._id;
+    obj['size'] = cart?.products[i]?.size;
+    obj['price'] = cart?.products[i]?.price;
+    items.push(obj);
+  }
+
+
+
+  const loadScript = async (src) => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.head.appendChild(script);
+    });
+  };
+
+  const checkOutHandler = async()=>{
+    const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
+    if (!res) {
+      alert("Razorpay SDK failed to load. Are you online?");
+      return;
+    }
+    const result = await axios.post("http://localhost:3000/api/user/order/payment",{amount:total},config);
+    console.log(result);
+    if (result && result?.data) {
+      const { amount, id: order_id, currency } = result.data?.order;
+      const options = {
+        key: "rzp_test_9134Bhh7f0Vcoz", // Enter the Key ID generated from the Dashboard
+        amount: amount,
+        currency: currency,
+        name: "Shopme Official.",
+        description: "Test Transaction",
+        image: logo ,
+        order_id: order_id,
+        handler: async function (response) {
+            const data = {
+                orderCreationId: order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpayOrderId: response.razorpay_order_id,
+                // razorpaySignature: response.razorpay_signature,
+            };
+
+            const result = await axios.post("http://localhost:3000/api/user/order/payment-verify", data,config);
+            const orderDetails = {
+              items,
+              shippingInfo:{
+                address: address?._id,
+                customerName: customer?.firstName + " " + customer?.lastName,
+                phoneNumber: customer?.mobile
+              },
+              paymentMethod : selectedPaymentMethod,
+              paymentInfo:{
+                razorpayPaymentID:  response.razorpay_payment_id,
+                razorpayOrderID:  response.razorpay_order_id,
+              },
+              orderStatus: "Not Processed",
+              orderBy: customer?._id,
+              totalPrice:subTotal,
+              totalAfterDiscount: Number(total?.toFixed(2))
+            } 
+            console.log(orderDetails);
+             dispatch(createOrder(orderDetails));
+
+        },
+        prefill: {
+            name: customer?.firstName?.toUpperCase().slice(0, 1) + customer?.firstName?.slice(1) + " " + customer?.lastName?.toUpperCase().slice(0,1) + customer?.lastName?.slice(1),
+            email: customer?.email,
+            contact: customer?.mobile,
+        },
+        notes: {
+            address: JSON.stringify({address:address.addressLine1 + address.addressLine2, city:address.city, state:address.state, country:address.country, pincode:address.pincode}),
+        },
+        theme: {
+            color: "#61dafb",
+        },
+    };
+
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+  }else{
+    alert("Server error. Are you online?");
+    return;
+  }
+}
+
+
+const handleOrder = async()=>{
+  if(selectedPaymentMethod !== "Cash on Delivery"){
+    checkOutHandler();
+  }else{
+    const orderDetails={
+              items,
+              shippingInfo:{
+                address: address?._id,
+                customerName: customer?.firstName + " " + customer?.lastName,
+                phoneNumber: customer?.mobile
+              },
+              paymentMethod : selectedPaymentMethod,
+              paymentInfo:paymentInfo,
+              orderStatus: "Not Processed",
+              orderBy: customer?._id,
+              totalPrice:subTotal,
+              totalAfterDiscount: Number(total?.toFixed(2))
+            }
+      dispatch(createOrder(orderDetails));
+  }
+}
+
+
+
   return (
-    <div className="p-5 max-w-4xl mx-auto bg-white shadow-md rounded-lg">
-      <h1 className="text-3xl font-bold mb-6">Checkout</h1>
+<>
+
+<div className="flex w-full justify-between bg-white border-gray-200 flex-wrap  dark:bg-gray-900 items-center px-2 py-3">
+    <Link to="/" className="flex md:px-10">
+      <img src="/assets/shopme_logo.png" className="md:w-32 w-24" alt="Logo" />
+      {/* <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"></span> */}
+    </Link>
+    <h1 className='md:text-2xl text-base text-nowrap font-semibold'>Checkout({cart?.products?.length} items)</h1>
+    <p className='md:px-5'>
+    <FaLock className='md:text-3xl text-base text-gray-500' />
+    </p>
+</div>
+    <div className='p-2 '>
+     
+        <div className="md:p-5 bg-white max-w-4xl mx-auto p-4 shadow-md rounded-lg my-5">
+      <h1 className="md:text-3xl text-xl font-bold mb-6">Billing Information</h1>
 
       {/* User Details */}
       <div className=" bg-gray-100 mb-4 p-3">
         <div className="flex flex-col gap-2">
           <h4 className="font-semibold text-xl">Contact Information</h4>
           <div className='flex gap-4'>
-            <div className='flex gap-1'>
-              <p className=" text-gray-500">{customer?.firstName?.toUpperCase().slice(0,1) + customer?.firstName?.slice(1)} {customer?.lastName?.toUpperCase().slice(0,1) + customer?.lastName?.slice(1)}</p>
+            <div className='flex gap-1 flex-wrap'>
+              <p className=" text-gray-500 text-sm md:text-base flex text-nowrap">{customer?.firstName?.toUpperCase().slice(0,1) + customer?.firstName?.slice(1)} {customer?.lastName?.toUpperCase().slice(0,1) + customer?.lastName?.slice(1)}</p>
               <button 
                 ref={buttonRef}
                 onMouseOver={togglePopover}
                 className="cursor-pointer"
               >
-                <p className='text-gray-500'>({customer?.email})</p>
+                <p className='text-gray-500 text-sm md:text-base'>({customer?.email})</p>
               </button>
               <div 
                 ref={popoverRef}
@@ -173,14 +313,14 @@ const Checkout = () => {
               </div>
             </div>
             <a href='/login' className='text-gray-600 flex gap-1 items-center cursor-pointer hover:text-blue-500'>
-              <BiSolidPencil className='text-lg' />
-              <span className='text-sm'>Change</span>
+              <BiSolidPencil className='text-sm md:text-lg' />
+              <span className='text-xs md:text-sm'>Change</span>
             </a>
           </div>
           <div className='flex gap-4'>
-            <h4 className='mb-3 flex gap-1 items-center'><GrLocationPin/>Deliver to:  </h4>
-            <address className='text-gray-600'>
-              {address?.addressLine1},{address?.addressLine2},{address?.city},{address?.state},{address?.country},{address?.pincode}
+            <h4 className='mb-3 flex gap-1 text-sm md:text-base items-center text-nowrap'><GrLocationPin/>Deliver to:  </h4>
+            <address className='text-gray-600 text-xs md:text-sm flex text-wrap flex-wrap'>
+              {address?.addressLine1},{address?.addressLine2},{address?.city}, <br /> {address?.state},{address?.country},{address?.pincode}
             </address>
           </div>
         </div>
@@ -188,10 +328,10 @@ const Checkout = () => {
 
       {/* Cart Items */}
       <div className="bg-gray-100 p-4 rounded-lg mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Cart Items</h2>
+        <h2 className="md:text-2xl text-lg font-semibold mb-2">Cart Items</h2>
         <ul className="divide-y divide-gray-300">
           {cart?.products?.map((item) => (
-            <li key={item.product_id} className="flex justify-between py-2 text-gray-700">
+            <li key={item.product_id} className="flex text-sm md:text-base justify-between py-2 text-gray-700">
               <span>{item?.product?.title?.length > 20 ? item.product.title.slice(0, 20) + "..." : item.product.title} (x{item.count})</span>
               <span> ₹{item.price * item.count}</span>
             </li>
@@ -200,13 +340,13 @@ const Checkout = () => {
       </div>
 
       <div className="bg-gray-100 p-4 rounded-lg mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Available Coupons</h2>
+        <h2 className="text-lg md:text-2xl font-semibold mb-2">Available Coupons</h2>
         <ul className="divide-y divide-gray-300">
-          {coupons.map(coupon => (
+          {coupons?.map(coupon => (
             <li key={coupon.name} className="py-2 text-gray-700 flex justify-between gap-2">
               <div className='flex gap-2 items-center'>
-              <span>{coupon.name} - {coupon.discount}% off</span>
-              <span className="text-sm text-gray-500"> (Expires on {new Date(coupon.expiry).toLocaleDateString()})</span>
+              <p className='text-sm relative'>{coupon.name} - {coupon.discount}% off <span className='text-xs text-blue-500 absolute -top-1'>T&C</span></p>
+              {/* <span className="text-sm text-gray-500"> (Valid until {new Date(coupon.expiry).toLocaleDateString()})</span> */}
               </div>
 
               <button
@@ -220,8 +360,8 @@ const Checkout = () => {
         </ul>
       </div>
 
-      <div className="bg-gray-100 p-4 rounded-lg mb-6">
-        <div className="flex mb-4">
+      <div className="bg-gray-100 p-3 mb-5 rounded-lg">
+        <div className="flex flex-wrap items-center gap-2">
           <input
             type="text"
             placeholder="Enter coupon code"
@@ -232,22 +372,22 @@ const Checkout = () => {
                 }
             } 
             
-            className="p-2 border border-gray-300 rounded-md flex-grow"
+            className="p-2 border text-sm border-gray-300 rounded-md flex-grow"
           />
           <button
             onClick={handleApplyCoupon}
-            className="ml-2 p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="ml-2 text-nowrap px-3 py-2 h-fit text-xs bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
-            Apply Coupon
+            Apply
           </button>
         </div>
         {isCouponApplied && <p className="text-green-600">Coupon applied: {appliedCoupon.code} - {appliedCoupon.discount}% off</p>}
       </div>
 
       {/* Billing Summary */}
-      <div className="bg-gray-100 p-4 rounded-lg mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Billing Summary</h2>
-        <div className="flex justify-between py-1 text-gray-700">
+      <div className="bg-gray-100 p-4 text-sm md:text-base rounded-lg mb-6">
+        <h2 className="md:text-2xl text-lg font-semibold mb-2">Billing Summary</h2>
+        <div className="flex justify-between py-1  text-gray-700">
           <span>Subtotal:</span>
           <span> ₹{subTotal}</span>
         </div>
@@ -273,32 +413,32 @@ const Checkout = () => {
       </div>
 
       {/* Payment Method */}
-      <div className="bg-gray-100 p-4 rounded-lg mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Payment Method</h2>
+      <div className="bg-gray-100 p-4 text-sm md:text-base rounded-lg mb-6">
+        <h2 className="md:text-2xl text-lg font-semibold mb-2">Payment Method</h2>
         <div className="space-y-2">
           <div className="flex items-center">
             <input
               type="radio"
-              id="credit-card"
+              id="card"
               name="payment-method"
-              value="Credit Card"
-              checked={selectedPaymentMethod === 'Credit Card'}
+              value="Card"
+              checked={selectedPaymentMethod === 'Card'}
               onChange={(e) => setSelectedPaymentMethod(e.target.value)}
               className="mr-2"
             />
-            <label htmlFor="credit-card" className="text-gray-700">Credit Card</label>
+            <label htmlFor="card" className="text-gray-700">Card</label>
           </div>
           <div className="flex items-center">
             <input
               type="radio"
-              id="paypal"
+              id="upi"
               name="payment-method"
-              value="PayPal"
-              checked={selectedPaymentMethod === 'PayPal'}
+              value="UPI"
+              checked={selectedPaymentMethod === 'UPI'}
               onChange={(e) => setSelectedPaymentMethod(e.target.value)}
               className="mr-2"
             />
-            <label htmlFor="paypal" className="text-gray-700">PayPal</label>
+            <label htmlFor="upi" className="text-gray-700">UPI</label>
           </div>
           <div className="flex items-center">
             <input
@@ -317,12 +457,15 @@ const Checkout = () => {
 
       {/* Place Order Button */}
       <button
-        onClick={() => alert('Order placed successfully!')}
-        className="w-full p-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        onClick={handleOrder}
+        className="w-full px-5 py-2 h-fit bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
       >
         Place Order
       </button>
+        </div>
     </div>
+</>
+   
   );
 };
 

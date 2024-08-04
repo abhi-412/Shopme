@@ -26,6 +26,8 @@ import {checkTokenExpiration} from "./features/user/userSlice"
 import { PrivateRoutes } from './routing/privateRoutes';
 import { OpenRoutes } from './routing/openRoutes';
 import Address from './Pages/Address';
+import Orders from './Pages/Orders';
+import OrderDetails from './Pages/OrderDetails';
 
 function App() {
   const dispatch = useDispatch();
@@ -58,6 +60,8 @@ useEffect(()=>{
                   <Route path="blogs" element={<Blog />}/>
                   <Route path="blog/:id" element={<MainBlog />}/>
                   <Route path="cart" element={<PrivateRoutes><Cart /></PrivateRoutes> }/>
+                  <Route path="orders" element={<PrivateRoutes><Orders /></PrivateRoutes> }/>
+                  {/* <Route path="orders/:orderId" element={<PrivateRoutes><OrderDetails /></PrivateRoutes> }/> */}
                   <Route path="contact" element={<Contact />}/>
                   <Route path="compare-product" element={<CompareProduct />}/>
                   <Route path="wishlist" element={<PrivateRoutes><Wishlist /></PrivateRoutes>}/>

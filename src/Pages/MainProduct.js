@@ -16,6 +16,7 @@ import { MdOutlineShoppingCartCheckout,MdOutlineContentCopy } from "react-icons/
 import CustomModel from '../Components/CustomModal'
 import { LuCopyCheck } from "react-icons/lu";
 import Loader from "./Loader"
+import { toast } from 'react-toastify'
 
 const Categories = ["Watch","Tv","Camera","Laptop"];
 const size = ["S","M","L","XL","XXL"]; 
@@ -104,6 +105,9 @@ const MainProduct = () => {
     const parser = new DOMParser();
 
 const addProductToCart = ()=>{
+    if(color === ""){
+        toast.error("Please Pick a color");
+    }
 
     const cart = {
    
