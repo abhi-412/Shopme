@@ -16,12 +16,12 @@ import Loader from './Loader';
 const size = ["S", "M", "L", "XL", "XXL"];
 const tags = ["Featured", "Special", "Popular", "None"];
 const options = [
+    { sort: "createdAt", order: "desc", label: "Date, New to Old" },
     { sort: "title", order: "desc", label: "Alphabetically, Z-A" },
     { sort: "title", order: "asc", label: "Alphabetically, A-Z" },
     { sort: "price", order: "asc", label: "Price, low to high" },
     { sort: "price", order: "desc", label: "Price, high to low" },
     { sort: "createdAt", order: "asc", label: "Date, Old to New" },
-    { sort: "createdAt", order: "desc", label: "Date, New to Old" }
 ];
 
 const OurStore = () => {

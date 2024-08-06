@@ -20,10 +20,10 @@ const SpecialProducts = ({product}) => {
                 <div className='w-full items-center gap-3  grid grid-cols-5'>
                     
                     
-                        <div className=' col-span-2 featured-image'>
-                        <img className='img-fluid h-[170px]'  src={product?.images[0]?.url || "/assets/watch.jpg"} alt="Featured product" />
+                        <div className='col-span-2 h-[170px] flex items-center featured-image'>
+                        <img className='img-fluid object-contain'  src={product?.images[0]?.url || "/assets/watch.jpg"} alt="Featured product" />
                         {product?.images?.length > 1 && 
-                            <img className='img-fluid h-[170px]'  src={product?.images[1]?.url || "/assets/watch.jpg"} alt="Featured product" />
+                            <img className='img-fluid object-contain'  src={product?.images[1]?.url || "/assets/watch.jpg"} alt="Featured product" />
                         }
                         </div>
                    

@@ -39,9 +39,9 @@ const Home = () => {
   const products = useSelector((state)=>state.product?.products)
   
 
-  const featuredProducts = products?.filter((item)=>item?.tags.includes('Featured'));
-  const specialProducts = products?.filter((item)=>item?.tags.includes('Special'));
-  const popularProducts = products?.filter((item)=>item?.tags.includes('Popular'));
+  const featuredProducts = products?.filter((item)=>item?.tags.includes('Featured')).slice(0,5);
+  const specialProducts = products?.filter((item)=>item?.tags.includes('Special')).slice(0,3);
+  const popularProducts = products?.filter((item)=>item?.tags.includes('Popular')).slice(0,5);
 
   const services = [
     {title:"Cameras",quant:"4,986 Items",src:"/images/camera.jpg"},
@@ -69,33 +69,33 @@ const Home = () => {
       <div class="flex items-center">
         <div class="flex items-center flex-nowrap gap-2 w-full justify-between">
 
-        <div class="flex md:flex-row flex-col justify-center items-center md:gap-3 gap-1">
+        <div class="flex md:flex-row flex-col justify-center items-center md:gap-3 gap-2">
           <img src="/images/service-02.png" className='w-5 md:w-8' alt="service" />
           <div>
             <h6 className='text-xs md:text-base'>Daily Surprise Offers</h6>
-            <p class="mb-0 text-xs md:text-base">Save upto 25%</p>
+            {/* <p class="mb-0 text-xs md:text-base">Save upto 25%</p> */}
           </div>
         </div>
 
-          <div class="flex md:flex-row flex-col justify-center items-center md:gap-3 gap-1">
+          <div class="flex md:flex-row flex-col justify-center items-center md:gap-3 gap-2">
             <img src="/images/service-03.png" className='w-5 md:w-8' alt="service" />
             <div>
               <h6 className='text-xs md:text-base'>24x7 Support</h6>
-              <p className="mb-0 text-xs md:text-base">Talk with our experts</p>
+              {/* <p className="mb-0 text-xs md:text-base">Talk with our experts</p> */}
             </div>
           </div>
-          <div class="flex md:flex-row flex-col justify-center items-center md:gap-3 gap-1">
+          <div class="flex md:flex-row flex-col justify-center items-center md:gap-3 gap-2">
             <img src="/images/service-04.png" className='w-5 md:w-8' alt="service" />
             <div>
               <h6 className='text-xs md:text-base'>Affordable Prices</h6>
-              <p class="mb-0 text-xs md:text-base">Get Factory  Prices</p>
+              {/* <p class="mb-0 text-xs md:text-base">Get Factory  Prices</p> */}
             </div>
           </div>
-          <div class="flex md:flex-row flex-col justify-center items-center md:gap-3 gap-1">
+          <div class="flex md:flex-row flex-col justify-center items-center md:gap-3 gap-2">
             <img src="/images/service-05.png" className='w-5 md:w-8' alt="service" />
             <div>
               <h6 className='text-xs md:text-base'>Secure Payments</h6>
-              <p class="mb-0 text-xs md:text-base">100% Secure Payment</p>
+              {/* <p class="mb-0 text-xs md:text-base">100% Secure Payment</p> */}
             </div>
           </div>
         </div>
@@ -142,7 +142,7 @@ const Home = () => {
     </Container>
 
     <div className='w-full hidden md:block'>
-    <SwitchableCard featuredProducts={featuredProducts} specialProducts={specialProducts}/>
+    <SwitchableCard featuredProducts={featuredProducts} specialProducts={specialProducts} popularProducts={popularProducts}/>
     </div>
 
 
@@ -163,7 +163,7 @@ const Home = () => {
 
 
 
-<Container class1 = " py-5  md:hidden block ">
+<Container class1 = "py-5  md:hidden block ">
        <div className="row">
             <div className='w-full'>
               <h3 className='section-heading'>Popular This Week</h3>

@@ -3,7 +3,7 @@ import Container from './Container';
 import  SpecialProducts from './SpecialProducts';
 import FeaturedCard from './FeaturedCard';
 
-const SwitchableCard = ({featuredProducts,specialProducts}) => {
+const SwitchableCard = ({featuredProducts,specialProducts,popularProducts}) => {
     const [activeTab, setActiveTab] = useState('featured-products');
   
     const handleTabClick = (tab) => {
@@ -19,9 +19,9 @@ const SwitchableCard = ({featuredProducts,specialProducts}) => {
             className="bg-gray-200 border-0 border-b border-gray-200 text-gray-900 text-sm rounded-t-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             onChange={(e) => handleTabClick(e.target.value)}
           >
-            <option value="featured-products">Featured Collections</option>
+            <option value="popular-products">Popular This Week</option>
             <option value="special-products">Special Products</option>
-            <option value="featured-collections">Featured Products</option>
+            <option value="popular-products">Featured Products</option>
           </select>
         </div>
         <ul
@@ -57,58 +57,34 @@ const SwitchableCard = ({featuredProducts,specialProducts}) => {
           </li>
           <li className="w-full">
             <button
-              id="featured-collections-tab"
+              id="popular-products-tab"
               type="button"
               role="tab"
-              aria-controls="featured-collections"
-              aria-selected={activeTab === 'featured-collections'}
-              className={`inline-block w-full p-4 rounded-se-lg ${activeTab === 'featured-collections' ? 'bg-gray-200' : 'bg-gray-50 hover:bg-gray-100'} focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600`}
-              onClick={() => handleTabClick('featured-collections')}
+              aria-controls="popular-products"
+              aria-selected={activeTab === 'popular-products'}
+              className={`inline-block w-full p-4 rounded-se-lg ${activeTab === 'popular-products' ? 'bg-gray-200' : 'bg-gray-50 hover:bg-gray-100'} focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600`}
+              onClick={() => handleTabClick('popular-products')}
             >
-              Featured Collections
+              Popular Products
             </button>
           </li>
         </ul>
         <div id="fullWidthTabContent" className="border-t w-full border-gray-200 dark:border-gray-600">
-          {activeTab === 'featured-collections' && (
-            <div className="p-4  rounded-lg md:p-8 dark:bg-gray-800" id="featured-products" role="tabpanel" aria-labelledby="featured-products-tab">
-              <Container class1="py-5">
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-cols-5 gap-4">
-                  <div className="col-span-1 bg-black hover:shadow-xl hover:scale-105 transition delay-50 relative">
-                    <img className="object-contain" src="/assets/famous-watch.jpg" alt="famous" />
-                    <div className="text-light absolute md:top-10 top-4 gap-1 flex flex-col left-3">
-                      <h5 className=" text-lg">Rolex Watch</h5>
-                      <h6 className="md:text-3xl">Luxury Watch Series 4</h6>
-                      <p className="text-base">From $11k or $1.2k/mo. for 12 mo. *</p>
-                    </div>
-                  </div>
-                  <div className="col-span-1 hover:shadow-xl bg-white hover:scale-105 transition delay-50 relative">
-                    <img className="object-contain" src="/assets/laptop-1.jpg" alt="famous" />
-                    <div className="absolute md:top-10 top-4 gap-1 flex flex-col left-3 text-black">
-                      <h5 className="text-lg">MacBook</h5>
-                      <h6 className="text-3xl">MacBook Pro Series</h6>
-                      <p className="text-base">From $11k or $1.2k/mo. for 12 mo. *</p>
-                    </div>
-                  </div>
-                  <div className="col-span-1 hover:shadow-xl hover:scale-105 transition bg-white delay-50 relative">
-                    <img className="object-contain" src="/assets/headphones-3.png" alt="famous" />
-                    <div className="absolute md:top-10 top-4 gap-1 flex flex-col left-3 text-black">
-                      <h5 className="text-base">Headset</h5>
-                      <h6 className="md:text-2xl text-base">Sony Xperia Series 2</h6>
-                      <p className="text-base">From $60 with flat 10% cashback</p>
-                    </div>
-                  </div>
-                  <div className="col-span-1 hover:shadow-xl hover:scale-105 transition delay-50 bg-white relative">
-                    <img className="object-contain" src="/assets/mobile.jpg" alt="famous" />
-                    <div className="absolute md:top-10 top-4 gap-1 flex flex-col left-3 text-dark">
-                      <h5 className="text-base">Samsung</h5>
-                      <h6 className="md:text-2xl text-base">Samsung Pro Series 9</h6>
-                      <p className="text-base">From $300 or $30/mo. for 12 mo. *</p>
-                    </div>
-                  </div>
+          {activeTab === 'popular-products' && (
+            <div className="flex justify-center w-full rounded-lg dark:bg-gray-800" id="popular-products" role="tabpanel" aria-labelledby="popular-products-tab">
+            <div className="p-5">
+              
+                <div className="w-full">
+                  <h3 className="section-heading">Popular Products</h3>
                 </div>
-              </Container>
+                <div className="flex justify-start flex-wrap gap-3">
+                  {popularProducts?.map((product) => (
+                    <FeaturedCard key={product.id} product={product} />
+                  ))}
+                </div>
+           
             </div>
+          </div>
           )}
           {activeTab === 'special-products' && (
             <div className="p-4  rounded-lg md:p-8 dark:bg-gray-800" id="special-products" role="tabpanel" aria-labelledby="special-products-tab">

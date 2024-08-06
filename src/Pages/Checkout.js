@@ -10,13 +10,13 @@ import axios from 'axios';
 import logo from "../shopme_logo.png"
 import config from '../utils/config';
 import { FaLock } from 'react-icons/fa';
-
+import { base_url } from '../utils/base_url';
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 // Function to calculate total cost
-const calculateTotalCost = (items) => {
-  return items.reduce((total, item) => total + item.price * item.quantity, 0);
-};
 
 const Checkout = () => {
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('UPI');
@@ -36,7 +36,6 @@ const Checkout = () => {
 
   const handleApplyCoupon = (c) => {
     const couponData = coupons.find(c => c.name === coupon);
-    console.log(couponData && new Date(couponData.expiry) > new Date());
     if (couponData && new Date(couponData.expiry) > new Date()) {
       setIsCouponApplied(true);
       setAppliedCoupon(couponData);
@@ -51,9 +50,10 @@ const Checkout = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const address = location?.state?.address;
+  const address = location?.state?.address;  
   const customer = JSON.parse(localStorage.getItem('customer'));
-  
+
+
 
   useEffect(() => {
     dispatch(getUserCart());
@@ -146,7 +146,7 @@ const Checkout = () => {
       alert("Razorpay SDK failed to load. Are you online?");
       return;
     }
-    const result = await axios.post("http://localhost:3000/api/user/order/payment",{amount:total},config);
+    const result = await axios.post(`${base_url}user/order/payment`,{amount:total},config);
     console.log(result);
     if (result && result?.data) {
       const { amount, id: order_id, currency } = result.data?.order;
@@ -166,7 +166,7 @@ const Checkout = () => {
                 // razorpaySignature: response.razorpay_signature,
             };
 
-            const result = await axios.post("http://localhost:3000/api/user/order/payment-verify", data,config);
+            const result = await axios.post(`${base_url}user/order/payment-verify`, data,config);
             const orderDetails = {
               items,
               shippingInfo:{
@@ -184,8 +184,11 @@ const Checkout = () => {
               totalPrice:subTotal,
               totalAfterDiscount: Number(total?.toFixed(2))
             } 
-            console.log(orderDetails);
+            // console.log(orderDetails);
              dispatch(createOrder(orderDetails));
+             setTimeout(()=>{
+               navigate("/orders");
+             },3000)
 
         },
         prefill: {
@@ -229,13 +232,25 @@ const handleOrder = async()=>{
               totalAfterDiscount: Number(total?.toFixed(2))
             }
       dispatch(createOrder(orderDetails));
+
   }
 }
 
-
-
-  return (
+return (
 <>
+<ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            />
+     
 
 <div className="flex w-full justify-between bg-white border-gray-200 flex-wrap  dark:bg-gray-900 items-center px-2 py-3">
     <Link to="/" className="flex md:px-10">
@@ -331,7 +346,7 @@ const handleOrder = async()=>{
         <h2 className="md:text-2xl text-lg font-semibold mb-2">Cart Items</h2>
         <ul className="divide-y divide-gray-300">
           {cart?.products?.map((item) => (
-            <li key={item.product_id} className="flex text-sm md:text-base justify-between py-2 text-gray-700">
+            <li key={item.product?._id} className="flex text-sm md:text-base justify-between py-2 text-gray-700">
               <span>{item?.product?.title?.length > 20 ? item.product.title.slice(0, 20) + "..." : item.product.title} (x{item.count})</span>
               <span> ₹{item.price * item.count}</span>
             </li>
@@ -369,6 +384,7 @@ const handleOrder = async()=>{
             onChange={(e) =>{
                 setCoupon(e.target.value);
                 setIsCouponApplied(false);
+                setCouponDiscount(0);
                 }
             } 
             
@@ -408,7 +424,7 @@ const handleOrder = async()=>{
         </div>
         <div className="flex justify-between py-2 font-bold text-gray-900">
           <span>Total:</span>
-          <p className='flex gap-3 items-center'><span className='text-gray-500 line-through font-normal'>₹{(total + discount).toFixed(2)}</span> ₹{total.toFixed(2)}</p>
+          <p className='flex gap-3 items-center'><span hidden={total + discount === total} className='text-gray-500 line-through font-normal'>₹{(total + discount).toFixed(2)}</span> ₹{total.toFixed(2)}</p>
         </div>
       </div>
 

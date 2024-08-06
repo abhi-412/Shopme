@@ -95,6 +95,16 @@ const getOrders = async(id)=>{
     }
 }
 
+const forgetPass = async(values)=>{
+    const response = await axios.post(`${base_url}user/forgot-password-token`,values);
+    return response.data
+}
+
+const resetPass = async(data)=>{
+    const response = await axios.put(`${base_url}user/reset-password/${data.token}`,{password:data.password});
+    return response.data;
+}
+
 export const authService = {
     register,
     login,
@@ -106,5 +116,7 @@ export const authService = {
     saveAddress,
     getUserAddress,
     createOrder,
-    getOrders
+    getOrders,
+    forgetPass,
+    resetPass
 }

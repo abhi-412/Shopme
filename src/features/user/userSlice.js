@@ -121,6 +121,24 @@ export const getMyOrders = createAsyncThunk('auth/get-orders',async(id,thunkAPI)
     }
 })
 
+export const forgetPassword = createAsyncThunk('auth/forgot-password',async(values,thunkAPI)=>{
+    try{
+        const res = await authService.forgetPass(values);
+        return res;
+    }catch(error){
+        return thunkAPI.rejectWithValue(error?.response?.data?.message)
+    }
+})
+
+export const resetPassword = createAsyncThunk('auth/reset-password',async(data,thunkAPI)=>{
+    try{
+        const res = await authService.resetPass(data);
+        return res;
+    }catch(error){
+        return thunkAPI.rejectWithValue(error?.response?.data?.message)
+    }
+})
+
 const initialState = {
     user: {},
     newAddress: {},
@@ -129,6 +147,7 @@ const initialState = {
     wishlist:[],
     address:[],
     cart:[],
+    passToken:"",
     orders:[],
     isLoggedIn: customer ? true : false,
     isError: false,
@@ -302,11 +321,35 @@ export const authSlice = createSlice({
             state.isLoading = false;
             state.isSuccess = true;
             state.newOrder = action.payload;
+            if(state.isSuccess){
+                toast('📦 Order Placed Successfully!', {
+                    position: "bottom-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    });
+            }
         }).addCase(createOrder.rejected,(state,action)=>{
             state.isError = true;
             state.isLoading = false;
             state.isSuccess = false;
             state.message = action.payload || "Something went wrong";
+            if (state.isError) {
+                toast.error(state.message, {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+            }
         }).addCase(getMyOrders.pending,(state,action)=>{
             state.isError = false;
             state.isLoading = true;
@@ -321,6 +364,71 @@ export const authSlice = createSlice({
             state.isLoading = false;
             state.isSuccess = false;
             state.message = action.payload || "Something went wrong";
+        }).addCase(forgetPassword.pending,(state,action)=>{
+            state.isError = false;
+            state.isLoading = true;
+            state.isSuccess = false;
+        }).addCase(forgetPassword.fulfilled,(state,action)=>{
+            state.isError = false;
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.message = action.payload;
+            if(state.isSuccess){
+                toast.success("Reset Link sent to Email Please Check Your 📧", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+            }
+        }).addCase(forgetPassword.rejected,(state,action)=>{
+            state.isError = true;
+            state.isLoading = false;
+            state.isSuccess = false;
+            state.message = action.payload || "Something went wrong";
+        })
+        .addCase(resetPassword.pending,(state,action)=>{
+            state.isError = false;
+            state.isLoading = true;
+            state.isSuccess = false;
+        }).addCase(resetPassword.fulfilled,(state,action)=>{
+            state.isError = false;
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.message = action.payload;
+            if(state.isSuccess){
+                toast.success("Password Reset Successfully", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+            }
+        }).addCase(resetPassword.rejected,(state,action)=>{
+            state.isError = true;
+            state.isLoading = false;
+            state.isSuccess = false;
+            state.message = action.payload || "Something went wrong";
+            if (state.isError) {
+                toast.error(state.message, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+            }
         })
     }
 });

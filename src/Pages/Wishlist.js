@@ -43,7 +43,7 @@ const Wishlist = () => {
         <div className="grid md:grid-cols-3 xl:grid-cols-4 sm:grid-cols-2 xxs:grid-cols-1 xs:grid-cols-2 gap-3">
                    
                   {wishlist?.map((item)=>(
-                       <div className="col-span-1  bg-white shadow sm:p-3 p-2 rounded">
+                       <div className="col-span-1  bg-white shadow sm:p-3 p-3 rounded">
                        <div className="w-full h-full flex flex-col sm:gap-4 justify-between gap-2 relative">
                        <h6 className='sm:text-sm text-xs  text-indigo-500 font-semibold'>{item?.category}</h6>
                           
@@ -53,8 +53,8 @@ const Wishlist = () => {
                               <img src="images/cross.svg" alt="cross" />
                               
                             </button>
-                             <div className="w-full flex justify-center">
-                                <img className='w-10/12' src={item?.images[0]?.url || "/assets/watch.jpg"} alt="" />
+                             <div className="w-full h-48 flex justify-center">
+                                <img className='w-10/12 object-contain' src={item?.images[0]?.url || "/assets/watch.jpg"} alt="" />
                              </div>
                              <div className='sm:py-3 py-1 flex flex-col gap-2'>
                               <h6 className='text-sm text-red-500 font-semibold'>{item?.brand}</h6>

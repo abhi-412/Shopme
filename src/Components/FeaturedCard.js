@@ -85,7 +85,7 @@ const FeaturedCard = (props) => {
 
     return (
         <>
-        <div className="relative min-w-[250px] max-w-[255px]  hover:shadow-xl hover:scale-105 transition delay-50 bg-white rounded">
+        <div className="relative min-w-[250px] max-w-[252px]  flex flex-col min-h-full justify-between hover:shadow-xl hover:scale-105 transition delay-50 bg-white rounded">
         
                 <div className='icon absolute right-5 top-2'>
                     <button onClick={!user ? goTologin : () => {addToWishlist(product?._id)}} disabled={isAddingToCart || isLoading} hidden={isLoading} className='border-0 bg-transparent' >
@@ -94,10 +94,11 @@ const FeaturedCard = (props) => {
                     {isLoading && <TbLoader className='text-danger' />}
                 </div>
                 <a
+                className='h-full'
                 href={`/product/${product?._id}`}
             >
-                <div className='mb-3 mx-4 p-4 featured-image'>
-                    <img className='img-fluid object-cover w-100' src={product?.images[0]?.url || "/assets/watch.jpg"} alt="Featured product" />
+                <div className='mb-3 mx-4 items-center flex p-4 h-48 w-48 featured-image'>
+                    <img className='img-fluid  object-cover' src={product?.images[0]?.url || "/assets/watch.jpg"} alt="Featured product" />
                     {product?.images?.length > 1 &&
                         <img className='img-fluid' src={product?.images[1]?.url || "/assets/watch.jpg"} alt="Featured product" />
                     }
@@ -121,7 +122,7 @@ const FeaturedCard = (props) => {
                 </a>
                 <div className='action-bar absolute top-10 right-5'>
                     <div className='d-flex flex-column gap-15'>
-                    <button onClick={!user ? goTologin : null} hidden={isAddingToCart} disabled={isAddingToCart} className='border-0 bg-transparent' onClick={() => {addProductToCart(product?._id); }}>
+                    <button onClick={!user ? goTologin : null} hidden={isAddingToCart} disabled={isAddingToCart} className='border-0 bg-transparent' >
                        {!inCart ? <IoBagAddSharp /> : <IoBagCheck className='text-green-500'/>}
                     </button>
                     {isAddingToCart && <TbLoader hidden={!isAddingToCart} className='text-green-500' />}

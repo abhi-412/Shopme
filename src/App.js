@@ -28,6 +28,7 @@ import { OpenRoutes } from './routing/openRoutes';
 import Address from './Pages/Address';
 import Orders from './Pages/Orders';
 import OrderDetails from './Pages/OrderDetails';
+import UserProfile from './Pages/Profile';
 
 function App() {
   const dispatch = useDispatch();
@@ -57,18 +58,19 @@ useEffect(()=>{
                   <Route path="store?" element={<OurStore />}/>
                   <Route path="product/:id" element={<MainProduct />}/>
                   <Route path="about" element={<About />}/>
+                  <Route path="profile" element={<UserProfile />}/>
                   <Route path="blogs" element={<Blog />}/>
                   <Route path="blog/:id" element={<MainBlog />}/>
                   <Route path="cart" element={<PrivateRoutes><Cart /></PrivateRoutes> }/>
                   <Route path="orders" element={<PrivateRoutes><Orders /></PrivateRoutes> }/>
-                  {/* <Route path="orders/:orderId" element={<PrivateRoutes><OrderDetails /></PrivateRoutes> }/> */}
+                  <Route path="orders/:orderId" element={<PrivateRoutes><OrderDetails /></PrivateRoutes> }/>
                   <Route path="contact" element={<Contact />}/>
                   <Route path="compare-product" element={<CompareProduct />}/>
                   <Route path="wishlist" element={<PrivateRoutes><Wishlist /></PrivateRoutes>}/>
                   <Route path="login" element={<Login />}/>
                   <Route path="signup" element={<OpenRoutes><SignUp /></OpenRoutes>}/>
                   <Route path="forgot-password" element={<ForgotPassword />}/>
-                  <Route path="reset-password" element={<PrivateRoutes><ResetPassword /></PrivateRoutes>}/>
+                  <Route path="reset-password/:token" element={<ResetPassword />}/>
                   <Route path="terms-and-conditions" element={<TermsAndConditions />}/>
                   <Route path="privacy-policy" element={<PrivacyPolicy />}/>
                   <Route path="return-policy" element={<ReturnPolicy />}/>
