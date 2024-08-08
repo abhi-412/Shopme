@@ -30,14 +30,12 @@ const ForgotPassword = () => {
   return (
     <>
       <Meta title={"Forgot Password"} />
-      <BreadCrumb title={"Forgot Password"} />
 
-      <Container class1="login-wrapper py-5 home-wrapper-2">
-        <div className="row">
-          <div className="col-12">
-            <div className="auth-card">
-              <h3 className='text-center'>Reset Your Password</h3>
-              <p className="text-center mt-2 mb-3">
+      <Container class1="py-5 flex items-center justify-center h-96 w-full">
+            <div className='w-full flex items-center md:items-start justify-center'>
+            <div className="bg-white p-4 w-[450px] rounded shadow">
+              <h3 className='text-center font-semibold text-lg'>Reset Your Password</h3>
+              <p className="text-center mt-2 mb-3 text-sm text-gray-500">
                 We will send you an email to reset your password
               </p>
               <form className='d-flex flex-column gap-15' onSubmit={formik.handleSubmit}>
@@ -53,16 +51,13 @@ const ForgotPassword = () => {
                   <div className="text-danger text-sm">{formik.errors.email}</div>
                 ) : null}
 
-                <div>
-                  <div className="d-flex flex-column mt-3 justify-content-center gap-15 align-items-center">
+                  <div className="flex flex-col mt-3 w-full justify-center gap-3 items-center">
                     <button type='submit' className='button login'>Submit</button>
-                    <Link to={'/login'}>Cancel</Link>
+                    <Link className='underline' to={'/login'}>Cancel</Link>
                   </div>
-                </div>
               </form>
             </div>
-          </div>
-        </div>
+            </div>
       </Container>
     </>
   );
