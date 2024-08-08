@@ -85,7 +85,7 @@ const StoreCard = (props) => {
                     </button>
                     {isLoading && <TbLoader className='text-danger' />}
                 </div>
-        <div className='featured-image mb-3 mx-4'>
+        <div className='featured-image flex justify-center mb-3 mx-4'>
         <img className='img-fluid h-[170px]'  src={product?.images[0]?.url || "/assets/sample-img.jpg"} alt="Featured product" />
         {product?.images?.length > 1 && 
             <img className='img-fluid h-[170px]'  src={product?.images[1]?.url || "/assets/sample-img.jpg"} alt="Featured product" />
@@ -99,7 +99,7 @@ const StoreCard = (props) => {
                 
             <ReactStars
             count={5}
-            value={product?.totalRating}
+            value={parseInt(product?.totalRating)}
             edit={false}
             size={window.innerWidth < 768 ? 20 : 24}
             color2={'#ffd700'} 

@@ -139,6 +139,15 @@ export const resetPassword = createAsyncThunk('auth/reset-password',async(data,t
     }
 })
 
+export const removeAddress = createAsyncThunk('auth/remove-address',async(addressId,thunkAPI)=>{
+    try{
+        const res = await authService.removeAddress(addressId);
+        return res;
+    }catch(error){
+        return thunkAPI.rejectWithValue(error?.response?.data?.message)
+    }
+})
+
 const initialState = {
     user: {},
     newAddress: {},
@@ -429,6 +438,32 @@ export const authSlice = createSlice({
                     theme: "light",
                   });
             }
+        }).addCase(removeAddress.pending,(state,action)=>{
+            state.isError = false;
+            state.isLoading = true;
+            state.isSuccess = false;
+        }).addCase(removeAddress.fulfilled,(state,action)=>{
+            state.isError = false;
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.message = action.payload;
+            if(state.isSuccess){
+                toast.success("Removed Addess Successfully", {
+                    position: "bottom-center",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+            }
+        }).addCase(removeAddress.rejected,(state,action)=>{
+            state.isError = true;
+            state.isLoading = false;
+            state.isSuccess = false;
+            state.message = action.payload || "Something went wrong";
         })
     }
 });

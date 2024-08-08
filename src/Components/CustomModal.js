@@ -27,7 +27,7 @@ const {toggleModal,isOpen,onOk,product,total,count,color,size} = props
                 <img src={product?.images?.length > 0 ? product?.images[0]?.url : "/assets/watch.jpg"} className="object-contain" alt="" />
 
                 </div>
-                <h3 className="mb-1 text-xl font-bold text-gray-900 dark:text-white">{product?.title}</h3>
+                <h3 className="mb-1 text-xl font-bold text-gray-900 dark:text-white">{product?.title?.length >20 ? product?.title?.slice(0,20) + "..." : product?.title}</h3>
                 <div>
                   <p className="mb-2 font-normal text-gray-700 dark:text-gray-400">Color : <span className={`text-${color?.toLowerCase()}-500`}>{color}</span></p>
                   <p className="mb-2 font-normal text-gray-700 dark:text-gray-400">Size : <span className='font-semibold text-black'>{size}</span></p>

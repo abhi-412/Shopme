@@ -105,6 +105,15 @@ const resetPass = async(data)=>{
     return response.data;
 }
 
+const removeAddress = async(addressId)=>{
+    const response = await axios.delete(`${base_url}user/address/${addressId}`,config);
+    if(response.data){
+        return response.data;
+    }else{
+        console.log("Error Occured");
+    }
+}
+
 export const authService = {
     register,
     login,
@@ -115,6 +124,7 @@ export const authService = {
     getUserCart,
     saveAddress,
     getUserAddress,
+    removeAddress,
     createOrder,
     getOrders,
     forgetPass,

@@ -53,3 +53,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.rbt input{
+    border-radius: 0%;
+    background-color: #f1f1f1;
+    outline: none;
+}
+

@@ -9,7 +9,7 @@ import { FaCheck, FaUser, FaFileAlt, FaClipboardCheck } from 'react-icons/fa';
 import { getProducts } from '../features/products/productSlice';
 import Loader from "./Loader"
 import { useNavigate } from 'react-router-dom';
-import { MdWork } from 'react-icons/md';
+import { MdCancel, MdWork } from 'react-icons/md';
 import { GrLocationPin } from 'react-icons/gr';
 
 const Orders = () => {
@@ -29,11 +29,13 @@ const Orders = () => {
   const userOrders = useSelector((state)=>state.auth.orders)
   const isLoading = useSelector((state)=>state.auth.isLoading)
   
-  const filteredOrders = userOrders?.filter(order => 
-    order.orderBy?.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.id.toString().includes(searchTerm)
+  const filteredOrders = userOrders?.filter(order =>
+    order?.items?.some(item => item?.product?.title?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    order?.createdAt?.toString().includes(searchTerm)
+
   );
 
+  
 
 
   useEffect(() => {
@@ -41,17 +43,7 @@ const Orders = () => {
         const id = customer?._id;
         dispatch(getMyOrders(id))
     }
-    const filters = {
-        page: 1,
-        limit: 10,
-        sortBy: { sort: 'createdAt', order: 'desc' },
-        price: { lte: 82000,gte:0 },
-        color:"",
-        categories: [],
-        outOfStock:false,
-        tags:[]
-    }
-    dispatch(getProducts(filters));
+
   }, [ dispatch]);
 
   const handleSelect = (id)=>{
@@ -64,7 +56,6 @@ const Orders = () => {
     // console.log(order?.items);
   }
 
-  const products = useSelector((state)=>state.product.products);
 
 
 
@@ -86,11 +77,10 @@ const Orders = () => {
                 <div className="relative mb-6 ">
                 <input
                     type="text"
-                    placeholder="Search by order ID or customer name..."
+                    placeholder="Search by product name..."
                     onChange={handleSearchChange}
                     className="w-full py-3 px-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
                 </div>
 
                 {/* Orders List */}
@@ -120,7 +110,7 @@ const Orders = () => {
                             <h2 className="text-2xl font-semibold text-gray-800 mb-2">Products in This Order</h2>
                             {selectedOrder?.items?.map((p, index) => (
                                 <div key={index} className="flex items-center mb-3 border-b border-gray-200 pb-1 pt-2">
-                                <img src={p.product?.images?.length > 0 ? p.product?.images[0].url : ""} alt={p.name} className="w-20 h-20 object-cover rounded mr-4 border border-gray-300" />
+                                <img onClick={()=>navigate(`/product/${p?.product?._id}`)} src={p.product?.images?.length > 0 ? p.product?.images[0].url : ""} alt={p.name} className="w-20 h-20 object-cover cursor-pointer rounded mr-4 border border-gray-300" />
                                 <div className="flex-1">
                                     <p className="text-gray-800 font-medium">{p.product?.title?.length > 40 ? p.product?.title.slice(0, 40) + "..." : p.product?.title}</p>
                                     <p className="text-black text-lg "> ₹{p.price}</p>
@@ -136,13 +126,14 @@ const Orders = () => {
                                                     <FaCheck className="w-2 h-2 text-green-500 dark:text-green-400" />
                                                     </span>
                                                     <h3 className="text-sm">Ordered</h3>
-                                                    <h3 className="text-xs">{new Intl.DateTimeFormat('en-US', { month: 'long', day: '2-digit', year: 'numeric' }).format(new Date(selectedOrder?.updatedAt))}</h3>
+                                                    <h3 className="text-xs">{new Intl.DateTimeFormat('en-US', { month: 'long', day: '2-digit', year: 'numeric' }).format(new Date(selectedOrder?.createdAt))}</h3>
                                                 </li>
                                                 <li className="mb-10 ms-6">
-                                                    <span className={`absolute flex items-center justify-center w-4 h-4 ${selectedOrder?.orderStatus === 'Delivered' ? 'bg-green-200' : 'bg-yellow-200'} rounded-full -start-2 ring-4 ring-white`}>
-                                                    {selectedOrder?.orderStatus === 'Delivered' ? <FaCheck className="w-2 h-2 text-green-500 dark:text-green-400" /> :  <FaExclamation className="w-2 h-2 text-yellow-500 dark:text-yellow-400" />}
+                                                    <span className={`absolute flex items-center justify-center w-4 h-4 ${selectedOrder?.orderStatus === 'Delivered' ? 'bg-green-200' : selectedOrder?.orderStatus === 'Cancelled' ? 'bg-red-200' : 'bg-yellow-200'} rounded-full -start-2 ring-4 ring-white`}>
+                                                    {selectedOrder?.orderStatus === 'Delivered' ? <FaCheck className="w-2 h-2 text-green-500 dark:text-green-400" /> : selectedOrder?.orderStatus === 'Cancelled' ? <MdCancel className="w-4 h-4 text-red-500" /> : <FaExclamation className="w-2 h-2 text-yellow-500 dark:text-yellow-400" />}
                                                     </span>
                                                     <h3 className="text-sm">{selectedOrder?.orderStatus}</h3>
+                                                    <h3 className="text-xs">{new Intl.DateTimeFormat('en-US', { month: 'long', day: '2-digit', year: 'numeric' }).format(new Date(selectedOrder?.updatedAt))}</h3>
                                                 </li>
                                             </ol>
                                     </div>

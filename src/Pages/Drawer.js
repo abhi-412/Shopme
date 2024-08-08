@@ -1,155 +1,218 @@
-import React from 'react';
-import ReactStars from 'react-stars';
- // Import your data and handlers
-// import Color from './Color'; // Import the Color component
+import React, { useState } from 'react';
+import { RxCross1 } from "react-icons/rx";
+import { toast } from 'react-toastify';
 
 const Drawer = (props) => {
-    
+    const {
+        Categories,
+        priceFilterBy,
+        handlePriceRange,
+        totalProducts,
+        selectedCategories,
+        outOfStock,
+        setOutOfStock,
+        tags,
+        toggleDrawer,
+        handleCategoryChange,
+        isDrawerOpen,
+        colors,
+        selectedTags,
+        handleTagChange,
+        setColor,
+        getThumbPosition,
+        color
+    } = props;
 
-    const { Categories, priceFilterBy, handlePriceRange, size, tags,toggleDrawer,isDrawerOpen,colors,setColor,color } = props;
-  return (
-    <div className={`absolute top-24 right-0 z-40 h-full p-4 overflow-y-auto transition-transform -translate-x-50 bg-gray-400 w-96 dark:bg-gray-800 drawer`} tabindex="-1" aria-labelledby="drawer-backdrop-label">
-        <h5 id="drawer-backdrop-label" className="text-base font-semibold text-white uppercase dark:text-gray-400">Menu</h5>
-      <button onClick={toggleDrawer} type="button" data-drawer-hide="drawer-backdrop" aria-controls="drawer-backdrop" className="text-white bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white">
-        <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-          <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-        </svg>
-        <span className="sr-only">Close menu</span>
-      </button>
-      <div className="py-4 overflow-y-auto">
-      <div className='text-dark bg-gray-200 rounded-xl p-3 flex flex-wrap gap-3 mb-3'>
-                        <h3 className="text-md font-semibold">Shop By Category</h3>
-                        <ul className='flex flex-wrap gap-3'>
-                            {Categories?.length > 0 && Categories.map((cat)=>{
-                                return <li key={cat?._id} className='badge bg-light text-secondary rounded-3 py-2 px-2'>{cat.title}</li>
-                            })}
-                        </ul>
-                     </div>
+    const handleCategoryClick = (category) => {
+        handleCategoryChange(category);
+        toggleDrawer(); // Close drawer after selection
+    };
 
-                     <div className='text-dark bg-gray-100 rounded-xl p-3 flex flex-col flex-wrap gap-3 mb-3'>
-                     <h3 className="text-md font-semibold mb-3">Filter By</h3>
-                     <div>
-                            <h5 className='text-md mb-2'>Availibility</h5>
+    const handleTagClick = (tag) => {
+        handleTagChange(tag);
+        toggleDrawer(); // Close drawer after selection
+    };
 
-                            <div className="form-check">
-                                <input type="checkbox" 
-                                className="form-check-input" 
-                                value={""}
-                                id=''
-                            
-                                />
-                                <label htmlFor="" 
-                                className="form-check-label text-sm"
+    const [visibleCount, setVisibleCount] = useState(10);
+
+    const handleShowMore = () => {
+      setVisibleCount((prevCount) => prevCount + 10);
+    };
+
+    const visibleCategories = Categories.slice(0, visibleCount);
+    const remainingCount = Categories.length - visibleCount;
+
+    const handleSubmit = ()=>{
+        toggleDrawer();
+        window.scrollTo(0,0);
+        setTimeout(()=>{
+            toast(`${totalProducts} products found`,{
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        },1000)
+    }
+
+    return (
+        <div
+            className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ease-in-out ${
+                isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
+            } z-40 bg-gray-100 shadow-lg w-96 overflow-y-auto `}
+            role="dialog"
+            aria-labelledby="drawer-title"
+        >
+            <div className="relative p-4">
+                <button
+                    onClick={toggleDrawer}
+                    type="button"
+                    className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                    aria-controls="drawer-content"
+                    aria-label="Close menu"
+                >
+                    <RxCross1  className='text-xl '/>
+                </button>
+                <div className="pt-6">
+                    <h5
+                        id="drawer-title"
+                        className="text-2xl py-1 font-semibold text-gray-800  mb-4 text-center"
+                    >
+                        Filters
+                    </h5>
+                    <div className='text-dark bg-white border-b border-b-gray-400  p-3 flex flex-wrap gap-3 mb-3'>
+                            <h3 className="text-md font-semibold">Shop By Category</h3>
+                            <ul className='flex flex-wrap items-center gap-3'>
+                                {visibleCategories.length > 0 && visibleCategories.map((cat) => (
+                                <li
+                                    onClick={() => handleCategoryChange(cat.title)}
+                                    key={cat?._id}
+                                    className={`cursor-pointer ${selectedCategories.includes(cat.title) ? "text-white bg-blue-500" : "bg-gray-200 text-gray-500"} text-xs font-semibold rounded-3 py-1 px-2`}
                                 >
-                                   In Stock [1]
-                                </label>
-                            </div>
-
-                            <div className="form-check">
-                                <input type="checkbox" 
-                                className="form-check-input " 
-                                value={""}
-                                id=''
-                                checked
-                                />
-                                <label htmlFor="" 
-                                className="form-check-label text-sm"
-                                >
-                                   Out of Stock [0]
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div >
-                            <h5 className='text-md mb-2'>Price</h5>
-
-                            <div className="flex flex-col justify-center gap-2">
-                            <h6 className='text-sm'>From $0 to ${priceFilterBy}</h6>
-                                <div className="filter-range">
-                                <input type="range"
-                                className="form-range"
-                                min="0"
-                                max="10000"
-                                step="10"
-                                onChange={handlePriceRange}
-                                id="customRange3" 
-                                value={priceFilterBy}
-                                />
-                            </div>
-                         </div>
-                        </div>
-                        
-                        <div className='flex items-center flex-wrap gap-2 '>
-                                <h6 className='mb-0'>Colors:</h6>
-                                <ul className='flex gap-2 flex-wrap'>
-                                {colors?.map((c,i)=>(
-                                    <button onClick={()=>setColor(c.color)} className={`text-center rounded-full ${color === c.color  ? "border-2 border-black scale-110" : ""} border-2  border-gray-600`} key={i} style={{backgroundColor:`${c.color?.toLowerCase()}`, width:"20px", height:"20px", borderRadius:"50%"}}></button>
+                                    {cat.title}
+                                </li>
                                 ))}
-                                </ul>
-                            </div>
-
-                        <div>
-                        <h5 className='text-md mb-2'>Size</h5>
-                           <div className='flex gap-3 items-center flex-wrap'>
-                           {size.map((size)=>{
-                                return  <div className="flex gap-1 items-center">
-                                <input type="checkbox" 
-                                className="form-check-input" 
-                                value={""}
-                                id=''
-                                />
-                                <label htmlFor="" 
-                                className="mt-1 text-sm"
+                                {remainingCount > 0 ? (
+                                <li
+                                    onClick={handleShowMore}
+                                    className="cursor-pointer text-sm underline text-blue-500"
                                 >
-                                    {size}
+                                    +{remainingCount} more
+                                </li>
+                                ):(
+                                    <li
+                                    onClick={()=>{setVisibleCount(10)}}
+                                    className="cursor-pointer text-sm underline text-blue-500"
+                                >
+                                    see less
+                                </li>
+                                )}
+                            </ul>
+                        </div>
+                    <div className="mb-4 flex gap-3 flex-col">
+                        <h6 className="text-lg font-semibold text-gray-800  p-2 text-center">Filter By</h6>
+                        <div className="border-b border-b-gray-400 bg-gray-50 pb-3 mb-2 py-2 px-3">
+                            <h6 className="font-medium text-gray-800 dark:text-gray-200 mb-3">Availability</h6>
+                            <div className="flex items-center mb-1">
+                                <input
+                                    type="checkbox"
+                                    id="in-stock"
+                                    checked={!outOfStock}
+                                    onChange={() => setOutOfStock(!outOfStock)}
+                                    className="form-checkbox h-3 w-3 text-blue-600 border-gray-300 rounded"
+                                />
+                                <label htmlFor="in-stock" className="ml-2 text-xs text-gray-600 dark:text-gray-300">
+                                    In Stock [{totalProducts}]
                                 </label>
-                            
                             </div>
-                            })}
-                           </div>
-                           
-                        </div> 
+                            <div className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    id="out-of-stock"
+                                    checked={outOfStock}
+                                    onChange={() => setOutOfStock(!outOfStock)}
+                                    className="form-checkbox h-3 w-3 text-blue-600 border-gray-300 rounded"
+                                />
+                                <label htmlFor="out-of-stock" className="ml-2 text-xs text-gray-600 dark:text-gray-300">
+                                    Out of Stock [0]
+                                </label>
+                            </div>
+                        </div>
+                        <div className='border-b border-b-gray-400 bg-gray-50 pb-3 mb-2 py-2 px-3'>
+                                <h5 className='text-md mb-4 font-semibold'>Price</h5>
+                                <div className="relative flex flex-col justify-center gap-1">
+                                    <input
+                                        type="range"
+                                        className="w-full h-1 my-1 outline-none bg-blue-600 cursor-pointer"
+                                        min={0}
+                                        max={82000}
+                                        step="10"
+                                        onChange={handlePriceRange}
+                                        id="customRange3"
+                                        value={priceFilterBy}
+                                    />
+                                    <span
+                                        className={`text-sm text-gray-700 -top-6 absolute ${priceFilterBy===0 || priceFilterBy===82000 ?  'hidden': 'block'}`}
+                                        style={{
+                                            left: getThumbPosition(),
+                                            transform: 'translateX(-50%)', 
+                                        }}
+                                        id='rangeValue'
+                                        
+                                    >
+                                        ₹{priceFilterBy}
+                                    </span>
+                                    <h6 className="text-sm flex justify-between w-full">
+                                        ₹0 <span>₹82000</span>
+                                    </h6>
+                                    
+                                </div>
+
+                            </div>
+                        <div className="border-b border-b-gray-400 bg-gray-50 pb-3 mb-2 py-2 px-3">
+                            <h6 className="font-semibold text-gray-800 dark:text-gray-200 mb-3">Colors</h6>
+                            <div className="flex gap-2">
+                                {colors?.map((c, i) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => setColor(c.color)}
+                                        className={`p-2.5 rounded-full border-2 ${
+                                            color === c.color ? 'border-black transform scale-125' : 'border-gray-500'
+                                        }`}
+                                        style={{ backgroundColor: c.color.toLowerCase() }}
+                                    ></button>
+                                ))}
+                            </div>
+                        </div>
+                        <div className='border-b border-b-gray-400 bg-gray-50 pb-3 mb-2 py-2 px-3'>
+                            <h6 className=" font-semibold text-gray-800 dark:text-gray-200 mb-3">Product Tags</h6>
+                            <div className="flex flex-wrap gap-2">
+                                {tags?.map((t, i) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => handleTagClick(t)}
+                                        className={`text-xs font-semibold rounded-lg py-1 px-2 ${
+                                            selectedTags.includes(t)
+                                                ? 'bg-blue-500 text-white'
+                                                : 'bg-gray-200 text-gray-600'
+                                        }`}
+                                    >
+                                        {t}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <button onClick={handleSubmit} className='bg-yellow-800 px-5 py-2 rounded-xl hover:bg-yellow-950 text-white'>Apply</button>
                     </div>
-
-                    <div className='text-dark filter-card mb-3'>
-                     <h3 className="filter-title">Product Tags</h3>
-                    
-                     <div className='flex flex-wrap gap-2'>
-                            {tags.map((tag)=>{
-                                return <span className='badge bg-light text-secondary rounded-3 py-2 px-2'>{tag}</span>
-                            })}
-                     </div>
-                    </div>
-
-        <div className='text-dark filter-card mb-3'>
-          <h3 className="filter-title">Random Products</h3>
-          <div>
-            <div className='random-products d-flex mb-3'>
-              <div className="w-50">
-                <img src='/images/headphone.jpg' className='img-fluid' alt="random-image-2" />
-              </div>
-              <div className="w-50">
-                <h6>Kids Headphones Bulk 10 <br />Pack Multi Colored For..</h6>
-                <ReactStars count={5} value={3} edit={false} size={24} color2={'#ffd700'} />
-                <p>$100 only</p>
-              </div>
+                </div>
             </div>
-
-            <div className='random-products d-flex'>
-              <div className="w-50">
-                <img src='/images/watch.jpg' className='img-fluid' alt="random-image-2" />
-              </div>
-              <div className="w-50">
-                <h6>Aspiron Watch <br />Blue Sapphire Color</h6>
-                <ReactStars count={5} value={4} edit={false} size={24} color2={'#ffd700'} />
-                <p>$60 only</p>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Drawer;

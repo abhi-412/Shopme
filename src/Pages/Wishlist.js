@@ -59,7 +59,7 @@ const Wishlist = () => {
                              <div className='sm:py-3 py-1 flex flex-col gap-2'>
                               <h6 className='text-sm text-red-500 font-semibold'>{item?.brand}</h6>
                              <h5 className="md:text-lg hidden md:block text-base font-semibold">
-                                {item?.title}
+                                {item?.title?.length > 20 ? `${item?.title?.slice(0,20)}...` : item?.title}
                            </h5>
                            <h5 className="md:text-lg md:hidden block text-base font-semibold">
                                 {`${item?.title?.slice(0,17)}...`}
@@ -69,7 +69,7 @@ const Wishlist = () => {
                            
                         </div>
                         <div className='flex gap-2 sm:gap-4 px-2 w-full items-end py-2 sm:justify-normal justify-between flex-wrap'>
-                                <Link className=' text-nowrap flex gap-2 items-center text-blue-500 font-semibold rounded' to={`/product/${item?._id}`}><FaEye className='text-xl' />View</Link>
+                                <Link className=' text-nowrap flex gap-2 items-center  text-blue-500 font-semibold rounded' to={`/product/${item?._id}`}><FaEye className='text-xl' />View</Link>
                                 <button className=' text-nowrap text-sm flex gap-2 items-center text-blue-600 font-semibold  rounded'><FaCartPlus className='text-xl' />Cart</button>
                              </div>
                              

@@ -186,13 +186,12 @@ const addProductToCart = ()=>{
 
     <>
     <Meta title={curProduct?.title?.slice(0,25)} />
-    <BreadCrumb title={curProduct?.title?.slice(0,25)} />
     {isLoading ? (
         <Loader />
 ):(
-<div className="w-full py-5">
+<div className="w-full">
     {isFullscreen ? (
-      <div className="w-full min-h-screen flex flex-col gap-3 items-start md:p-5 p-2 justify-center bg-white">
+      <div className="w-full min-h-screen flex flex-col gap-3 items-start p-3 mt-3 justify-center bg-white">
         <button className='flex items-center gap-2' onClick={handleImageClick}><IoArrowBackOutline className='text-gray-600' /> Go back</button>
         <div className='w-full h-full flex flex-col gap-4'>
         <div className='p-3 border flex justify-center items-center w-full md:w-fit h-[400px] lg:h-[500px]'>

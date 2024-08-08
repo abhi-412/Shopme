@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Container from '../Components/Container';
 import { FaCheck, FaMapMarkerAlt } from 'react-icons/fa';
 import { FaExclamation } from 'react-icons/fa6';
@@ -29,7 +29,7 @@ const OrderDetails = () => {
         dispatch(getProducts(filters));
       }, [dispatch]);
 
-      console.log(selectedOrder);
+      const navigate = useNavigate();
 
   const products = useSelector((state)=>state.product.products);
 
@@ -42,7 +42,6 @@ const OrderDetails = () => {
 
   const rewardCoins = selectedOrder?.totalAfterDiscount * 0.01;
 
-  console.log(rewardCoins.toFixed(0));
 
   return (
     
@@ -55,7 +54,7 @@ const OrderDetails = () => {
                     <h2 className="text-2xl font-semibold text-gray-800 mb-2">Products in This Order</h2>
                     {selectedOrder?.items?.map((p, index) => (
                         <div key={index} className="flex items-center border-b border-gray-200 pb-1 pt-2">
-                        <img src={p.product?.images?.length > 0 ? p.product?.images[0].url : ""} alt={p.name} className="sm:w-20 sm:h-20 w-16 h-16 object-cover rounded mr-4 border border-gray-300" />
+                        <img onClick={()=>{navigate(`/product/${p.product?._id}`)}} src={p.product?.images?.length > 0 ? p.product?.images[0].url : ""} alt={p.name} className="sm:w-20 sm:h-20 w-16 h-16 object-cover rounded mr-4 border border-gray-300" />
                         <div className="flex-1">
                             <p className="text-gray-800 text-sm mr-2 sm:text-lg font-medium">{p.product?.title?.length > 20 ? p.product?.title.slice(0, 20) + "..." : p.product?.title}</p>
                             <p className="text-black sm:text-lg text-sm"> ₹{p.price}</p>
@@ -75,7 +74,7 @@ const OrderDetails = () => {
                                         </li>
                                         <li className="my-4 ms-3">
                                             <span className={`absolute flex items-center justify-center w-4 h-4 ${selectedOrder?.orderStatus === 'Delivered' ? 'bg-green-200' : 'bg-yellow-200'} rounded-full -start-2 `}>
-                                            {selectedOrder?.orderStatus === 'Delivered' ? <FaCheck className="w-2 h-2 text-green-500 dark:text-green-400" /> :  <FaExclamation className="w-2 h-2 text-yellow-500 dark:text-yellow-400" />}
+                                            {selectedOrder?.orderStatus === 'Delivered' ? <FaCheck className="w-2 h-2 text-green-500 dark:text-green-400" /> : selectedOrder?.orderStatus === 'Cancelled' ? <FaExclamation className="w-2 h-2 text-red-500 dark:text-red-400" /> :  <FaExclamation className="w-2 h-2 text-yellow-500 dark:text-yellow-400" />}
                                             </span>
                                             <h3 className="text-sm">{selectedOrder?.orderStatus}</h3>
                                         </li>

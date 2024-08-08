@@ -147,11 +147,10 @@ const Checkout = () => {
       return;
     }
     const result = await axios.post(`${base_url}user/order/payment`,{amount:total},config);
-    console.log(result);
     if (result && result?.data) {
       const { amount, id: order_id, currency } = result.data?.order;
       const options = {
-        key: "rzp_test_9134Bhh7f0Vcoz", // Enter the Key ID generated from the Dashboard
+        key: process.env.RAZORPAY_KEY, // Enter the Key ID generated from the Dashboard
         amount: amount,
         currency: currency,
         name: "Shopme Official.",
