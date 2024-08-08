@@ -384,14 +384,14 @@ export const authSlice = createSlice({
             state.message = action.payload;
             if(state.isSuccess){
                 toast.success("Reset Link sent to Email Please Check Your 📧", {
-                    position: "top-right",
+                    position: "bottom-center",
                     autoClose: 3000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: "light",
+                    theme: "dark",
                   });
             }
         }).addCase(forgetPassword.rejected,(state,action)=>{
