@@ -123,7 +123,7 @@ const randomNum =  Math.floor(Math.random() * (1200 - 100 + 1)) + 100;
                     
                 ))
                 ) : (
-                    <Link to={"/store"} className="flex flex-col cursor-pointer items-center justify-center h-72 w-full text-center">
+                    <Link to={"/store"} className="flex flex-col col-start-2 cursor-pointer items-center justify-center h-72 w-full text-center">
                         <div className="flex flex-col items-center justify-center  rounded-lg ">
                             <FaArrowDown className='text-4xl animate-bounce'/>
                             <BsCart4 className="text-9xl text-gray-600" />
@@ -172,7 +172,7 @@ const randomNum =  Math.floor(Math.random() * (1200 - 100 + 1)) + 100;
                                         <p className="text-gray-600 flex justify-between mb-2"><span>Price ({userCart?.products?.length} items):</span> ₹ {userCart?.cartTotal +( userCart?.cartTotal * 2 + randomNum)}</p>
                                         <p className="text-green-500 flex justify-between mb-2"><span className='text-gray-600'>Discount:</span>- ₹{userCart?.cartTotal * 2 + randomNum}</p>
                                         <p className="text-gray-600 flex justify-between mb-2"><span>Delivery Charges:</span>{userCart?.cartTotal > 1000 ? <p className='flex gap-2'> <span className='line-through text-gray-400'>₹50</span> <span className='text-green-500'> FREE Delivery</span></p> : <span>₹50</span>} </p>
-                                        <p className="text-black flex font-semibold  justify-between"><span>Final Amount:</span> ₹ {userCart?.cartTotal > 1000 ? userCart?.cartTotal  : userCart?.cartTotal + 50}</p>
+                                        <p className="text-black flex font-semibold  justify-between"><span>Final Amount:</span> ₹ {userCart?.cartTotal > 1000 ? userCart?.cartTotal  : userCart?.cartTotal > 0 ? userCart?.cartTotal + 50 : 0}</p>
                                 </div>
                        </div>
 

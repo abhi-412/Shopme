@@ -16,7 +16,6 @@ const MainBlog = () => {
     const location = useLocation();
     const id = location.pathname.split('/')[2]
 
-    console.log(id);
     const dispatch = useDispatch();
 
     useEffect(()=>{
@@ -24,6 +23,7 @@ const MainBlog = () => {
     },[dispatch, id])
 
     const addLikeToBlog = (blogId)=>{
+
         dispatch(likeBlog(blogId));
         setTimeout(()=>{
             dispatch(getBlog(id));

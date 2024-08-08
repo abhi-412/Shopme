@@ -75,10 +75,10 @@ const Contact = () => {
         </iframe>
         </div>
 
-        <div className="col-12 mt-5 mb-5">
-            <div className="content-wrapper d-flex justify-content-between">
-              <div>
-                <h3 className='contact-title mb-3'>Contact Us</h3>
+        <div className="col-12 mt-5 mb-5 ">
+            <div className="flex md:flex-row flex-col gap-3">
+              <div className='w-full bg-white p-3 shadow-sm mb-4'>
+                <h3 className='text-xl font-semibold text-center mb-3'>Contact Us</h3>
                 {successPage && <div className='my-3 flex flex-col items-center gap-2 justify-center'>
                   <p className='text-green-600'>Enquiry Submitted Successfully. We will get back to you shortly.</p>
                   <div className='flex gap-3 flex-wrap items-center'>
@@ -88,15 +88,15 @@ const Contact = () => {
                   
                   </div>}
                 {!successPage && (
-                            <form onSubmit={formik.handleSubmit} className='d-flex flex-column gap-15'>
-                              <div className="d-flex flex-column  justify-items-center gap-2"> 
+                            <form onSubmit={formik.handleSubmit} className='flex flex-col gap-3'>
+                              <div className="flex flex-col  justify-center gap-2"> 
                                 <CustomInput
                                 type="text"
                                 name='name'
                                 placeholder='Full Name'
                                 onCh={formik.handleChange}
                                 val={formik.values.name}  
-                                //  onBl={formik.handleBlur("name")}
+                                 onBl={formik.handleBlur}
                                 />
                                     <div>
                                         {formik.touched.name && formik.errors.name ? (
@@ -154,33 +154,33 @@ const Contact = () => {
                       
                         
                       
-                              <div>
-                                <button className='button'>
+                              <div className='w-full flex items-center justify-center'>
+                                <button className='py-1.5 px-4 rounded-full bg-gray-800 text-gray-50 '>
                                     Submit
                                 </button>
                               </div>
                             </form>
                 )}
               </div>
-              <div>
-                <h3 className='contact-title mb-4'>Get in Touch with Us</h3>
+              <div className='w-full mb-4 shadow-sm bg-white p-3'>
+                <h3 className='text-xl text-center font-semibold mb-4'>Get in Touch with Us</h3>
                 <div>
                   <ul className='ps-0'>
                     <li className='mb-3 d-flex gap-15 align-items-center'>
-                      <FaHome className='fs-5' />
+                      <FaHome className='text-3xl' />
                       <address className='mb-0'>Hno. 209/9, Near Metro Station-4, Hazaratganj, 
                         Lucknow,  UP</address>
                     </li>
                     <li className='mb-3 d-flex gap-15 align-items-center'>
-                      <FaAddressBook className='fs-5' />
+                      <FaAddressBook className='text-lg' />
                       <a href="tel:+91 8788091946">+91 9145105096</a>
                     </li>
                     <li className='mb-3 d-flex gap-15 align-items-center'>
-                      <IoIosMail className='fs-5' />
+                      <IoIosMail className='text-lg' />
                       <a href="mailto: rakhisingh41234@gmail.com">rakhisingh41234@gmail.com</a>
                     </li>
                     <li className='mb-3 d-flex gap-15 align-items-center'>
-                      <BiInfoCircle className='fs-5' />
+                      <BiInfoCircle className='text-lg' />
                       <p className='mb-0'>Monday-Friday 9am-10pm</p>
                     </li>
                     
