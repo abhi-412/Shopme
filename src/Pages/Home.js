@@ -69,34 +69,34 @@ const Home = () => {
       <div class="flex items-center">
         <div class="flex items-center flex-nowrap gap-2 w-full justify-between">
 
-        <div class="flex md:flex-row flex-col justify-center items-center md:gap-3 gap-2">
+        <div class="flex md:flex-row justify-center items-center md:gap-3 gap-2">
           <img src="/images/service-02.png" className='w-5 md:w-8' alt="service" />
-          <div>
+          
             <h6 className='text-xs md:text-base'>Daily Surprise Offers</h6>
             {/* <p class="mb-0 text-xs md:text-base">Save upto 25%</p> */}
-          </div>
+        
         </div>
 
-          <div class="flex md:flex-row flex-col justify-center items-center md:gap-3 gap-2">
+          <div class="flex md:flex-row justify-center items-center md:gap-3 gap-2">
             <img src="/images/service-03.png" className='w-5 md:w-8' alt="service" />
-            <div>
+          
               <h6 className='text-xs md:text-base'>24x7 Support</h6>
               {/* <p className="mb-0 text-xs md:text-base">Talk with our experts</p> */}
-            </div>
+            
           </div>
-          <div class="flex md:flex-row flex-col justify-center items-center md:gap-3 gap-2">
+          <div class="flex md:flex-row justify-center items-center md:gap-3 gap-2">
             <img src="/images/service-04.png" className='w-5 md:w-8' alt="service" />
-            <div>
+          
               <h6 className='text-xs md:text-base'>Affordable Prices</h6>
               {/* <p class="mb-0 text-xs md:text-base">Get Factory  Prices</p> */}
-            </div>
+            
           </div>
-          <div class="flex md:flex-row flex-col justify-center items-center md:gap-3 gap-2">
+          <div class="flex md:flex-row justify-center items-center md:gap-3 gap-2">
             <img src="/images/service-05.png" className='w-5 md:w-8' alt="service" />
-            <div>
+          
               <h6 className='text-xs md:text-base'>Secure Payments</h6>
               {/* <p class="mb-0 text-xs md:text-base">100% Secure Payment</p> */}
-            </div>
+            
           </div>
         </div>
       </div>

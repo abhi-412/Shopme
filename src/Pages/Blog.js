@@ -61,7 +61,7 @@ const Blog = () => {
           <h1 className='text-3xl font-semibold'> Read Our Blogs Here</h1>
         </div>
 
-            <div className="flex flex-wrap gap-3 relative">
+            <div className="flex justify-center flex-wrap gap-3 relative">
                     <div className='text-dark  bg-white flex flex-col gap-3 rounded-lg p-3  mb-3'>
                         <h3 className="text-lg font-semibold">Search By Category</h3>
                         <ul className='flex w-[250px] flex-wrap items-center gap-3'>

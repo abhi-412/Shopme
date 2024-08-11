@@ -146,6 +146,7 @@ const Checkout = () => {
       alert("Razorpay SDK failed to load. Are you online?");
       return;
     }
+    
     const result = await axios.post(`${base_url}user/order/payment`,{amount:total},config);
     if (result && result?.data) {
       const { amount, id: order_id, currency } = result.data?.order;

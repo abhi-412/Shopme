@@ -6,7 +6,7 @@ import {BsLinkedin,BsGithub,BsYoutube,BsInstagram} from 'react-icons/bs'
 const Footer = () => {
   return (
     <>
-        <footer className="py-3 w-full ">
+        <footer className="p-3 w-full ">
             <div className="w-full flex justify-center">
               <div className="flex md:flex-row flex-col gap-3 px-3 justify-between md:w-10/12 w-full items-center">
                 <div className="flex w-full items-center gap-3">
@@ -37,7 +37,7 @@ const Footer = () => {
         </footer>
 
 
-        <footer className="py-3 w-full">
+        <footer className="p-3 w-full">
           <div className="w-full flex justify-center md:px-10 px-2">
             <div className="md:container flex flex-wrap justify-between gap-4">
 
@@ -74,26 +74,15 @@ const Footer = () => {
                 <h4 className='text-white mb-4'>Account</h4>
                 <div className='text-sm md:text-base flex flex-col gap-2'>
 
-                    <Link className='text-white ' to={'/'}>Search</Link>
-                    <Link className='text-white' to={'/'}>About Us</Link>
-                    <Link className='text-white' to={'/'}>Faq</Link>
-                    <Link className='text-white' to={'/'}>Contact</Link>
+                    <Link className='text-white ' to={'/Home#'}>Search</Link>
+                    <Link className='text-white' to={'/contact'}>About Us</Link>
+                    <Link className='text-white' to={'/contact'}>Faq</Link>
+                    <Link className='text-white' to={'/contact'}>Contact</Link>
                     <Link className='text-white' to={'/'}>Size Chart</Link>
                   
                 </div>
               </div>
-              <div className="col-span-2">
-                <h4 className='text-white mb-4'>Quick Links</h4>
-                <div className='text-sm md:text-base flex flex-col gap-2'>
-
-                    <Link className='text-white' to={'/'}>Accessories</Link>
-                    <Link className='text-white' to={'/'}>Laptops</Link>
-                    <Link className='text-white' to={'/'}>Headphones</Link>
-                    <Link className='text-white' to={'/'}>Smart Watches</Link>
-                    <Link className='text-white' to={'/'}>Tablets</Link>
-                  
-                </div>
-              </div>
+             
             </div>
           </div>
 

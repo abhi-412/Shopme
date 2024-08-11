@@ -75,7 +75,7 @@ const customer = localStorage.getItem('customer') ? JSON.parse(localStorage.getI
 
   return (
     <nav className="flex flex-col gap-3">
-      <div className="flex flex-nowrap justify-between  bg-white border-gray-200  dark:bg-gray-900  md:justify-center items-center gap-3 px-2 py-4">
+      <div className="flex flex-nowrap justify-between  bg-white border-gray-200    md:justify-center items-center gap-3 px-2 py-4">
         <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <img src="/assets/shopme_logo.png" className="w-32" alt="Logo" />
           {/* <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"></span> */}
@@ -86,7 +86,7 @@ const customer = localStorage.getItem('customer') ? JSON.parse(localStorage.getI
             data-collapse-toggle="navbar-search"
             aria-controls="navbar-search"
             aria-expanded="false"
-            className="md:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 me-1"
+            className="md:hidden text-gray-500  hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 rounded-lg text-sm p-2.5 me-1"
             onClick={toggleSidebar}
           >
             <AiOutlineMenu className="w-5 h-5" />
@@ -126,12 +126,12 @@ const customer = localStorage.getItem('customer') ? JSON.parse(localStorage.getI
                       className='w-full' 
                     />
                     <div className="lg:flex items-center px-2 hidden">
-                      <BsSearch className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                      <BsSearch className="w-5 h-5 text-gray-500 " />
                       <span className="sr-only">Search icon</span>
                     </div>
                   </div>
                 
-                <ul className="flex flex-col md:p-0 md:gap-3  font-medium  rounded-lg bg-gray-50  md:flex-row md:items-center md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                <ul className="flex flex-col md:p-0 md:gap-3  font-medium  rounded-lg bg-gray-50  md:flex-row md:items-center md:mt-0 md:border-0 md:bg-white ">
               
                   
                     {/* <Link to="/compare-product" className="flex items-center gap-2 text-black">
@@ -168,20 +168,20 @@ const customer = localStorage.getItem('customer') ? JSON.parse(localStorage.getI
                         {isOpen && (
                           <div
                             id="dropdownAvatarName"
-                            className="absolute z-10 right-0 top-10  bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+                            className="absolute z-40 right-0 top-10  bg-white divide-y divide-gray-100 rounded-lg shadow w-44 "
                           >
-                            <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                            <div className="px-4 py-3 text-sm text-gray-900 ">
                               <div className="font-medium">{customer?.firstName?.toUpperCase().slice(0,1) + customer?.firstName?.slice(1) + " " + customer?.lastName?.toUpperCase().slice(0,1) + customer?.lastName?.slice(1)}</div>
                               <div className="truncate">{customer?.email}</div>
                             </div>
                             <ul
-                              className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                              className="py-2 text-sm text-gray-700 "
                               aria-labelledby="dropdownAvatarNameButton"
                             >
                               <li>
                                 <a
                                   href="/"
-                                  className="flex gap-2 items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                  className="flex gap-2 items-center px-4 py-2 hover:bg-gray-100 "
                                 >
                                   <FaUser className='text-orange-800' /> Profile
                                 </a>
@@ -189,7 +189,7 @@ const customer = localStorage.getItem('customer') ? JSON.parse(localStorage.getI
                               <li>
                                 <a
                                   href="/orders"
-                                  className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                  className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
                                 >
                                   <BsBox className=' text-orange-800' /> Orders
                                 </a>
@@ -197,7 +197,7 @@ const customer = localStorage.getItem('customer') ? JSON.parse(localStorage.getI
                               <li>
                                 <a
                                   href="/contact"
-                                  className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                  className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 "
                                 >
                                   <BiSupport className='text-lg text-orange-800'/> Help & Support
                                 </a>
@@ -206,7 +206,7 @@ const customer = localStorage.getItem('customer') ? JSON.parse(localStorage.getI
                             <div className="py-2">
                               <button
                                 onClick={handleLogout}
-                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 "
                               >
                                 Sign out
                               </button>
@@ -252,7 +252,7 @@ const customer = localStorage.getItem('customer') ? JSON.parse(localStorage.getI
                 className='w-full bg-white' 
               />
             {/* <div className="border inset-0 rounded-r inset-y-0 start-0 flex items-center ps-3 pointer-events-none"> */}
-              <BsSearch className="w-5 h-5 absolute right-5 text-gray-500 dark:text-gray-400" />
+              <BsSearch className="w-5 h-5 absolute right-5 text-gray-500 " />
             {/* </div> */}
     </div>
 
@@ -313,7 +313,7 @@ const customer = localStorage.getItem('customer') ? JSON.parse(localStorage.getI
                             </ul>
 
                           <ul
-                              className=" text-gray-700 flex  justify-between gap-2 dark:text-gray-200"
+                              className=" text-gray-700 flex  justify-between gap-2 "
                             >
                                 <li className='px-3 text-sm py-1 w-full hover:bg-gray-100 hover:border-orange-800 border-1 border-gray-300'>
                                   <a

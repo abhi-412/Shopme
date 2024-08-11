@@ -1,5 +1,5 @@
 import './App.scss';
-import {BrowserRouter,Routes,Route} from 'react-router-dom';
+import {BrowserRouter,Routes,Route, Navigate, useLocation} from 'react-router-dom';
 import Layout from "./Components/Layout";
 import Home from "./Pages/Home"
 import Blog from './Pages/Blog';
@@ -29,6 +29,7 @@ import Address from './Pages/Address';
 import Orders from './Pages/Orders';
 import OrderDetails from './Pages/OrderDetails';
 import UserProfile from './Pages/Profile';
+import ScrollToTop from './Components/ScrollToTop';
 
 function App() {
   const dispatch = useDispatch();
@@ -49,9 +50,11 @@ useEffect(()=>{
     }
 },[])
 
+
   return (
     <>
         <BrowserRouter>
+        <ScrollToTop />
             <Routes>
                 <Route path="/" element={<Layout />} >
                   <Route index element={<Home />}/>
