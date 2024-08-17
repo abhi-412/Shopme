@@ -120,17 +120,17 @@ const Orders = () => {
                                 </div>
 
                                     <div>
-                                            <ol className="relative text-gray-500 border-s border-gray-200 dark:border-gray-700 dark:text-gray-400">
+                                            <ol className="relative text-gray-500 border-s border-gray-200 ">
                                                 <li className="mb-10 ms-6">
                                                     <span className="absolute flex items-center justify-center w-4 h-4 bg-green-200 rounded-full -start-2 ring-4 ring-white ">
-                                                    <FaCheck className="w-2 h-2 text-green-500 dark:text-green-400" />
+                                                    <FaCheck className="w-2 h-2 text-green-500 " />
                                                     </span>
                                                     <h3 className="text-sm">Ordered</h3>
                                                     <h3 className="text-xs">{new Intl.DateTimeFormat('en-US', { month: 'long', day: '2-digit', year: 'numeric' }).format(new Date(selectedOrder?.createdAt))}</h3>
                                                 </li>
                                                 <li className="mb-10 ms-6">
                                                     <span className={`absolute flex items-center justify-center w-4 h-4 ${selectedOrder?.orderStatus === 'Delivered' ? 'bg-green-200' : selectedOrder?.orderStatus === 'Cancelled' ? 'bg-red-200' : 'bg-yellow-200'} rounded-full -start-2 ring-4 ring-white`}>
-                                                    {selectedOrder?.orderStatus === 'Delivered' ? <FaCheck className="w-2 h-2 text-green-500 dark:text-green-400" /> : selectedOrder?.orderStatus === 'Cancelled' ? <MdCancel className="w-4 h-4 text-red-500" /> : <FaExclamation className="w-2 h-2 text-yellow-500 dark:text-yellow-400" />}
+                                                    {selectedOrder?.orderStatus === 'Delivered' ? <FaCheck className="w-2 h-2 text-green-500 " /> : selectedOrder?.orderStatus === 'Cancelled' ? <MdCancel className="w-4 h-4 text-red-500" /> : <FaExclamation className="w-2 h-2 text-yellow-500" />}
                                                     </span>
                                                     <h3 className="text-sm">{selectedOrder?.orderStatus}</h3>
                                                     <h3 className="text-xs">{new Intl.DateTimeFormat('en-US', { month: 'long', day: '2-digit', year: 'numeric' }).format(new Date(selectedOrder?.updatedAt))}</h3>

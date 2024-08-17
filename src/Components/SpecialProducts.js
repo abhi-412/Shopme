@@ -42,8 +42,8 @@ const SpecialProducts = ({product}) => {
                         
                         <div className="flex flex-col gap-2 mb-1">
                                 <p className='text-sm text-gray-600'>{product?.quantity} remaining</p>
-                                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1 dark:bg-gray-700">
-                                    <div class="bg-blue-600 h-2.5 rounded-full dark:bg-blue-500" style={{width:`${100-progress}%`}}></div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1">
+                                    <div class="bg-blue-600 h-2.5 rounded-full " style={{width:`${100-progress}%`}}></div>
                                 </div>
                         </div>
 

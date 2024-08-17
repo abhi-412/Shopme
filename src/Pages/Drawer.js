@@ -71,7 +71,7 @@ const Drawer = (props) => {
                 <button
                     onClick={toggleDrawer}
                     type="button"
-                    className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                    className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 "
                     aria-controls="drawer-content"
                     aria-label="Close menu"
                 >
@@ -116,7 +116,7 @@ const Drawer = (props) => {
                     <div className="mb-4 flex gap-3 flex-col">
                         <h6 className="text-lg font-semibold text-gray-800  p-2 text-center">Filter By</h6>
                         <div className="border-b border-b-gray-400 bg-gray-50 pb-3 mb-2 py-2 px-3">
-                            <h6 className="font-medium text-gray-800 dark:text-gray-200 mb-3">Availability</h6>
+                            <h6 className="font-medium text-gray-800  mb-3">Availability</h6>
                             <div className="flex items-center mb-1">
                                 <input
                                     type="checkbox"
@@ -125,7 +125,7 @@ const Drawer = (props) => {
                                     onChange={() => setOutOfStock(!outOfStock)}
                                     className="form-checkbox h-3 w-3 text-blue-600 border-gray-300 rounded"
                                 />
-                                <label htmlFor="in-stock" className="ml-2 text-xs text-gray-600 dark:text-gray-300">
+                                <label htmlFor="in-stock" className="ml-2 text-xs text-gray-600 ">
                                     In Stock [{totalProducts}]
                                 </label>
                             </div>
@@ -137,7 +137,7 @@ const Drawer = (props) => {
                                     onChange={() => setOutOfStock(!outOfStock)}
                                     className="form-checkbox h-3 w-3 text-blue-600 border-gray-300 rounded"
                                 />
-                                <label htmlFor="out-of-stock" className="ml-2 text-xs text-gray-600 dark:text-gray-300">
+                                <label htmlFor="out-of-stock" className="ml-2 text-xs text-gray-600">
                                     Out of Stock [0]
                                 </label>
                             </div>
@@ -174,7 +174,7 @@ const Drawer = (props) => {
 
                             </div>
                         <div className="border-b border-b-gray-400 bg-gray-50 pb-3 mb-2 py-2 px-3">
-                            <h6 className="font-semibold text-gray-800 dark:text-gray-200 mb-3">Colors</h6>
+                            <h6 className="font-semibold text-gray-800  mb-3">Colors</h6>
                             <div className="flex gap-2">
                                 {colors?.map((c, i) => (
                                     <button
@@ -189,7 +189,7 @@ const Drawer = (props) => {
                             </div>
                         </div>
                         <div className='border-b border-b-gray-400 bg-gray-50 pb-3 mb-2 py-2 px-3'>
-                            <h6 className=" font-semibold text-gray-800 dark:text-gray-200 mb-3">Product Tags</h6>
+                            <h6 className=" font-semibold text-gray-800  mb-3">Product Tags</h6>
                             <div className="flex flex-wrap gap-2">
                                 {tags?.map((t, i) => (
                                     <button

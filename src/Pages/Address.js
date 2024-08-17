@@ -137,7 +137,7 @@ const Address = () => {
             pauseOnHover
             theme="light"
             />
-    <div className="flex w-full bg-white border-gray-200  dark:bg-gray-900 items-center gap-5 px-2 py-3">
+    <div className="flex w-full bg-white border-gray-200   items-center gap-5 px-2 py-3">
         <Link to="/" className="flex px-10">
           <img src="/assets/shopme_logo.png" className="w-32" alt="Logo" />
           {/* <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"></span> */}
@@ -154,7 +154,7 @@ const Address = () => {
           <nav className="flex" aria-label="Breadcrumb">
             <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
               <li className="inline-flex items-center">
-                <a href="/" className="inline-flex items-center text-sm gap-2 font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                <a href="/" className="inline-flex items-center text-sm gap-2 font-medium text-gray-700 hover:text-blue-600 ">
                   <FaHome />
                   Home
                 </a>
@@ -168,7 +168,7 @@ const Address = () => {
               <li aria-current="page">
                 <div className="flex items-center">
                 <MdNavigateNext className='text-gray-500 text-lg'/>
-                  <span className="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Information</span>
+                  <span className="ms-1 text-sm font-medium text-gray-500 md:ms-2">Information</span>
                 </div>
               </li>
             </ol>

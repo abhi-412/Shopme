@@ -64,17 +64,17 @@ const OrderDetails = () => {
                         </div>
 
                             <div className="relative">
-                                    <ol className="text-gray-500 border-s border-gray-200 dark:border-gray-700 dark:text-gray-400">
+                                    <ol className="text-gray-500 border-s border-gray-200">
                                         <li className="my-4  ms-3">
                                             <span className="absolute flex items-center justify-center w-4 h-4 bg-green-200 rounded-full -start-2">
-                                            <FaCheck className="w-2 h-2 text-green-500 dark:text-green-400" />
+                                            <FaCheck className="w-2 h-2 text-green-500 " />
                                             </span>
                                             <h3 className="text-sm">Ordered</h3>
                                             <h3 className="text-xs">{new Intl.DateTimeFormat('en-US', { month: 'long', day: '2-digit', year: 'numeric' }).format(new Date(selectedOrder?.updatedAt))}</h3>
                                         </li>
                                         <li className="my-4 ms-3">
                                             <span className={`absolute flex items-center justify-center w-4 h-4 ${selectedOrder?.orderStatus === 'Delivered' ? 'bg-green-200' : 'bg-yellow-200'} rounded-full -start-2 `}>
-                                            {selectedOrder?.orderStatus === 'Delivered' ? <FaCheck className="w-2 h-2 text-green-500 dark:text-green-400" /> : selectedOrder?.orderStatus === 'Cancelled' ? <FaExclamation className="w-2 h-2 text-red-500 dark:text-red-400" /> :  <FaExclamation className="w-2 h-2 text-yellow-500 dark:text-yellow-400" />}
+                                            {selectedOrder?.orderStatus === 'Delivered' ? <FaCheck className="w-2 h-2 text-green-500 " /> : selectedOrder?.orderStatus === 'Cancelled' ? <FaExclamation className="w-2 h-2 text-red-500 " /> :  <FaExclamation className="w-2 h-2 text-yellow-500 " />}
                                             </span>
                                             <h3 className="text-sm">{selectedOrder?.orderStatus}</h3>
                                         </li>
@@ -146,7 +146,7 @@ const OrderDetails = () => {
 
                 {/* Recommended Products */}
                 <div className="mb-6">
-                    <h2 className="text-2xl font-semibold text-gray-800 mb-2">You Might Also Like</h2>
+                    <h2 className="text-2xl font-semibold text-gray-800 mb-2">Recommended For You</h2>
                     <div className="flex gap-3 p-2 w-full overflow-scroll hide-scrollbar">
                         {recommendedProducts?.map((product, index) => (
                         <div key={index} className='border shadow border-gray-600 rounded'>
